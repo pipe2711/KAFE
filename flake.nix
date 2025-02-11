@@ -30,6 +30,9 @@
             packages = with pkgs; [
               antlr
               flex
+	      openjdk
+	      git
+	      python3
               bison
             ];
           };
