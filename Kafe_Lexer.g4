@@ -1,6 +1,6 @@
 lexer grammar Kafe_Lexer;
 
-//EStructura y definicion de TOKENS
+//Estructura y definicion de TOKENS
 
     ID : [a-zA-Z]+;
     INT : [0-9]+;
