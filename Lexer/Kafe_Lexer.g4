@@ -1,9 +1,8 @@
 lexer grammar Kafe_Lexer;
 
 //Estructura y definicion de TOKENS
-    //Simbolos matematicos 
+    //Simbolos matematicos
 
-    
     ID : [a-zA-Z]+;
     INT : [0-9]+;
     ADD : '+';
@@ -45,6 +44,6 @@ lexer grammar Kafe_Lexer;
     //Espacios en blanco o espacios
     SEMICOLON   : ';';
     COMA    : ',';
-    NEWLINE: ['\r'];
+    NEWLINE: ('\r' '\n'? | '\n');
     WS : [ \t]+ -> skip;
 
