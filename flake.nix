@@ -30,9 +30,13 @@
             packages = with pkgs; [
               antlr
               flex
-	      openjdk
-	      git
-	      python3
+              openjdk
+              git
+              (python3.withPackages (
+                p: with p; [
+                  antlr4-python3-runtime
+                ]
+              ))
               bison
             ];
           };
