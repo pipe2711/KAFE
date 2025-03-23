@@ -1,7 +1,6 @@
 lexer grammar Kafe_Lexer;
 
-//Estructura y definicion de TOKENS
-    //Simbolos matematicos
+//TIPOS DE DATOS PRIMITIVOS Y OPERADORES (SEMILLAS)
 
     ID : [a-zA-Z]+;
     INT : [0-9]+;
@@ -10,14 +9,11 @@ lexer grammar Kafe_Lexer;
     MUL : '*';
     DIV : '/';
     MOD : '%';
-    SIN : 'sin';
-    COS :  'cos';
-    TAN : 'tan';
-    RAI : '^';
+
 
     //Comparacion
 
-    EQUALS : '=';
+    EQUALS : '==';
     NOEQUAL : '!=';
     MEQ : '<' ;
     MAQ : '>' ;
@@ -27,7 +23,7 @@ lexer grammar Kafe_Lexer;
 
     //Operaciones Logicas
 
-    OR : '|';
+    OR : '||';
     AND : '&&' ;
     NOT : '!'   ;
 
@@ -41,7 +37,6 @@ lexer grammar Kafe_Lexer;
     DCOR : '}' ;
 
 
-    //Espacios en blanco o espacios
     SEMICOLON   : ';';
     COMA    : ',';
     NEWLINE: ('\r' '\n'? | '\n');
