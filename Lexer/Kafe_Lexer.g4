@@ -1,49 +1,20 @@
-lexer grammar Kafe_Lexer;
+lexer grammar kafe_Lexer;
 
-//Estructura y definicion de TOKENS
-    //Simbolos matematicos
+DRIP       : 'drip';
+RETURN     : 'return';
+LPAREN     : '(';
+RPAREN     : ')';
+COLON      : ':';
+ASSIGN     : '=';
+COMMA      : ',';
+END_LINE   : '$';
 
-    ID : [a-zA-Z]+;
-    INT : [0-9]+;
-    ADD : '+';
-    SUB : '-';
-    MUL : '*';
-    DIV : '/';
-    MOD : '%';
-    SIN : 'sin';
-    COS :  'cos';
-    TAN : 'tan';
-    RAI : '^';
+INT_TYPE   : 'INT';
+FLOAT_TYPE : 'FLOAT';
+CHAR_TYPE  : 'CHAR';
+BOOL_TYPE  : 'BOOL';
 
-    //Comparacion
+NUMBER     : [0-9]+;
+IDENT      : [a-zA-Z_][a-zA-Z0-9_]*;
 
-    EQUALS : '=';
-    NOEQUAL : '!=';
-    MEQ : '<' ;
-    MAQ : '>' ;
-    MEQI : '<=';
-    MAQI : '>=';
-
-
-    //Operaciones Logicas
-
-    OR : '|';
-    AND : '&&' ;
-    NOT : '!'   ;
-
-    //PARENTESIS, LLAVES, CORCHETES
-
-    IPAREN : '(' ;
-    DPAREN : ')' ;
-    ILLAVE : '[' ;
-    DLLAVE : ']' ;
-    ICOR : '{' ;
-    DCOR : '}' ;
-
-
-    //Espacios en blanco o espacios
-    SEMICOLON   : ';';
-    COMA    : ',';
-    NEWLINE: ('\r' '\n'? | '\n');
-    WS : [ \t]+ -> skip;
-
+WS         : [ \t\r\n]+ -> skip;
