@@ -21,8 +21,8 @@ MAQI : '>=';
 
 // Operaciones Logicas
 OR : '||';
-AND : '&&' ;
-NOT : '!'   ;
+AND : '&&';
+NOT : '!';
 
 // PARENTESIS, LLAVES, CORCHETES
 IPAREN : '(' ;
@@ -42,6 +42,8 @@ WS : [ \t]+ -> skip;
 DRIP       : 'drip';
 RETURN     : 'return';
 COLON      : ':';
+POUR       : 'pour';
+SHOW       : 'show';
 
 // TIPOS DE DATOS PRIMITIVOS
 INT   : 'INT';
@@ -54,6 +56,10 @@ BOOLEAN : 'True' | 'False';
 FLOAT_VALUE : [0-9]+ '.' [0-9]+;
 INT_VALUE : [0-9]+;
 CHAR_VALUE : '\'' . '\'';
+
+// Otros Valores
+STRING_VALUE : '"' (~["\\] | ESCAPED_VALUE)* '"';
+ESCAPED_VALUE: '\\' [\\'"];
 
 // PALABRAS RESERVADAS PARA CONDICIONALES
 IF : 'if';
