@@ -1,44 +1,64 @@
 lexer grammar Kafe_Lexer;
 
-//TIPOS DE DATOS PRIMITIVOS Y OPERADORES (SEMILLAS)
+ID : [a-zA-Z_][a-zA-Z0-9_]*;
+ASSIGN : '=';
 
-    ID : [a-zA-Z]+;
-    INT : [0-9]+;
-    ADD : '+';
-    SUB : '-';
-    MUL : '*';
-    DIV : '/';
-    MOD : '%';
+// Operaciones Aritmeticas
+ADD : '+';
+SUB : '-';
+MUL : '*';
+DIV : '/';
+MOD : '%';
+RAI : '^';
 
+// Comparacion
+EQUALS : '==';
+NOEQUAL : '!=';
+MEQ : '<' ;
+MAQ : '>' ;
+MEQI : '<=';
+MAQI : '>=';
 
-    //Comparacion
+// Operaciones Logicas
+OR : '||';
+AND : '&&' ;
+NOT : '!'   ;
 
-    EQUALS : '==';
-    NOEQUAL : '!=';
-    MEQ : '<' ;
-    MAQ : '>' ;
-    MEQI : '<=';
-    MAQI : '>=';
+// PARENTESIS, LLAVES, CORCHETES
+IPAREN : '(' ;
+DPAREN : ')' ;
+ILLAVE : '[' ;
+DLLAVE : ']' ;
+ICOR : '{' ;
+DCOR : '}' ;
 
+// Espacios en blanco o espacios
+END_LINE   : ';';
+COMA    : ',';
+NEWLINE: ('\r' '\n'? | '\n');
+WS : [ \t]+ -> skip;
 
-    //Operaciones Logicas
+// Relacionado con funciones
+DRIP       : 'drip';
+RETURN     : 'return';
+COLON      : ':';
 
-    OR : '||';
-    AND : '&&' ;
-    NOT : '!'   ;
+// TIPOS DE DATOS PRIMITIVOS
+INT   : 'INT';
+FLOAT : 'FLOAT';
+BOOL  : 'BOOL';
+CHAR  : 'CHAR';
 
-    //PARENTESIS, LLAVES, CORCHETES
+// Valores primitivos
+BOOLEAN : 'True' | 'False';
+FLOAT_VALUE : [0-9]+ '.' [0-9]+;
+INT_VALUE : [0-9]+;
+CHAR_VALUE : '\'' . '\'';
 
-    IPAREN : '(' ;
-    DPAREN : ')' ;
-    ILLAVE : '[' ;
-    DLLAVE : ']' ;
-    ICOR : '{' ;
-    DCOR : '}' ;
+// PALABRAS RESERVADAS PARA CONDICIONALES
+IF : 'if';
+ELSE : 'else';
 
-
-    SEMICOLON   : ';';
-    COMA    : ',';
-    NEWLINE: ('\r' '\n'? | '\n');
-    WS : [ \t]+ -> skip;
-
+// COMENTARIOS
+LINE_COMMENT : '--' ~[\r\n]* -> skip;
+BLOCK_COMMENT : '->' .*? '<-' -> skip;
