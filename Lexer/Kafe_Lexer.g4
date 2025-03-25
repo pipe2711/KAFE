@@ -1,49 +1,22 @@
 lexer grammar Kafe_Lexer;
 
-//Estructura y definicion de TOKENS
-    //Simbolos matematicos
+// TIPOS DE DATOS PRIMITIVOS
+INT   : 'INT';
+FLOAT : 'FLOAT';
+BOOL  : 'BOOL';
+CHAR  : 'CHAR';
 
-    ID : [a-zA-Z]+;
-    INT : [0-9]+;
-    ADD : '+';
-    SUB : '-';
-    MUL : '*';
-    DIV : '/';
-    MOD : '%';
-    SIN : 'sin';
-    COS :  'cos';
-    TAN : 'tan';
-    RAI : '^';
-
-    //Comparacion
-
-    EQUALS : '=';
-    NOEQUAL : '!=';
-    MEQ : '<' ;
-    MAQ : '>' ;
-    MEQI : '<=';
-    MAQI : '>=';
+// Valores primitivos
+BOOLEAN : 'True' | 'False';
+FLOAT_VALUE : [0-9]+ '.' [0-9]+;
+INT_VALUE : [0-9]+;
+CHAR_VALUE : '\'' . '\'';
 
 
-    //Operaciones Logicas
+// PALABRAS RESERVADAS PARA CONDICIONALES
+IF : 'if';
+ELSE : 'else';
 
-    OR : '|';
-    AND : '&&' ;
-    NOT : '!'   ;
-
-    //PARENTESIS, LLAVES, CORCHETES
-
-    IPAREN : '(' ;
-    DPAREN : ')' ;
-    ILLAVE : '[' ;
-    DLLAVE : ']' ;
-    ICOR : '{' ;
-    DCOR : '}' ;
-
-
-    //Espacios en blanco o espacios
-    SEMICOLON   : ';';
-    COMA    : ',';
-    NEWLINE: ('\r' '\n'? | '\n');
-    WS : [ \t]+ -> skip;
-
+// COMENTARIOS
+LINE_COMMENT : '--' ~[\r\n]* -> skip;
+BLOCK_COMMENT : '->' .*? '<-' -> skip;
