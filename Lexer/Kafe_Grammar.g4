@@ -24,9 +24,9 @@ expr: expr EQUALS expr //Igual a
     | expr OR expr //o
     | expr AND expr //Y
     | NOT expr //Negar
-    | expr RAI expr
-    | expr op=(MUL|DIV|MOD) expr
     | expr op=(ADD|SUB) expr
+    | expr op=(MUL|DIV|MOD) expr
+    | expr RAI expr
     | valor
     | pourStmt //pour
     ;
