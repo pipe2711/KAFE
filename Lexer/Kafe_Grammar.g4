@@ -3,14 +3,15 @@ import Kafe_Lexer;
 
 prog: stat+;
 
-declaracion: tipo ID ASSIGN (expr | arrayValues);
+declaracion: tipo ID ASSIGN (expr | arrayValues)
+	| DRIP functionDeclaration
+	;
 
-stat: declaracion END_LINE
-    | condicion END_LINE
-    | functionDecl END_LINE
-    | returnStmt END_LINE
-    | pourStmt END_LINE
-    | showStmt END_LINE
+stat: declaracion
+    | condicion
+    | returnStmt
+    | pourStmt
+    | showStmt
     | NEWLINE
     ;
 
@@ -30,13 +31,47 @@ expr: expr EQUALS expr //Igual a
     | pourStmt //pour
     ;
 
+block
+    : expr+ NEWLINE returnStmt
+    ;
+
 // Input/Output
 pourStmt: POUR IPAREN (STRING_VALUE | ID) DPAREN;
 showStmt: SHOW IPAREN expr DPAREN;
 
 // Declaracion de funcion
-functionDecl
-    : DRIP ID IPAREN DPAREN COLON
+functionDefinition
+    : functionSignature (':' tipo) ASSIGN expr
+    | functionSignature NEWLINE? ICOR block DCOR
+    ;
+
+functionDeclaration
+    : functionSignature (':' tipo)
+    ;
+
+functionSignature
+    : ID paramClauses
+    ;
+
+paramClauses
+    : paramClause* (IPAREN params DPAREN)?
+    ;
+
+paramClause
+    : IPAREN params? DPAREN
+    ;
+
+params
+    : param (',' param)*
+    ;
+
+param
+    : ID ':' paramType (ASSIGN expr)?
+    ;
+
+paramType
+    : tipo
+    | FLECHA_SUSHI tipo
     ;
 
 // Sentencia return
@@ -46,17 +81,18 @@ returnStmt
 
 // Lista de valores separados por coma 
 arrayValues
-    : ILLAVE expr (COMA expr)* DLLAVE
+    : ILLAVE expr (',' expr)* DLLAVE
     | STRING_VALUE
     ;
 
 tipo: INT | FLOAT | BOOL | CHAR;
 
-valor: INT_VALUE
-     | FLOAT_VALUE
+valor: '-'? INT_VALUE
+     | '-'? FLOAT_VALUE
      | BOOLEAN
      | CHAR_VALUE
      | STRING_VALUE
+     | 'null'
      ;
 
 condicion: IF IPAREN expr DPAREN ICOR stat* DCOR

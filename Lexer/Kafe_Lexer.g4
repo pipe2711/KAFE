@@ -25,23 +25,23 @@ AND : '&&';
 NOT : '!';
 
 // PARENTESIS, LLAVES, CORCHETES
-IPAREN : '(' ;
-DPAREN : ')' ;
-ILLAVE : '[' ;
-DLLAVE : ']' ;
-ICOR : '{' ;
-DCOR : '}' ;
+IPAREN : '(';
+DPAREN : ')';
+ILLAVE : '[';
+DLLAVE : ']';
+ICOR : '{';
+DCOR : '}';
+
+FLECHA_SUSHI : '=>';
 
 // Espacios en blanco o espacios
 END_LINE   : ';';
-COMA    : ',';
 NEWLINE: ('\r' '\n'? | '\n');
 WS : [ \t]+ -> skip;
 
 // Relacionado con funciones
 DRIP       : 'drip';
 RETURN     : 'return';
-COLON      : ':';
 POUR       : 'pour';
 SHOW       : 'show';
 
@@ -66,5 +66,5 @@ IF : 'if';
 ELSE : 'else';
 
 // COMENTARIOS
-LINE_COMMENT : '--' ~[\r\n]* -> skip;
+LINE_COMMENT : '--' (~[\r\n])* -> skip;
 BLOCK_COMMENT : '->' .*? '<-' -> skip;
