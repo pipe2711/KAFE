@@ -64,6 +64,7 @@ ESCAPED_VALUE: '\\' [\\'"];
 // PALABRAS RESERVADAS PARA CONDICIONALES
 IF : 'if';
 ELSE : 'else';
+IMPORT: 'import';
 
 // COMENTARIOS
 LINE_COMMENT : '--' (~[\r\n])* -> skip;

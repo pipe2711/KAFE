@@ -1,7 +1,11 @@
-grammar Kafe_Grammar;
+parser grammar Kafe_Grammar;
 import Kafe_Lexer;
 
-prog: stat+;
+options { tokenVocab=NombreDelLexer; }
+
+prog: (importStmt | stat)+;
+
+importStmt: IMPORT STRING_VALUE NEWLINE;
 
 declaracion: tipo ID ASSIGN (expr | arrayValues)
 	| DRIP functionDeclaration
