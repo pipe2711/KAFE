@@ -1,70 +1,66 @@
 lexer grammar Kafe_Lexer;
 
-ID : [a-zA-Z_][a-zA-Z0-9_]*;
-ASSIGN : '=';
-
-// Operaciones Aritmeticas
-ADD : '+';
-SUB : '-';
-MUL : '*';
-DIV : '/';
-MOD : '%';
-RAI : '^';
-
-// Comparacion
-EQUALS : '==';
-NOEQUAL : '!=';
-MEQ : '<' ;
-MAQ : '>' ;
-MEQI : '<=';
-MAQI : '>=';
-
-// Operaciones Logicas
-OR : '||';
-AND : '&&';
-NOT : '!';
-
-// PARENTESIS, LLAVES, CORCHETES
-IPAREN : '(';
-DPAREN : ')';
-ILLAVE : '[';
-DLLAVE : ']';
-ICOR : '{';
-DCOR : '}';
-
-FLECHA_SUSHI : '=>';
-
-// Espacios en blanco o espacios
-END_LINE   : ';';
-NEWLINE: ('\r' '\n'? | '\n');
-WS : [ \t]+ -> skip;
-
-// Relacionado con funciones
+// Palabras clave y funciones
 DRIP       : 'drip';
-RETURN     : 'return';
 POUR       : 'pour';
 SHOW       : 'show';
+RETURN     : 'return';
+IF         : 'if';
+ELSE       : 'else';
+TRUE       : 'True';
+FALSE      : 'False';
+MATCH      : 'match';
+FUNC       : 'FUNC';
+IMPORT     : 'import';
 
-// TIPOS DE DATOS PRIMITIVOS
-INT   : 'INT';
-FLOAT : 'FLOAT';
-BOOL  : 'BOOL';
-CHAR  : 'CHAR';
+// Operadores
+ADD        : '+';
+SUB        : '-';
+MUL        : '*';
+DIV        : '/';
+MOD        : '%';
+POW        : '^';
+AND        : '&&';
+OR         : '||';
+EQ         : '==';
+NEQ        : '!=';
+LT         : '<';
+GT         : '>';
+LE         : '<=';
+GE         : '>=';
+ARROW      : '=>';
+ASSIGN     : '=';
 
-// Valores primitivos
-BOOLEAN : 'True' | 'False';
-FLOAT_VALUE : [0-9]+ '.' [0-9]+;
-INT_VALUE : [0-9]+;
-CHAR_VALUE : '\'' . '\'';
+// Símbolos
+LPAREN     : '(';
+RPAREN     : ')';
+LBRACK     : '[';
+RBRACK     : ']';
+COLON      : ':';
+PIPE       : '|';
+SEMI       : ';';
+COMMA      : ',';
+UNDERSCORE : '_';
 
-// Otros Valores
-STRING_VALUE : '"' (~["\\] | ESCAPED_VALUE)* '"';
-ESCAPED_VALUE: '\\' [\\'"];
+// Tipos
+INT_TYPE   : 'INT';
+FLOAT_TYPE : 'FLOAT';
+CHAR_TYPE  : 'CHAR';
+BOOL_TYPE  : 'BOOL';
+VOID_TYPE  : 'VOID';
 
-// PALABRAS RESERVADAS PARA CONDICIONALES
-IF : 'if';
-ELSE : 'else';
-
-// COMENTARIOS
-LINE_COMMENT : '--' (~[\r\n])* -> skip;
+// Comentarios
+LINE_COMMENT : '--' ~[\r\n]* -> skip;
 BLOCK_COMMENT : '->' .*? '<-' -> skip;
+
+// Literales
+INT     : [0-9]+;
+FLOAT   : [0-9]+ '.' [0-9]+;
+CHAR    : '\'' . '\'';
+STRING  : '"' .*? '"';
+
+// Identificadores
+ID      : [a-zA-Z_][a-zA-Z0-9_]*;
+
+// Espacios
+WS      : [ \t\r\n]+ -> skip;
