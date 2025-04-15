@@ -1,0 +1,11 @@
+-- Indexar (Errores)
+
+STR a = "Hello";
+List[List[INT]] matriz = [
+	[234, 234],
+	[2341, 1234]
+];
+
+INT i = 0;
+--show(a[45]);
+--show(matriz['asdf'][2 - 1]);

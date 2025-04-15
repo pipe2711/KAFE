@@ -1,0 +1,11 @@
+-- Indexar
+
+STR a = "Hello";
+List[List[INT]] matriz = [
+	[234, 234],
+	[2341, 1234]
+];
+
+INT i = -1;
+show(a[i]);
+show(matriz[i][2 - 1]);

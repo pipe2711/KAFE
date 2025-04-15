@@ -208,7 +208,19 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         return self.visitChildren(ctx)
 
     def visitIndexingExpr(self, ctx:Kafe_GrammarParser.IndexingExprContext):
-        return self.visitChildren(ctx)
+        collection = self.visit(ctx.primaryExpr())
+        index = self.visit(ctx.expr())
+
+        if type(index) != int:
+            raise Exception(f"Index must be an integer, got {type(index).__name__}")
+
+        if type(collection) == str or type(collection) == list:
+            try:
+                return collection[index]
+            except IndexError:
+                raise Exception(f"Index {index} out of bounds for collection of size {len(collection)}")
+        else:
+            raise Exception(f"Type {type(collection).__name__} is not indexable")
 
     def visitParenExpr(self, ctx:Kafe_GrammarParser.ParenExprContext):
         return self.visitChildren(ctx.expr())
