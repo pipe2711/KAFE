@@ -47,7 +47,7 @@ INT_TYPE   : 'INT';
 FLOAT_TYPE : 'FLOAT';
 BOOL_TYPE  : 'BOOL';
 VOID_TYPE  : 'VOID';
-STRING_TYPE : 'STRING';
+STRING_TYPE : 'STR';
 
 // Comentarios
 LINE_COMMENT : '--' ~[\r\n]* -> skip;

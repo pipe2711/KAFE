@@ -1,21 +1,76 @@
 from Kafe_GrammarVisitor import Kafe_GrammarVisitor
 from Kafe_GrammarParser import Kafe_GrammarParser
+from utils import obtener_tipo_lista, verificarHomogeneidad
 
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
-    def visitProgram(self, ctx:Kafe_GrammarParser.ProgramContext):
-        return self.visitChildren(ctx)
+    def __init__(self):
+        self.intVariables = {}
+        self.floatVariables = {}
+        self.stringVariables = {}
+        self.booleanoVariables = {}
+        self.listaVariables = {}
+        self.type_mapping = {
+            "INT": (int, self.intVariables),
+            "FLOAT": (float, self.floatVariables),
+            "STR": (str, self.stringVariables),
+            "BOOL": (bool, self.booleanoVariables)
+        }
 
     def visitImportStmt(self, ctx:Kafe_GrammarParser.ImportStmtContext):
         return self.visitChildren(ctx)
 
-    def visitStmt(self, ctx:Kafe_GrammarParser.StmtContext):
-        return self.visitChildren(ctx)
-
     def visitVarDecl(self, ctx:Kafe_GrammarParser.VarDeclContext):
-        return self.visitChildren(ctx)
+        tipo = ctx.typeDecl().getText()
+        id_text = ctx.ID().getText()
+        valor = self.visit(ctx.expr())
+
+        if id_text in self.intVariables or id_text in self.floatVariables or id_text in self.stringVariables or id_text in self.booleanoVariables or id_text in self.listaVariables:
+            raise NameError(f"Variable '{id_text}' already defined")
+
+        if tipo == "VOID":
+            raise TypeError("Cannot declare variable with type VOID")
+
+        if tipo in self.type_mapping:
+            expected_type, storage = self.type_mapping[tipo]
+            if not isinstance(valor, expected_type):
+                raise TypeError(f"Expected {tipo}, obtained {str.upper(type(valor).__name__)}")
+            storage[id_text] = valor
+            return
+
+        if tipo.startswith("List") and any(t in tipo for t in ["INT", "FLOAT", "STR", "BOOL"]):
+            tipo_valor = obtener_tipo_lista(valor)
+            tipo_base = tipo.replace("INT", '').replace("FLOAT", '').replace("STR", '').replace("BOOL", '')
+
+            if tipo != tipo_valor and tipo_base != tipo_valor and valor != []:
+                raise TypeError(f"Expected {tipo}, obtained {tipo_valor}")
+            self.listaVariables[id_text] = (tipo, valor)
+            return
+
+        raise TypeError(f"Type '{tipo}' not recognized")
 
     def visitAssignStmt(self, ctx:Kafe_GrammarParser.AssignStmtContext):
-        return self.visitChildren(ctx)
+        id_text = ctx.ID().getText()
+        valor = self.visit(ctx.expr())
+
+        for tipo, (expected_type, storage) in self.type_mapping.items():
+            if id_text in storage:
+                if not isinstance(valor, expected_type):
+                    raise TypeError(f"Expected {tipo}, obtained {str.upper(type(valor).__name__)}")
+                storage[id_text] = valor
+                return
+
+        if id_text in self.listaVariables:
+            tipo = self.listaVariables[id_text][0]
+            tipo_valor = obtener_tipo_lista(valor)
+
+            tipo_base = tipo.replace("INT", '').replace("FLOAT", '').replace("STR", '').replace("BOOL", '')
+            if tipo != tipo_valor and tipo_base != tipo_valor and valor != []:
+                raise TypeError(f"Expected {tipo}, obtained {tipo_valor}")
+            self.listaVariables[id_text] = (tipo, valor)
+            return
+
+        raise NameError(f"Variable '{id_text}' not defined")
+
 
     def visitFunctionDecl(self, ctx:Kafe_GrammarParser.FunctionDeclContext):
         return self.visitChildren(ctx)
@@ -105,10 +160,19 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         return self.visitChildren(ctx)
 
     def visitParenExpr(self, ctx:Kafe_GrammarParser.ParenExprContext):
-        return self.visitChildren(ctx)
+        return self.visitChildren(ctx.expr())
 
     def visitIdExpr(self, ctx:Kafe_GrammarParser.IdExprContext):
-        return self.visitChildren(ctx)
+        id_text = ctx.ID().getText()
+
+        for (_, storage) in self.type_mapping.values():
+            if id_text in storage:
+                return storage[id_text]
+
+        if id_text in self.listaVariables:
+            return self.listaVariables[id_text][1]
+
+        raise NameError(f"Variable '{id_text}' not defined")
 
     def visitFunctionCall(self, ctx:Kafe_GrammarParser.FunctionCallContext):
         return self.visitChildren(ctx)
@@ -126,25 +190,28 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         return self.visitChildren(ctx)
 
     def visitIntLiteral(self, ctx:Kafe_GrammarParser.IntLiteralContext):
-        return self.visitChildren(ctx)
+        return int(ctx.getText())
 
     def visitFloatLiteral(self, ctx:Kafe_GrammarParser.FloatLiteralContext):
-        return self.visitChildren(ctx)
-
-    def visitCharLiteral(self, ctx:Kafe_GrammarParser.CharLiteralContext):
-        return self.visitChildren(ctx)
+        return float(ctx.getText())
 
     def visitStringLiteral(self, ctx:Kafe_GrammarParser.StringLiteralContext):
-        return self.visitChildren(ctx)
+        return ctx.getText()[1:-1]
 
     def visitBoolLiteral(self, ctx:Kafe_GrammarParser.BoolLiteralContext):
-        return self.visitChildren(ctx)
-
-    def visitListLiteralExpr(self, ctx:Kafe_GrammarParser.ListLiteralExprContext):
-        return self.visitChildren(ctx)
+        if ctx.getText() == "False":
+            return False
+        else:
+            return True
 
     def visitListLiteral(self, ctx:Kafe_GrammarParser.ListLiteralContext):
-        return self.visitChildren(ctx)
+        lista = []
 
-    def visitTypeDecl(self, ctx:Kafe_GrammarParser.TypeDeclContext):
-        return self.visitChildren(ctx)
+        for expr in ctx.expr():
+            valor = self.visit(expr)
+            lista.append(valor)
+
+        if (verificarHomogeneidad(lista) == False):
+            raise TypeError(f"Expected homogeneous list")
+
+        return lista
