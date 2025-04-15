@@ -124,25 +124,80 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         return self.visitChildren(ctx)
 
     def visitLogicExpr(self, ctx:Kafe_GrammarParser.LogicExprContext):
-        return self.visitChildren(ctx)
+        result = self.visit(ctx.equalityExpr(0))
+        for i in range(1, len(ctx.equalityExpr())):
+            op = ctx.getChild(2 * i - 1).getText()
+            right = self.visit(ctx.equalityExpr(i))
+            if op == '&&':
+                result = result and right
+            elif op == '||':
+                    result = result or right
+        return result
 
     def visitEqualityExpr(self, ctx:Kafe_GrammarParser.EqualityExprContext):
-        return self.visitChildren(ctx)
+        result = self.visit(ctx.relationalExpr(0))
+        for i in range(1, len(ctx.relationalExpr())):
+            op = ctx.getChild(2 * i - 1).getText()
+            right = self.visit(ctx.relationalExpr(i))
+            if op == '==':
+                result = result == right
+            elif op == '!=':
+                result = result != right
+        return result
 
     def visitRelationalExpr(self, ctx:Kafe_GrammarParser.RelationalExprContext):
-        return self.visitChildren(ctx)
+        result = self.visit(ctx.additiveExpr(0))
+        for i in range(1, len(ctx.additiveExpr())):
+            op = ctx.getChild(2 * i - 1).getText()
+            right = self.visit(ctx.additiveExpr(i))
+            if op == '<':
+                result = result < right
+            elif op == '<=':
+                result = result <= right
+            elif op == '>':
+                result = result > right
+            elif op == '>=':
+                result = result >= right
+        return result
 
     def visitAdditiveExpr(self, ctx:Kafe_GrammarParser.AdditiveExprContext):
-        return self.visitChildren(ctx)
+        result = self.visit(ctx.multiplicativeExpr(0))
+        for i in range(1, len(ctx.multiplicativeExpr())):
+            op = ctx.getChild(2 * i - 1).getText()
+            right = self.visit(ctx.multiplicativeExpr(i))
+            if op == '+':
+                result += right
+            elif op == '-':
+                result -= right
+        return result
 
     def visitMultiplicativeExpr(self, ctx:Kafe_GrammarParser.MultiplicativeExprContext):
-        return self.visitChildren(ctx)
+        result = self.visit(ctx.powerExpr(0))
+        for i in range(1, len(ctx.powerExpr())):
+            op = ctx.getChild(2 * i - 1).getText()
+            right = self.visit(ctx.powerExpr(i))
+            if op == '*':
+                result *= right
+            elif op == '/':
+                result /= right
+            elif op == '%':
+                result %= right
+        return result
 
     def visitPowerExpr(self, ctx:Kafe_GrammarParser.PowerExprContext):
-        return self.visitChildren(ctx)
+        base = self.visit(ctx.unaryExpr(0))
+        for i in range(1, len(ctx.unaryExpr())):
+            exponent = self.visit(ctx.unaryExpr(i))
+            base = base ** exponent
+        return base
 
     def visitUnaryExpresion(self, ctx:Kafe_GrammarParser.UnaryExpresionContext):
-        return self.visitChildren(ctx)
+        op = ctx.getChild(0).getText()
+        value = self.visit(ctx.unaryExpr())
+        if op == '-':
+            return -value
+        elif op == '!':
+            return not value
 
     def visitPrimaryExpresion(self, ctx:Kafe_GrammarParser.PrimaryExpresionContext):
         return self.visitChildren(ctx)
