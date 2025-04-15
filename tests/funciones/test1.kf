@@ -1,0 +1,9 @@
+
+INT a = 9;
+INT b = 6;
+
+drip suma (a: INT, b: INT) :
+    return a + b;
+;
+
+show (suma(a,b));
