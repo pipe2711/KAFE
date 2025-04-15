@@ -86,7 +86,6 @@ lambdaExpr : '(' paramDecl ')' ARROW expr;
 literal
     : INT                                                    # intLiteral
     | FLOAT                                                  # floatLiteral
-    | CHAR                                                   # charLiteral
     | STRING                                                 # stringLiteral
     | BOOL                                                   # boolLiteral
     | listLiteral                                            # listLiteralExpr
@@ -97,7 +96,6 @@ listLiteral : LBRACK (expr (COMMA expr)*)? RBRACK;
 typeDecl
     : INT_TYPE
     | FLOAT_TYPE
-    | CHAR_TYPE
     | BOOL_TYPE
     | VOID_TYPE
     | STRING_TYPE

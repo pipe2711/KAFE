@@ -45,7 +45,6 @@ UNDERSCORE : '_';
 LIST: 'List';
 INT_TYPE   : 'INT';
 FLOAT_TYPE : 'FLOAT';
-CHAR_TYPE  : 'CHAR';
 BOOL_TYPE  : 'BOOL';
 VOID_TYPE  : 'VOID';
 STRING_TYPE : 'STRING';
@@ -58,8 +57,7 @@ BLOCK_COMMENT : '->' .*? '<-' -> skip;
 INT     : [0-9]+;
 BOOL    : 'True' | 'False';
 FLOAT   : [0-9]+ '.' [0-9]+;
-CHAR    : '\'' . '\'';
-STRING  : '"' .*? '"';
+STRING  : '"' .*? '"' | '\'' .*? '\'';
 
 // Identificadores
 ID      : [a-zA-Z_][a-zA-Z0-9_]*;
