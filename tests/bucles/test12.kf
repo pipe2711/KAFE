@@ -1,0 +1,4 @@
+INT x = 0;
+while (x):
+    show(x);
+;

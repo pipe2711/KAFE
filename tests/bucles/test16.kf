@@ -1,0 +1,6 @@
+INT a = 0;
+INT b = 5;
+while (a < b && b > 0):
+    show(a);
+    a = a + 1;
+;

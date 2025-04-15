@@ -1,0 +1,5 @@
+List[STRING] letras = ['K', 'A', 'F', 'E'];
+for (l in letras):
+    show(l);
+;
+ING

@@ -1,0 +1,13 @@
+INT n = 60;
+INT a = 0;
+INT b = 1;
+INT temp = 0;
+INT contador = 0;
+
+while (contador < n):
+    show(a);
+    temp = a + b;
+    a = b;
+    b = temp;
+    contador = contador + 1;
+;
