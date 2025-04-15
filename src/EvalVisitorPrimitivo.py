@@ -32,7 +32,7 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
         if tipo in self.type_mapping:
             expected_type, storage = self.type_mapping[tipo]
-            if not isinstance(valor, expected_type):
+            if type(valor) != expected_type:
                 raise TypeError(f"Expected {tipo}, obtained {str.upper(type(valor).__name__)}")
             storage[id_text] = valor
             return
@@ -54,7 +54,7 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
         for tipo, (expected_type, storage) in self.type_mapping.items():
             if id_text in storage:
-                if not isinstance(valor, expected_type):
+                if type(valor) != expected_type:
                     raise TypeError(f"Expected {tipo}, obtained {str.upper(type(valor).__name__)}")
                 storage[id_text] = valor
                 return
