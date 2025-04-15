@@ -23,7 +23,10 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitParamList(self, ctx:Kafe_GrammarParser.ParamListContext):
         return self.visitChildren(ctx)
 
-    def visitParamDecl(self, ctx:Kafe_GrammarParser.ParamDeclContext):
+    def visitSimpleParam(self, ctx:Kafe_GrammarParser.SimpleParamContext):
+        return self.visitChildren(ctx)
+
+    def visitFunctionParam(self, ctx:Kafe_GrammarParser.FunctionParamContext):
         return self.visitChildren(ctx)
 
     def visitReturnStmt(self, ctx:Kafe_GrammarParser.ReturnStmtContext):
@@ -50,7 +53,13 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitMatchCase(self, ctx:Kafe_GrammarParser.MatchCaseContext):
         return self.visitChildren(ctx)
 
-    def visitPattern(self, ctx:Kafe_GrammarParser.PatternContext):
+    def visitLiteralPattern(self, ctx:Kafe_GrammarParser.LiteralPatternContext):
+        return self.visitChildren(ctx)
+
+    def visitWildcardPattern(self, ctx:Kafe_GrammarParser.WildcardPatternContext):
+        return self.visitChildren(ctx)
+
+    def visitIdPattern(self, ctx:Kafe_GrammarParser.IdPatternContext):
         return self.visitChildren(ctx)
 
     def visitBlock(self, ctx:Kafe_GrammarParser.BlockContext):
@@ -59,19 +68,82 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitExpr(self, ctx:Kafe_GrammarParser.ExprContext):
         return self.visitChildren(ctx)
 
+    def visitLogicExpr(self, ctx:Kafe_GrammarParser.LogicExprContext):
+        return self.visitChildren(ctx)
+
+    def visitEqualityExpr(self, ctx:Kafe_GrammarParser.EqualityExprContext):
+        return self.visitChildren(ctx)
+
+    def visitRelationalExpr(self, ctx:Kafe_GrammarParser.RelationalExprContext):
+        return self.visitChildren(ctx)
+
+    def visitAdditiveExpr(self, ctx:Kafe_GrammarParser.AdditiveExprContext):
+        return self.visitChildren(ctx)
+
+    def visitMultiplicativeExpr(self, ctx:Kafe_GrammarParser.MultiplicativeExprContext):
+        return self.visitChildren(ctx)
+
+    def visitPowerExpr(self, ctx:Kafe_GrammarParser.PowerExprContext):
+        return self.visitChildren(ctx)
+
+    def visitUnaryExpresion(self, ctx:Kafe_GrammarParser.UnaryExpresionContext):
+        return self.visitChildren(ctx)
+
+    def visitPrimaryExpresion(self, ctx:Kafe_GrammarParser.PrimaryExpresionContext):
+        return self.visitChildren(ctx)
+
+    def visitLiteralExpr(self, ctx:Kafe_GrammarParser.LiteralExprContext):
+        return self.visitChildren(ctx)
+
+    def visitFunctionCallExpr(self, ctx:Kafe_GrammarParser.FunctionCallExprContext):
+        return self.visitChildren(ctx)
+
+    def visitLambdaExpresion(self, ctx:Kafe_GrammarParser.LambdaExpresionContext):
+        return self.visitChildren(ctx)
+
+    def visitIndexingExpr(self, ctx:Kafe_GrammarParser.IndexingExprContext):
+        return self.visitChildren(ctx)
+
+    def visitParenExpr(self, ctx:Kafe_GrammarParser.ParenExprContext):
+        return self.visitChildren(ctx)
+
+    def visitIdExpr(self, ctx:Kafe_GrammarParser.IdExprContext):
+        return self.visitChildren(ctx)
+
     def visitFunctionCall(self, ctx:Kafe_GrammarParser.FunctionCallContext):
         return self.visitChildren(ctx)
 
     def visitArgList(self, ctx:Kafe_GrammarParser.ArgListContext):
         return self.visitChildren(ctx)
 
-    def visitArg(self, ctx:Kafe_GrammarParser.ArgContext):
+    def visitExprArgument(self, ctx:Kafe_GrammarParser.ExprArgumentContext):
+        return self.visitChildren(ctx)
+
+    def visitLambdaArgument(self, ctx:Kafe_GrammarParser.LambdaArgumentContext):
         return self.visitChildren(ctx)
 
     def visitLambdaExpr(self, ctx:Kafe_GrammarParser.LambdaExprContext):
         return self.visitChildren(ctx)
 
-    def visitLiteral(self, ctx:Kafe_GrammarParser.LiteralContext):
+    def visitIntLiteral(self, ctx:Kafe_GrammarParser.IntLiteralContext):
+        return self.visitChildren(ctx)
+
+    def visitFloatLiteral(self, ctx:Kafe_GrammarParser.FloatLiteralContext):
+        return self.visitChildren(ctx)
+
+    def visitCharLiteral(self, ctx:Kafe_GrammarParser.CharLiteralContext):
+        return self.visitChildren(ctx)
+
+    def visitStringLiteral(self, ctx:Kafe_GrammarParser.StringLiteralContext):
+        return self.visitChildren(ctx)
+
+    def visitBoolLiteral(self, ctx:Kafe_GrammarParser.BoolLiteralContext):
+        return self.visitChildren(ctx)
+
+    def visitListLiteralExpr(self, ctx:Kafe_GrammarParser.ListLiteralExprContext):
+        return self.visitChildren(ctx)
+
+    def visitListLiteral(self, ctx:Kafe_GrammarParser.ListLiteralContext):
         return self.visitChildren(ctx)
 
     def visitTypeDecl(self, ctx:Kafe_GrammarParser.TypeDeclContext):

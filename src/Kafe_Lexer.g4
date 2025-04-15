@@ -7,8 +7,6 @@ SHOW       : 'show';
 RETURN     : 'return';
 IF         : 'if';
 ELSE       : 'else';
-TRUE       : 'True';
-FALSE      : 'False';
 MATCH      : 'match';
 FUNC       : 'FUNC';
 IMPORT     : 'import';
@@ -30,6 +28,7 @@ LE         : '<=';
 GE         : '>=';
 ARROW      : '=>';
 ASSIGN     : '=';
+NOT        : '!';
 
 // Símbolos
 LPAREN     : '(';
@@ -43,6 +42,7 @@ COMMA      : ',';
 UNDERSCORE : '_';
 
 // Tipos
+LIST: 'List';
 INT_TYPE   : 'INT';
 FLOAT_TYPE : 'FLOAT';
 CHAR_TYPE  : 'CHAR';
@@ -55,6 +55,7 @@ BLOCK_COMMENT : '->' .*? '<-' -> skip;
 
 // Literales
 INT     : [0-9]+;
+BOOL    : 'True' | 'False';
 FLOAT   : [0-9]+ '.' [0-9]+;
 CHAR    : '\'' . '\'';
 STRING  : '"' .*? '"';
