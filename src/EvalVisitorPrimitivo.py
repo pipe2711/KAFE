@@ -155,6 +155,12 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         return self.visitChildren(ctx)
 
     def visitExpr(self, ctx:Kafe_GrammarParser.ExprContext):
+        resultado = self.visitChildren(ctx)
+
+        if (type(resultado) == list):
+            if (verificarHomogeneidad(resultado) == False):
+                raise TypeError(f"Expected homogeneous list")
+
         return self.visitChildren(ctx)
 
     def visitLogicExpr(self, ctx:Kafe_GrammarParser.LogicExprContext):

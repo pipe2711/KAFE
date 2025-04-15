@@ -10,3 +10,4 @@ Operaciones (Errores)
 
 --List[BOOL] a = [[True]] + [[False]];
 --List[BOOL] a = [True] + [[False]];
+--show([True] + [[False]])
