@@ -7,7 +7,7 @@ def obtener_tipo_lista(lista):
         elif type(lista[0]) is float:
             tipo += "FLOAT"
         elif type(lista[0]) is str:
-            tipo += "STRING"
+            tipo += "STR"
         elif type(lista[0]) is bool:
             tipo += "BOOL"
         else:
