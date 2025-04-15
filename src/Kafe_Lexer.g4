@@ -48,6 +48,7 @@ FLOAT_TYPE : 'FLOAT';
 CHAR_TYPE  : 'CHAR';
 BOOL_TYPE  : 'BOOL';
 VOID_TYPE  : 'VOID';
+STRING_TYPE : 'STRING';
 
 // Comentarios
 LINE_COMMENT : '--' ~[\r\n]* -> skip;

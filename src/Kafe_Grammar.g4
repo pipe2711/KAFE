@@ -100,5 +100,6 @@ typeDecl
     | CHAR_TYPE
     | BOOL_TYPE
     | VOID_TYPE
+    | STRING_TYPE
     | LIST LBRACK typeDecl RBRACK
     ;
