@@ -1,5 +1,11 @@
 lexer grammar Kafe_Lexer;
 
+// Casting
+INT_CAST   : 'int';
+FLOAT_CAST : 'float';
+STR_CAST   : 'str';
+BOOL_CAST  : 'bool';
+
 // Palabras clave y funciones
 DRIP       : 'drip';
 POUR       : 'pour';

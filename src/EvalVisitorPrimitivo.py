@@ -88,10 +88,10 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         return self.visitChildren(ctx)
 
     def visitShowStmt(self, ctx:Kafe_GrammarParser.ShowStmtContext):
-        return self.visitChildren(ctx)
+        print(self.visit(ctx.expr()))
 
     def visitPourStmt(self, ctx:Kafe_GrammarParser.PourStmtContext):
-        return self.visitChildren(ctx)
+        return input(self.visit(ctx.expr()))
 
     def visitIfElseExpr(self, ctx:Kafe_GrammarParser.IfElseExprContext):
         return self.visitChildren(ctx)
@@ -215,3 +215,15 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
             raise TypeError(f"Expected homogeneous list")
 
         return lista
+
+    def visitStrCastExpr(self, ctx:Kafe_GrammarParser.StrCastExprContext):
+        return str(self.visit(ctx.expr()))
+
+    def visitBoolCastExpr(self, ctx:Kafe_GrammarParser.BoolCastExprContext):
+        return bool(self.visit(ctx.expr()))
+
+    def visitFloatCastExpr(self, ctx:Kafe_GrammarParser.FloatCastExprContext):
+        return float(self.visit(ctx.expr()))
+
+    def visitIntCastExpr(self, ctx:Kafe_GrammarParser.IntCastExprContext):
+        return int(self.visit(ctx.expr()))

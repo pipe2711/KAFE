@@ -69,6 +69,11 @@ unaryExpr
 primaryExpr
     : primaryExpr LBRACK expr RBRACK          # indexingExpr
     | functionCall                            # functionCallExpr
+    | pourStmt                                # pourExpr
+    | INT_CAST '(' expr ')'                   # intCastExpr
+    | FLOAT_CAST '(' expr ')'                 # floatCastExpr
+    | STR_CAST '(' expr ')'                   # strCastExpr
+    | BOOL_CAST '(' expr ')'                  # boolCastExpr
     | lambdaExpr                              # lambdaExpresion
     | literal                                 # literalExpr
     | ID                                      # idExpr
