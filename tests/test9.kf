@@ -1,0 +1,12 @@
+->
+Operaciones (Errores)
+<-
+
+--show(5 / 0);
+--show(5 % 0);
+--show('asdf' ^ 12);
+--show([123] > 5);
+--show([123] - 123);
+
+--List[BOOL] a = [[True]] + [[False]];
+--List[BOOL] a = [True] + [[False]];

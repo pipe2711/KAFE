@@ -1,0 +1,26 @@
+-- Asignación Variables
+
+INT a = 5;
+show(a);
+a = 234;
+show(a);
+
+BOOL b = True;
+show(b);
+b = False;
+show(b);
+
+STR c = 'asdf';
+show(c);
+c = "qwerty";
+show(c);
+
+List[INT] f = [];
+show(f);
+f = [234, 234, 123];
+show(f);
+
+List[List[FLOAT]] h = [[234.234, 532.32], [234.4], []];
+show(h);
+h = [];
+show(h);

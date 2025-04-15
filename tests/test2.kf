@@ -1,0 +1,18 @@
+-- Declaración de Variables y Arreglos (Errores)
+
+INT var = 234;
+-- BOOL var = True;
+-- INT var = 234324;
+
+-- INT a = False;
+-- BOOL b = 234.4;
+-- INT a = 234.4234;
+
+-- List[INT] f = [[]];
+-- List[BOOL] g = [234, 34234, 123.2];
+-- List[List[FLOAT]] h = [[234], [234], []];
+-- List[List[FLOAT]] i = [234, [234], []];
+-- List[List[INT]] matriz = [
+	[[234], [234]],
+	[[2341], [1234]]
+];

@@ -4,17 +4,36 @@ from utils import obtener_tipo_lista, verificarHomogeneidad
 
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def __init__(self):
-        self.intVariables = {}
-        self.floatVariables = {}
-        self.stringVariables = {}
-        self.booleanoVariables = {}
-        self.listaVariables = {}
+        self.variables = {}
         self.type_mapping = {
-            "INT": (int, self.intVariables),
-            "FLOAT": (float, self.floatVariables),
-            "STR": (str, self.stringVariables),
-            "BOOL": (bool, self.booleanoVariables)
+            "INT": int,
+            "FLOAT": float,
+            "STR": str,
+            "BOOL": bool
         }
+
+    def asignar_variable(self, id_text, valor, tipo):
+        variable_asignada = True
+
+        if tipo in self.type_mapping:
+            expected_type = self.type_mapping[tipo]
+            if type(valor) != expected_type:
+                raise TypeError(f"Expected {tipo}, obtained {str.upper(type(valor).__name__)}")
+            self.variables[id_text] = (tipo, valor)
+        elif tipo.startswith("List") and any(t in tipo for t in ["INT", "FLOAT", "STR", "BOOL"]):
+            tipo_valor = obtener_tipo_lista(valor)
+            tipo_base = tipo.replace("INT", '').replace("FLOAT", '').replace("STR", '').replace("BOOL", '')
+
+            if (verificarHomogeneidad(valor) == False):
+                raise TypeError(f"Expected homogeneous list")
+
+            if tipo != tipo_valor and tipo_base != tipo_valor and valor != []:
+                raise TypeError(f"Expected {tipo}, obtained {tipo_valor}")
+            self.variables[id_text] = (tipo, valor)
+        else:
+            variable_asignada = False
+
+        return variable_asignada
 
     def visitImportStmt(self, ctx:Kafe_GrammarParser.ImportStmtContext):
         return self.visitChildren(ctx)
@@ -24,53 +43,30 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         id_text = ctx.ID().getText()
         valor = self.visit(ctx.expr())
 
-        if id_text in self.intVariables or id_text in self.floatVariables or id_text in self.stringVariables or id_text in self.booleanoVariables or id_text in self.listaVariables:
+        if id_text in self.variables:
             raise NameError(f"Variable '{id_text}' already defined")
 
         if tipo == "VOID":
             raise TypeError("Cannot declare variable with type VOID")
 
-        if tipo in self.type_mapping:
-            expected_type, storage = self.type_mapping[tipo]
-            if type(valor) != expected_type:
-                raise TypeError(f"Expected {tipo}, obtained {str.upper(type(valor).__name__)}")
-            storage[id_text] = valor
-            return
+        variable_asignada = self.asignar_variable(id_text, valor, tipo)
 
-        if tipo.startswith("List") and any(t in tipo for t in ["INT", "FLOAT", "STR", "BOOL"]):
-            tipo_valor = obtener_tipo_lista(valor)
-            tipo_base = tipo.replace("INT", '').replace("FLOAT", '').replace("STR", '').replace("BOOL", '')
-
-            if tipo != tipo_valor and tipo_base != tipo_valor and valor != []:
-                raise TypeError(f"Expected {tipo}, obtained {tipo_valor}")
-            self.listaVariables[id_text] = (tipo, valor)
-            return
-
-        raise TypeError(f"Type '{tipo}' not recognized")
+        if (not variable_asignada):
+            raise TypeError(f"Type '{tipo}' not recognized")
 
     def visitAssignStmt(self, ctx:Kafe_GrammarParser.AssignStmtContext):
         id_text = ctx.ID().getText()
         valor = self.visit(ctx.expr())
 
-        for tipo, (expected_type, storage) in self.type_mapping.items():
-            if id_text in storage:
-                if type(valor) != expected_type:
-                    raise TypeError(f"Expected {tipo}, obtained {str.upper(type(valor).__name__)}")
-                storage[id_text] = valor
-                return
+        if id_text not in self.variables:
+            raise NameError(f"Variable '{id_text}' not defined")
 
-        if id_text in self.listaVariables:
-            tipo = self.listaVariables[id_text][0]
-            tipo_valor = obtener_tipo_lista(valor)
+        tipo = self.variables[id_text][0]
 
-            tipo_base = tipo.replace("INT", '').replace("FLOAT", '').replace("STR", '').replace("BOOL", '')
-            if tipo != tipo_valor and tipo_base != tipo_valor and valor != []:
-                raise TypeError(f"Expected {tipo}, obtained {tipo_valor}")
-            self.listaVariables[id_text] = (tipo, valor)
-            return
+        variable_asignada = self.asignar_variable(id_text, valor, tipo)
 
-        raise NameError(f"Variable '{id_text}' not defined")
-
+        if (not variable_asignada):
+            raise TypeError(f"Cannot assign value to variable '{id_text}' of type '{tipo}'")
 
     def visitFunctionDecl(self, ctx:Kafe_GrammarParser.FunctionDeclContext):
         return self.visitChildren(ctx)
@@ -220,12 +216,8 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitIdExpr(self, ctx:Kafe_GrammarParser.IdExprContext):
         id_text = ctx.ID().getText()
 
-        for (_, storage) in self.type_mapping.values():
-            if id_text in storage:
-                return storage[id_text]
-
-        if id_text in self.listaVariables:
-            return self.listaVariables[id_text][1]
+        if id_text in self.variables:
+            return self.variables[id_text][1]
 
         raise NameError(f"Variable '{id_text}' not defined")
 
@@ -265,9 +257,6 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         for expr in ctx.expr():
             valor = self.visit(expr)
             lista.append(valor)
-
-        if (verificarHomogeneidad(lista) == False):
-            raise TypeError(f"Expected homogeneous list")
 
         return lista
 
