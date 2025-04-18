@@ -1,0 +1,6 @@
+show("Probando else...");
+if (False) :
+    show("Esto no se debe ver");
+else :
+    show("Entré al else");
+;

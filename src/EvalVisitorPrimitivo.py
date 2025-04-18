@@ -89,28 +89,82 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitPourStmt(self, ctx:Kafe_GrammarParser.PourStmtContext):
         return input(self.visit(ctx.expr()))
 
+    
+    def visitLiteralExpr(self, ctx:Kafe_GrammarParser.LiteralExprContext):
+        return self.visit(ctx.literal())
+    
+    def visitProgram(self, ctx:Kafe_GrammarParser.ProgramContext):
+        for imp in ctx.importStmt():
+            self.visit(imp)
+        for stmt in ctx.stmt():
+            self.visit(stmt)
+    
+    def visitLiteral(self, ctx:Kafe_GrammarParser.LiteralContext):
+        if ctx.BOOL():
+            valor = ctx.BOOL().getText()
+            return True if valor == "true" else False
+        elif ctx.INT():
+            return int(ctx.INT().getText())
+        elif ctx.FLOAT():
+            return float(ctx.FLOAT().getText())
+        elif ctx.STRING():
+            return str(ctx.STRING().getText().strip('"'))
+        elif ctx.listLiteral():
+            return self.visit(ctx.listLiteral())
+        else:
+            raise ValueError("Unknown literal type")
+
+
     def visitIfElseExpr(self, ctx:Kafe_GrammarParser.IfElseExprContext):
-        return self.visitChildren(ctx)
+        cond_principal = self.visit(ctx.expr(0))
+        if not isinstance(cond_principal, bool):
+            raise TypeError(f"Condition in 'if' must be boolean, got {type(cond_principal).__name__}")
 
-    def visitWhileLoop(self, ctx:Kafe_GrammarParser.WhileLoopContext):
-        cond = self.visit(ctx.expr())
-        if not isinstance(cond, bool):
-            raise TypeError(f"Condition in 'while' must be boolean, got {type(cond).__name__}")
-        max_iteraciones = 10000 
-        contador = 0
-        while cond:
-            try:
-                self.visit(ctx.block())
-            except Exception as e:
-                raise RuntimeError(f"Error in 'while' block: {str(e)}")
-            contador += 1
-            if contador > max_iteraciones:
-                raise RuntimeError("Maximum number of iterations exceeded in 'while' loop (possible infinite loop)")
-            cond = self.visit(ctx.expr())
+        try:
+            if cond_principal:
+                self.visit(ctx.block(0))  # bloque del if
+            else:
+                # Revisar posibles elif con PIPE
+                for i in range(len(ctx.PIPE())):
+                    cond_elif = self.visit(ctx.expr(i + 1))  # expr(1), expr(2), ...
+                    if not isinstance(cond_elif, bool):
+                        raise TypeError(f"Condition in 'elif' must be boolean, got {type(cond_elif).__name__}")
+                    if cond_elif:
+                        self.visit(ctx.block(i + 1))  # block(1), block(2), ...
+                        return
+                # Si no se cumple ningún if ni elif, revisar else
+                if ctx.ELSE():
+                    self.visit(ctx.block(len(ctx.block()) - 1))
+        except Exception as e:
+            raise RuntimeError(f"Error in 'if-else' block: {str(e)}")
 
-            if not isinstance(cond, bool):
-                raise TypeError(f"Condition in 'while' must be boolean, got {type(cond).__name__} on iteration {contador}")
+    def visitMatchExpr(self, ctx:Kafe_GrammarParser.MatchExprContext):
+        valor_objetivo = self.visit(ctx.expr())
+    
+        for case in ctx.matchCase():
+            resultado = self.visit(case.pattern())
+        
+            if resultado == "__wildcard__":
+                return self.visit(case.expr())  # patrón _
+        
+            if resultado == "__id__":
+                # Puede usarse para bindings futuros (por ahora ignorar)
+                return self.visit(case.expr())
+        
+            if valor_objetivo == resultado:
+                return self.visit(case.expr())
+    
+        raise ValueError("No matching pattern found")
 
+    def visitLiteralPattern(self, ctx:Kafe_GrammarParser.LiteralPatternContext):
+        return self.visit(ctx.literal())
+
+    def visitWildcardPattern(self, ctx:Kafe_GrammarParser.WildcardPatternContext):
+        return "__wildcard__"
+
+    def visitIdPattern(self, ctx:Kafe_GrammarParser.IdPatternContext):
+        # Aquí podrías guardar la variable si quieres hacer bindings
+        return "__id__"
 
     def visitForLoop(self, ctx:Kafe_GrammarParser.ForLoopContext):
         var_name = ctx.ID().getText()
@@ -235,10 +289,7 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
     def visitPrimaryExpresion(self, ctx:Kafe_GrammarParser.PrimaryExpresionContext):
         return self.visitChildren(ctx)
-
-    def visitLiteralExpr(self, ctx:Kafe_GrammarParser.LiteralExprContext):
-        return self.visitChildren(ctx)
-
+    
     def visitFunctionCallExpr(self, ctx:Kafe_GrammarParser.FunctionCallExprContext):
         return self.visitChildren(ctx)
 
