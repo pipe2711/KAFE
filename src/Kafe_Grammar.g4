@@ -1,3 +1,4 @@
+// Kafe_Grammar.g4
 grammar Kafe_Grammar;
 
 import Kafe_Lexer;
@@ -19,51 +20,73 @@ stmt
     | matchExpr
     ;
 
-varDecl : typeDecl ID ASSIGN expr;
-assignStmt : ID ASSIGN expr;
+varDecl   : typeDecl ID ASSIGN expr;
+assignStmt: ID ASSIGN expr;
 
-functionDecl: DRIP ID '(' paramList? ')' ('(' paramList ')')* COLON block SEMI;
+// Declaración de función (currificada)
+functionDecl
+    : DRIP ID '(' paramList? ')' ('(' paramList ')')* COLON block SEMI
+    ;
 
 paramList : paramDecl (COMMA paramDecl)*;
 paramDecl
     : ID COLON typeDecl                                      # simpleParam
-    | ID COLON FUNC '(' paramList? ')' COLON typeDecl        # functionParam;
+    | ID COLON FUNC '(' paramList? ')' COLON typeDecl        # functionParam
+    ;
 
 returnStmt : RETURN expr;
-showStmt : SHOW '(' expr ')';
-pourStmt : POUR '(' expr ')';
+showStmt   : SHOW '(' expr ')';
+pourStmt   : POUR '(' expr ')';
 
-ifElseExpr: IF '(' expr ')' COLON block (PIPE '(' expr ')' COLON block)* (ELSE COLON block)? SEMI;
+ifElseExpr
+    : IF '(' expr ')' COLON block
+      (PIPE '(' expr ')' COLON block)*
+      (ELSE COLON block)?
+      SEMI
+    ;
 
 whileLoop : 'while' '(' expr ')' COLON block SEMI;
-forLoop : 'for' '(' ID 'in' expr ')' COLON block SEMI;
+forLoop   : 'for' '(' ID 'in' expr ')' COLON block SEMI;
 
 matchExpr : MATCH expr COLON matchCase+ SEMI;
 matchCase : PIPE pattern ARROW expr;
 pattern
     : literal                                                # literalPattern
     | UNDERSCORE                                             # wildcardPattern
-    | ID                                                     # idPattern ;
+    | ID                                                     # idPattern
+    ;
 
 block : stmt*;
 
 expr : logicExpr;
 
-logicExpr: equalityExpr ((OR | AND) equalityExpr)*;
+logicExpr
+    : equalityExpr ((OR | AND) equalityExpr)*
+    ;
 
-equalityExpr: relationalExpr ((EQ | NEQ) relationalExpr)*;
+equalityExpr
+    : relationalExpr ((EQ | NEQ) relationalExpr)*
+    ;
 
-relationalExpr: additiveExpr ((LT | LE | GT | GE) additiveExpr)*;
+relationalExpr
+    : additiveExpr ((LT | LE | GT | GE) additiveExpr)*
+    ;
 
-additiveExpr: multiplicativeExpr ((ADD | SUB) multiplicativeExpr)*;
+additiveExpr
+    : multiplicativeExpr ((ADD | SUB) multiplicativeExpr)*
+    ;
 
-multiplicativeExpr: powerExpr ((MUL | DIV | MOD) powerExpr)*;
+multiplicativeExpr
+    : powerExpr ((MUL | DIV | MOD) powerExpr)*
+    ;
 
-powerExpr: unaryExpr (POW unaryExpr)*;
+powerExpr
+    : unaryExpr (POW unaryExpr)*
+    ;
 
 unaryExpr
-    : (SUB | NOT) unaryExpr # unaryExpresion
-    | primaryExpr # primaryExpresion
+    : (SUB | NOT) unaryExpr              # unaryExpresion
+    | primaryExpr                        # primaryExpresion
     ;
 
 primaryExpr
@@ -80,20 +103,24 @@ primaryExpr
     | '(' expr ')'                            # parenExpr
     ;
 
-functionCall : ID '(' argList? ')';
+// Llamadas currificables:
+functionCall
+    : ID '(' argList? ')' ('(' argList? ')')*
+    ;
 argList : arg (COMMA arg)*;
 arg
-    : expr                                                   # exprArgument
-    | lambdaExpr                                             # lambdaArgument ;
+    : expr           # exprArgument
+    | lambdaExpr     # lambdaArgument
+    ;
 
 lambdaExpr : '(' paramDecl ')' ARROW expr;
 
 literal
-    : INT                                                    # intLiteral
-    | FLOAT                                                  # floatLiteral
-    | STRING                                                 # stringLiteral
-    | BOOL                                                   # boolLiteral
-    | listLiteral                                            # listLiteralExpr
+    : INT             # intLiteral
+    | FLOAT           # floatLiteral
+    | STRING          # stringLiteral
+    | BOOL            # boolLiteral
+    | listLiteral     # listLiteralExpr
     ;
 
 listLiteral : LBRACK (expr (COMMA expr)*)? RBRACK;
