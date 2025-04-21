@@ -1,0 +1,21 @@
+INT edad = 25;
+BOOL tieneLicencia = True;
+INT puntos = 3;
+
+if (edad >= 18) :
+    if (tieneLicencia) :
+        if (puntos < 5) :
+            show("Puede conducir con normalidad");
+        ; else :
+            show("Puede conducir pero debe tener precaución");
+        ;
+    ; else :
+        show("No puede conducir, no tiene licencia");
+    ;
+; else :
+    if (edad >= 16) :
+        show("Puede conducir con permiso de aprendizaje");
+    ; else :
+        show("Es menor de edad, no puede conducir");
+    ;
+;
