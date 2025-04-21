@@ -6,6 +6,6 @@ clean:
 
 make test:
 	for i in $(wildcard ../tests/test*.kf); do \
-		python Kafe.py $$i; \
+		Python3 Kafe.py $$i; \
 		echo "------------------"; \
 	done

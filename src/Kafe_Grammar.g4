@@ -16,7 +16,6 @@ stmt
     | returnStmt SEMI
     | showStmt SEMI
     | pourStmt SEMI
-    | matchExpr
     ;
 
 varDecl : typeDecl ID ASSIGN expr;
@@ -38,12 +37,6 @@ ifElseExpr: IF '(' expr ')' COLON block (PIPE '(' expr ')' COLON block)* (ELSE C
 whileLoop : 'while' '(' expr ')' COLON block SEMI;
 forLoop : 'for' '(' ID 'in' expr ')' COLON block SEMI;
 
-matchExpr : MATCH expr COLON matchCase+ SEMI;
-matchCase : PIPE pattern ARROW expr;
-pattern
-    : literal                                                # literalPattern
-    | UNDERSCORE                                             # wildcardPattern
-    | ID                                                     # idPattern ;
 
 block : stmt*;
 

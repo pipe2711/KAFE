@@ -138,34 +138,6 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         except Exception as e:
             raise RuntimeError(f"Error in 'if-else' block: {str(e)}")
 
-    def visitMatchExpr(self, ctx:Kafe_GrammarParser.MatchExprContext):
-        valor_objetivo = self.visit(ctx.expr())
-    
-        for case in ctx.matchCase():
-            resultado = self.visit(case.pattern())
-        
-            if resultado == "__wildcard__":
-                return self.visit(case.expr())  # patrón _
-        
-            if resultado == "__id__":
-                # Puede usarse para bindings futuros (por ahora ignorar)
-                return self.visit(case.expr())
-        
-            if valor_objetivo == resultado:
-                return self.visit(case.expr())
-    
-        raise ValueError("No matching pattern found")
-
-    def visitLiteralPattern(self, ctx:Kafe_GrammarParser.LiteralPatternContext):
-        return self.visit(ctx.literal())
-
-    def visitWildcardPattern(self, ctx:Kafe_GrammarParser.WildcardPatternContext):
-        return "__wildcard__"
-
-    def visitIdPattern(self, ctx:Kafe_GrammarParser.IdPatternContext):
-        # Aquí podrías guardar la variable si quieres hacer bindings
-        return "__id__"
-
     def visitForLoop(self, ctx:Kafe_GrammarParser.ForLoopContext):
         var_name = ctx.ID().getText()
         iterable = self.visit(ctx.expr())
@@ -190,20 +162,6 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         if var_name in self.variables:
             del self.variables[var_name]
 
-    def visitMatchExpr(self, ctx:Kafe_GrammarParser.MatchExprContext):
-        return self.visitChildren(ctx)
-
-    def visitMatchCase(self, ctx:Kafe_GrammarParser.MatchCaseContext):
-        return self.visitChildren(ctx)
-
-    def visitLiteralPattern(self, ctx:Kafe_GrammarParser.LiteralPatternContext):
-        return self.visitChildren(ctx)
-
-    def visitWildcardPattern(self, ctx:Kafe_GrammarParser.WildcardPatternContext):
-        return self.visitChildren(ctx)
-
-    def visitIdPattern(self, ctx:Kafe_GrammarParser.IdPatternContext):
-        return self.visitChildren(ctx)
 
     def visitBlock(self, ctx:Kafe_GrammarParser.BlockContext):
         return self.visitChildren(ctx)
