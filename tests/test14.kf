@@ -1,7 +1,0 @@
-INT x = 2;
-
-match x:
-| 1 => show("uno");
-| 2 => show("dos");
-| _ => show("otro");
-;
