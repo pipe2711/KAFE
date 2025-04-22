@@ -1,258 +1,298 @@
 # EvalVisitorPrimitivo.py
+
+import os
+import pathlib
+from antlr4 import FileStream, CommonTokenStream
+from Kafe_GrammarLexer import Kafe_GrammarLexer
 from Kafe_GrammarVisitor import Kafe_GrammarVisitor
 from Kafe_GrammarParser import Kafe_GrammarParser
 from utils import obtener_tipo_lista, verificarHomogeneidad
+
 
 class ReturnValue(Exception):
     def __init__(self, value):
         super().__init__()
         self.value = value
 
+
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def __init__(self):
-        self.variables = {}
-        self.type_mapping = {
-            "INT": int,
-            "FLOAT": float,
-            "STR": str,
-            "BOOL": bool
-        }
+        self.variables    = {}
+        self.type_mapping = {"INT": int, "FLOAT": float, "STR": str, "BOOL": bool}
+        self.imported     = set()
+        # Directorio actual de .kf para imports relativos
+        self.current_dir  = None
 
-    def asignar_variable(self, id_text, valor, tipo):
-        variable_asignada = True
+    # Soporte para "import módulo;"
+    def visitImportStmt(self, ctx):
+        module = ctx.ID().getText()
+        if module in self.imported:
+            return
+        self.imported.add(module)
+
+        # Construir lista de rutas a probar
+        candidates = []
+        if self.current_dir:
+            candidates.append(pathlib.Path(self.current_dir) / f"{module}.kf")
+        base = pathlib.Path(__file__).parent
+        candidates.append(base / f"{module}.kf")
+        candidates.append(base.parent / f"{module}.kf")
+
+        filename = None
+        for path in candidates:
+            if path.is_file():
+                filename = path
+                break
+        if filename is None:
+            tried = ", ".join(str(p) for p in candidates)
+            raise FileNotFoundError(f"Module file for '{module}' not found. Tried: {tried}")
+
+        # Ajustar directorio para imports dentro del módulo
+        prev_dir = self.current_dir
+        self.current_dir = filename.parent
+
+        # Parsear y ejecutar el módulo
+        input_stream = FileStream(str(filename), encoding='utf-8')
+        lexer        = Kafe_GrammarLexer(input_stream)
+        tokens       = CommonTokenStream(lexer)
+        parser       = Kafe_GrammarParser(tokens)
+        tree         = parser.program()
+        self.visit(tree)
+
+        # Restaurar directorio anterior
+        self.current_dir = prev_dir
+        return
+
+    def _check_value_type(self, value, declared_type):
+        if declared_type == "VOID":
+            if value is not None:
+                raise TypeError("Function declared VOID must not return a value")
+            return
+        if declared_type in self.type_mapping:
+            if not isinstance(value, self.type_mapping[declared_type]):
+                raise TypeError(f"Expected {declared_type}, obtained {type(value).__name__.upper()}")
+            return
+        if declared_type.startswith("List"):
+            if not isinstance(value, list):
+                raise TypeError(f"Expected {declared_type}, obtained {type(value).__name__}")
+            if value:
+                tipo_valor = obtener_tipo_lista(value)
+                if tipo_valor != declared_type:
+                    raise TypeError(f"Expected {declared_type}, obtained {tipo_valor}")
+                if not verificarHomogeneidad(value):
+                    raise TypeError("Expected homogeneous list")
+            return
+        if declared_type.startswith("FUNC"):
+            if not callable(value):
+                raise TypeError(f"Expected function, got {type(value).__name__}")
+            return
+        raise TypeError(f"Unknown type '{declared_type}'")
+
+    def asignar_variable(self, name, valor, tipo):
+        if tipo.startswith("FUNC"):
+            if not callable(valor):
+                raise TypeError(f"Expected function, got {type(valor).__name__}")
+            self.variables[name] = (tipo, valor)
+            return True
         if tipo in self.type_mapping:
-            expected = self.type_mapping[tipo]
-            if type(valor) is not expected:
+            if type(valor) is not self.type_mapping[tipo]:
                 raise TypeError(f"Expected {tipo}, obtained {type(valor).__name__.upper()}")
-            self.variables[id_text] = (tipo, valor)
-        elif tipo.startswith("List") and any(t in tipo for t in ["INT","FLOAT","STR","BOOL"]):
-            tipo_valor = obtener_tipo_lista(valor)
-            tipo_base  = tipo.replace("INT","").replace("FLOAT","").replace("STR","").replace("BOOL","")
+            self.variables[name] = (tipo, valor)
+            return True
+        if tipo.startswith("List") and any(t in tipo for t in ["INT","FLOAT","STR","BOOL"]):
             if not verificarHomogeneidad(valor):
                 raise TypeError("Expected homogeneous list")
-            if tipo != tipo_valor and tipo_base != tipo_valor and valor != []:
+            tipo_valor = obtener_tipo_lista(valor)
+            tipo_base  = tipo.replace("INT","").replace("FLOAT","")
+            tipo_base  = tipo_base.replace("STR","").replace("BOOL","")
+            if valor and tipo_valor not in (tipo, tipo_base):
                 raise TypeError(f"Expected {tipo}, obtained {tipo_valor}")
-            self.variables[id_text] = (tipo, valor)
-        else:
-            variable_asignada = False
-        return variable_asignada
+            self.variables[name] = (tipo, valor)
+            return True
+        return False
 
-    def visitImportStmt(self, ctx): return self.visitChildren(ctx)
-    def visitParamList(self, ctx): return self.visitChildren(ctx)
-    def visitSimpleParam(self, ctx): return self.visitChildren(ctx)
-    def visitFunctionParam(self, ctx): return self.visitChildren(ctx)
-    def visitIfElseExpr(self, ctx): return self.visitChildren(ctx)
-    def visitMatchExpr(self, ctx): return self.visitChildren(ctx)
-    def visitMatchCase(self, ctx): return self.visitChildren(ctx)
-    def visitLiteralPattern(self, ctx): return self.visitChildren(ctx)
-    def visitWildcardPattern(self, ctx): return self.visitChildren(ctx)
-    def visitIdPattern(self, ctx): return self.visitChildren(ctx)
-    def visitBlock(self, ctx): return self.visitChildren(ctx)
-    def visitExpr(self, ctx): return self.visitChildren(ctx)
-    def visitFunctionCallExpr(self, ctx): return self.visitChildren(ctx)
-    def visitLambdaExpresion(self, ctx): return self.visitChildren(ctx)
-    def visitExprArgument(self, ctx): return self.visitChildren(ctx)
-    def visitLambdaArgument(self, ctx): return self.visitChildren(ctx)
-
-    def visitVarDecl(self, ctx:Kafe_GrammarParser.VarDeclContext):
-        tipo  = ctx.typeDecl().getText()
-        name  = ctx.ID().getText()
-        value = self.visit(ctx.expr())
+    def visitVarDecl(self, ctx):
+        tipo = ctx.typeDecl().getText()
+        if tipo == "VOID":
+            raise TypeError("VOID cannot be used as variable type")
+        name = ctx.ID().getText()
+        val  = self.visit(ctx.expr())
         if name in self.variables:
             raise NameError(f"Variable '{name}' already defined")
-        if tipo == "VOID":
-            raise TypeError("Cannot declare variable with type VOID")
-        if not self.asignar_variable(name, value, tipo):
+        if not self.asignar_variable(name, val, tipo):
             raise TypeError(f"Type '{tipo}' not recognized")
 
-    def visitAssignStmt(self, ctx:Kafe_GrammarParser.AssignStmtContext):
-        name  = ctx.ID().getText()
-        value = self.visit(ctx.expr())
+    def visitAssignStmt(self, ctx):
+        name, val = ctx.ID().getText(), self.visit(ctx.expr())
         if name not in self.variables:
             raise NameError(f"Variable '{name}' not defined")
         tipo = self.variables[name][0]
-        if not self.asignar_variable(name, value, tipo):
+        if not self.asignar_variable(name, val, tipo):
             raise TypeError(f"Cannot assign to '{name}' of type '{tipo}'")
 
-    def visitReturnStmt(self, ctx:Kafe_GrammarParser.ReturnStmtContext):
-        value = self.visit(ctx.expr())
-        raise ReturnValue(value)
+    def visitFunctionDecl(self, ctx):
+        name   = ctx.ID().getText()
+        retTyp = ctx.typeDecl().getText()
+        params = [p for pl in ctx.paramList() for p in pl.paramDecl()]
+        for p in params:
+            if (not isinstance(p, Kafe_GrammarParser.FunctionParamContext)
+                    and p.typeDecl().getText() == "VOID"):
+                raise TypeError(f"Parameter '{p.ID().getText()}' in '{name}' cannot be of type VOID")
+        body  = ctx.block()
+        outer = self
+        class KafeFunction:
+            def __init__(self, collected=None):
+                self.collected = collected or []
+                self.total     = len(params)
+            def __call__(self, *args):
+                if len(self.collected)+len(args) > self.total:
+                    raise TypeError(f"{name} expects {self.total} args, got {len(self.collected)+len(args)}")
+                new_vals = self.collected+list(args)
+                if len(new_vals)<self.total:
+                    return KafeFunction(new_vals)
+                saved = dict(outer.variables)
+                for decl,val in zip(params,new_vals):
+                    pid   = decl.ID().getText()
+                    ptype = ("FUNC" if isinstance(decl,Kafe_GrammarParser.FunctionParamContext)
+                             else decl.typeDecl().getText())
+                    outer.asignar_variable(pid,val,ptype)
+                result=None
+                try:
+                    outer.visit(body)
+                except ReturnValue as rv:
+                    result=rv.value
+                finally:
+                    outer.variables=saved
+                outer._check_value_type(result,retTyp)
+                return result
+        self.variables[name] = ("FUNC", KafeFunction())
 
-    def visitShowStmt(self, ctx:Kafe_GrammarParser.ShowStmtContext):
-        print(self.visit(ctx.expr()))
+    def visitLambdaExpr(self, ctx):
+        param    = ctx.paramDecl()
+        pid      = param.ID().getText()
+        ptype    = param.typeDecl().getText()
+        if ptype == "VOID":
+            raise TypeError("Lambda parameter cannot be of type VOID")
+        body     = ctx.expr()
+        captured = dict(self.variables)
+        outer    = self
+        class LambdaFn:
+            def __call__(self,val):
+                local = dict(captured)
+                saved = outer.variables
+                outer.variables = local
+                outer.asignar_variable(pid,val,ptype)
+                try: res=outer.visit(body)
+                finally: outer.variables=saved
+                return res
+        return LambdaFn()
 
-    def visitPourStmt(self, ctx:Kafe_GrammarParser.PourStmtContext):
-        return input(self.visit(ctx.expr()))
+    def visitLambdaExpresion(self, ctx):
+        return self.visit(ctx.lambdaExpr())
 
-    def visitWhileLoop(self, ctx:Kafe_GrammarParser.WhileLoopContext):
-        cond = self.visit(ctx.expr())
-        if not isinstance(cond, bool):
-            raise TypeError(f"'while' condition must be bool, got {type(cond).__name__}")
-        count, max_it = 0, 10000
-        while cond:
-            self.visit(ctx.block())
-            count += 1
-            if count > max_it:
-                raise RuntimeError("Possible infinite loop")
-            cond = self.visit(ctx.expr())
-
-    def visitForLoop(self, ctx:Kafe_GrammarParser.ForLoopContext):
-        name     = ctx.ID().getText()
-        iterable = self.visit(ctx.expr())
-        if isinstance(iterable, list):
-            elem_t = obtener_tipo_lista(iterable).replace("List[","").replace("]","")
-        elif isinstance(iterable, str):
-            elem_t = "STR"
-        else:
-            raise TypeError(f"'for' expects iterable, got {type(iterable).__name__}")
-        for item in iterable:
-            self.variables[name] = (elem_t, item)
-            self.visit(ctx.block())
-        self.variables.pop(name, None)
-
-    def visitLogicExpr(self, ctx:Kafe_GrammarParser.LogicExprContext):
-        res = self.visit(ctx.equalityExpr(0))
-        for i in range(1, len(ctx.equalityExpr())):
-            op, right = ctx.getChild(2*i-1).getText(), self.visit(ctx.equalityExpr(i))
-            res = res and right if op=='&&' else res or right
-        return res
-
-    def visitEqualityExpr(self, ctx:Kafe_GrammarParser.EqualityExprContext):
-        res = self.visit(ctx.relationalExpr(0))
-        for i in range(1, len(ctx.relationalExpr())):
-            op, right = ctx.getChild(2*i-1).getText(), self.visit(ctx.relationalExpr(i))
-            res = (res == right) if op=='==' else (res != right)
-        return res
-
-    def visitRelationalExpr(self, ctx:Kafe_GrammarParser.RelationalExprContext):
-        res = self.visit(ctx.additiveExpr(0))
-        for i in range(1, len(ctx.additiveExpr())):
-            op, right = ctx.getChild(2*i-1).getText(), self.visit(ctx.additiveExpr(i))
-            if op=='<':  res = res < right
-            elif op=='<=': res = res <= right
-            elif op=='>':  res = res > right
-            else:          res = res >= right
-        return res
-
-    def visitAdditiveExpr(self, ctx:Kafe_GrammarParser.AdditiveExprContext):
-        res = self.visit(ctx.multiplicativeExpr(0))
-        for i in range(1, len(ctx.multiplicativeExpr())):
-            op, right = ctx.getChild(2*i-1).getText(), self.visit(ctx.multiplicativeExpr(i))
-            res = res + right if op=='+' else res - right
-        return res
-
-    def visitMultiplicativeExpr(self, ctx:Kafe_GrammarParser.MultiplicativeExprContext):
-        res = self.visit(ctx.powerExpr(0))
-        for i in range(1, len(ctx.powerExpr())):
-            op, right = ctx.getChild(2*i-1).getText(), self.visit(ctx.powerExpr(i))
-            if op=='*': res *= right
-            elif op=='/': res /= right
-            else:        res %= right
-        return res
-
-    def visitPowerExpr(self, ctx:Kafe_GrammarParser.PowerExprContext):
-        base = self.visit(ctx.unaryExpr(0))
-        for i in range(1, len(ctx.unaryExpr())):
-            base **= self.visit(ctx.unaryExpr(i))
-        return base
-
-    def visitUnaryExpresion(self, ctx:Kafe_GrammarParser.UnaryExpresionContext):
-        op, val = ctx.getChild(0).getText(), self.visit(ctx.unaryExpr())
-        return -val if op=='-' else not val
-
-    def visitPrimaryExpresion(self, ctx:Kafe_GrammarParser.PrimaryExpresionContext):
-        return self.visitChildren(ctx)
-
-    def visitIndexingExpr(self, ctx:Kafe_GrammarParser.IndexingExprContext):
-        col, idx = self.visit(ctx.primaryExpr()), self.visit(ctx.expr())
-        if not isinstance(idx, int):
-            raise TypeError(f"Index must be int, got {type(idx).__name__}")
-        return col[idx]
-
-    def visitParenExpr(self, ctx:Kafe_GrammarParser.ParenExprContext):
-        return self.visit(ctx.expr())
-
-    def visitIdExpr(self, ctx:Kafe_GrammarParser.IdExprContext):
-        name = ctx.ID().getText()
-        if name not in self.variables:
-            raise NameError(f"Variable '{name}' not defined")
-        return self.variables[name][1]
-
-    def visitFunctionDecl(self, ctx:Kafe_GrammarParser.FunctionDeclContext):
-        # (implementado arriba)
-
-        return self.visitChildren(ctx)
-
-    def visitFunctionCall(self, ctx:Kafe_GrammarParser.FunctionCallContext):
+    def visitFunctionCall(self, ctx):
         name = ctx.ID().getText()
         if name not in self.variables:
             raise NameError(f"Function '{name}' not defined")
         func = self.variables[name][1]
-        for argListCtx in ctx.argList():
-            args = [self.visit(a) for a in argListCtx.arg()]
-            func = func(*args)
+        ch, i = list(ctx.getChildren()), 0
+        while i < len(ch):
+            if ch[i].getText() == '(':
+                if (i+1 < len(ch) and isinstance(ch[i+1], Kafe_GrammarParser.ArgListContext)):
+                    args = [self.visit(a) for a in ch[i+1].arg()]
+                    func = func(*args); i += 3
+                else:
+                    func = func();      i += 2
+            else:
+                i += 1
+        if hasattr(func,"total") and len(func.collected) < func.total:
+            raise TypeError(f"{name} expects {func.total} args, got {len(func.collected)}")
         return func
 
-    def visitArgList(self, ctx:Kafe_GrammarParser.ArgListContext):
-        return self.visitChildren(ctx)
+    def visitReturnStmt(self, ctx):        raise ReturnValue(self.visit(ctx.expr()))
+    def visitShowStmt(self, ctx):          print(self.visit(ctx.expr()))
+    def visitPourStmt(self, ctx):          return input(self.visit(ctx.expr()))
+    def visitBlock(self, ctx):             return self.visitChildren(ctx)
+    def visitIfElseExpr(self, ctx):        return self.visitChildren(ctx)
+    def visitMatchExpr(self, ctx):         return self.visitChildren(ctx)
+    def visitExpr(self, ctx):              return self.visitChildren(ctx)
 
-    # Casts
-    def visitIntLiteral(self, ctx:Kafe_GrammarParser.IntLiteralContext):
-        return int(ctx.getText())
-    def visitFloatLiteral(self, ctx:Kafe_GrammarParser.FloatLiteralContext):
-        return float(ctx.getText())
-    def visitStringLiteral(self, ctx:Kafe_GrammarParser.StringLiteralContext):
-        return ctx.getText()[1:-1]
-    def visitBoolLiteral(self, ctx:Kafe_GrammarParser.BoolLiteralContext):
-        return False if ctx.getText()=="False" else True
-    def visitListLiteral(self, ctx:Kafe_GrammarParser.ListLiteralContext):
-        return [self.visit(e) for e in ctx.expr()]
-    def visitStrCastExpr(self, ctx:Kafe_GrammarParser.StrCastExprContext):
-        return str(self.visit(ctx.expr()))
-    def visitBoolCastExpr(self, ctx:Kafe_GrammarParser.BoolCastExprContext):
-        return bool(self.visit(ctx.expr()))
-    def visitFloatCastExpr(self, ctx:Kafe_GrammarParser.FloatCastExprContext):
-        return float(self.visit(ctx.expr()))
-    def visitIntCastExpr(self, ctx:Kafe_GrammarParser.IntCastExprContext):
-        return int(self.visit(ctx.expr()))
+    def visitLogicExpr(self, ctx):
+        r = self.visit(ctx.equalityExpr(0))
+        for i in range(1,len(ctx.equalityExpr())):
+            op  = ctx.getChild(2*i-1).getText()
+            rhs = self.visit(ctx.equalityExpr(i))
+            r   = r and rhs if op=='&&' else r or rhs
+        return r
 
-    # --- Función completa definida aquí para claridad ---
-    def visitFunctionDecl(self, ctx:Kafe_GrammarParser.FunctionDeclContext):
-        name       = ctx.ID().getText()
-        full_groups= [pl.paramDecl() for pl in ctx.paramList()]
-        body       = ctx.block()
+    def visitEqualityExpr(self, ctx):
+        r = self.visit(ctx.relationalExpr(0))
+        for i in range(1,len(ctx.relationalExpr())):
+            op  = ctx.getChild(2*i-1).getText()
+            rhs = self.visit(ctx.relationalExpr(i))
+            r   = r==rhs if op=='==' else r!=rhs
+        return r
 
-        class KafeFunction:
-            def __init__(self, visitor, remaining, collected=None):
-                self.visitor    = visitor
-                self.full_groups= full_groups
-                self.remaining  = remaining
-                self.body       = body
-                self.collected  = collected or []
+    def visitRelationalExpr(self, ctx):
+        r = self.visit(ctx.additiveExpr(0))
+        for i in range(1,len(ctx.additiveExpr())):
+            op  = ctx.getChild(2*i-1).getText()
+            rhs = self.visit(ctx.additiveExpr(i))
+            if op=='<': r=r<rhs
+            elif op=='<=': r=r<=rhs
+            elif op=='>': r=r>rhs
+            else: r=r>=rhs
+        return r
 
-            def __call__(self, *args):
-                grp = self.remaining[0]
-                if len(args) != len(grp):
-                    raise TypeError(f"{name} expects {len(grp)} args, got {len(args)}")
-                new_col = self.collected + [args]
-                # si es el último grupo, asigno todos los grupos
-                if len(self.remaining) == 1:
-                    old = dict(self.visitor.variables)
-                    for decls, vals in zip(self.full_groups, new_col):
-                        for decl, val in zip(decls, vals):
-                            pid   = decl.ID().getText()
-                            ptype = decl.typeDecl().getText()
-                            self.visitor.asignar_variable(pid, val, ptype)
-                    try:
-                        self.visitor.visit(body)
-                    except ReturnValue as rv:
-                        result = rv.value
-                    else:
-                        result = None
-                    self.visitor.variables = old
-                    return result
-                # queda currificación pendiente
-                return KafeFunction(self.visitor, self.remaining[1:], new_col)
+    def visitAdditiveExpr(self, ctx):
+        r = self.visit(ctx.multiplicativeExpr(0))
+        for i in range(1,len(ctx.multiplicativeExpr())):
+            op  = ctx.getChild(2*i-1).getText()
+            rhs = self.visit(ctx.multiplicativeExpr(i))
+            r   = r+rhs if op=='+' else r-rhs
+        return r
 
-        func_obj = KafeFunction(self, full_groups)
-        self.variables[name] = ("FUNC", func_obj)
+    def visitMultiplicativeExpr(self, ctx):
+        r = self.visit(ctx.powerExpr(0))
+        for i in range(1,len(ctx.powerExpr())):
+            op  = ctx.getChild(2*i-1).getText()
+            rhs = self.visit(ctx.powerExpr(i))
+            if op=='*': r*=rhs
+            elif op=='/': r/=rhs
+            else: r%=rhs
+        return r
+
+    def visitPowerExpr(self, ctx):
+        base = self.visit(ctx.unaryExpr(0))
+        for i in range(1,len(ctx.unaryExpr())):
+            base **= self.visit(ctx.unaryExpr(i))
+        return base
+
+    def visitUnaryExpresion(self, ctx):
+        op = ctx.getChild(0).getText()
+        v  = self.visit(ctx.unaryExpr())
+        return -v if op=='-' else not v
+
+    def visitPrimaryExpresion(self, ctx): return self.visitChildren(ctx)
+
+    def visitIndexingExpr(self, ctx):
+        col = self.visit(ctx.primaryExpr()); idx = self.visit(ctx.expr())
+        if not isinstance(idx,int): raise TypeError("Index must be int")
+        return col[idx]
+
+    def visitParenExpr(self, ctx): return self.visit(ctx.expr())
+
+    def visitIdExpr(self, ctx):
+        name = ctx.ID().getText()
+        if name not in self.variables: raise NameError(f"Variable '{name}' not defined")
+        return self.variables[name][1]
+
+    def visitIntLiteral(self, ctx):    return int(ctx.getText())
+    def visitFloatLiteral(self, ctx):  return float(ctx.getText())
+    def visitStringLiteral(self, ctx):text = ctx.getText(); return text[1:-1]
+    def visitBoolLiteral(self, ctx):  return ctx.getText()=="True"
+    def visitListLiteral(self, ctx):  return [self.visit(e) for e in ctx.expr()]
+    def visitStrCastExpr(self, ctx):  return str(self.visit(ctx.expr()))
+    def visitBoolCastExpr(self, ctx): return bool(self.visit(ctx.expr()))
+    def visitFloatCastExpr(self, ctx):return float(self.visit(ctx.expr()))
+    def visitIntCastExpr(self, ctx):  return int(self.visit(ctx.expr()))
