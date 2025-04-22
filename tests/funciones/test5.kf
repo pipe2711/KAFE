@@ -1,0 +1,9 @@
+drip aplicar(f: FUNC(a: INT): INT, x: INT):
+    return f(x);
+;
+
+drip cuadrado(a: INT):
+    return a * a;
+;
+
+show(aplicar(cuadrado, 4));  -- 16

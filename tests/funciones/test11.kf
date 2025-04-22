@@ -1,0 +1,5 @@
+drip aplicar(fn: FUNC(x: INT): INT, v: INT):
+    return fn(v);
+;
+
+aplicar(5, 3);       -- TypeError: Expected function, got INT

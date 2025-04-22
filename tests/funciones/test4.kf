@@ -1,0 +1,13 @@
+-- importar nada si todo está en el mismo archivo
+
+drip aplicar(f: FUNC(x: INT):INT, n: INT) => INT:
+    return f(n);
+;
+
+drip inc(x: INT)=>INT:
+    return x + 1;
+;
+
+show(aplicar(inc, 5));          -- 6        (función por nombre)
+
+show(aplicar( (y: INT) => y*y , 4));  -- 16  (lambda)

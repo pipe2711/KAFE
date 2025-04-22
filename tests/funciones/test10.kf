@@ -1,0 +1,5 @@
+drip add(a: INT, b: INT):
+    return a + b;
+;
+
+show(add(1));        -- TypeError: add expects 2 args, got 1

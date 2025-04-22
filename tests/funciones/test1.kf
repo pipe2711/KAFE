@@ -2,7 +2,7 @@
 INT a = 9;
 INT b = 6;
 
-drip suma (a: INT, b: INT) :
+drip suma (a: INT, b: INT) => INT :
     return a + b;
 ;
 
