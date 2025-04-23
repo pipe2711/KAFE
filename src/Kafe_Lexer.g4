@@ -12,6 +12,7 @@ POUR       : 'pour';
 SHOW       : 'show';
 RETURN     : 'return';
 IF         : 'if';
+ELIF       : 'elif';
 ELSE       : 'else';
 MATCH      : 'match';
 FUNC       : 'FUNC';

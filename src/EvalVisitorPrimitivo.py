@@ -116,27 +116,30 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
 
     def visitIfElseExpr(self, ctx:Kafe_GrammarParser.IfElseExprContext):
-        cond_principal = self.visit(ctx.expr(0))
+        cond_principal = self.visit(ctx.expr())
         if not isinstance(cond_principal, bool):
             raise TypeError(f"Condition in 'if' must be boolean, got {type(cond_principal).__name__}")
 
         try:
             if cond_principal:
                 self.visit(ctx.block(0))  # bloque del if
+                return  # salimos si se cumple el if
             else:
-                # Revisar posibles elif con PIPE
-                for i in range(len(ctx.PIPE())):
-                    cond_elif = self.visit(ctx.expr(i + 1))  # expr(1), expr(2), ...
+                # Aquí revisas los ELIF (ya no hay PIPE)
+                for elif_branch in ctx.elifBranch():
+                    cond_elif = self.visit(elif_branch.expr())
                     if not isinstance(cond_elif, bool):
                         raise TypeError(f"Condition in 'elif' must be boolean, got {type(cond_elif).__name__}")
                     if cond_elif:
-                        self.visit(ctx.block(i + 1))  # block(1), block(2), ...
-                        return
-                # Si no se cumple ningún if ni elif, revisar else
-                if ctx.ELSE():
-                    self.visit(ctx.block(len(ctx.block()) - 1))
+                        self.visit(elif_branch.block())
+                        return  # salimos si se cumple algún elif
+                # Si no se cumple ningún if ni elif, revisas el ELSE (si existe)
+            if ctx.ELSE() and len(ctx.block()) > 0:
+                self.visit(ctx.block(len(ctx.block()) - 1))
+ # el último bloque es el else
         except Exception as e:
             raise RuntimeError(f"Error in 'if-else' block: {str(e)}")
+
 
     def visitForLoop(self, ctx:Kafe_GrammarParser.ForLoopContext):
         var_name = ctx.ID().getText()

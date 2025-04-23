@@ -32,7 +32,9 @@ returnStmt : RETURN expr;
 showStmt : SHOW '(' expr ')';
 pourStmt : POUR '(' expr ')';
 
-ifElseExpr: IF '(' expr ')' COLON block (PIPE '(' expr ')' COLON block)* (ELSE COLON block)? SEMI;
+ifElseExpr: IF '(' expr ')' COLON block (elifBranch)* (ELSE COLON block)? SEMI;
+
+elifBranch: ELIF '(' expr ')' COLON block;
 
 whileLoop : 'while' '(' expr ')' COLON block SEMI;
 forLoop : 'for' '(' ID 'in' expr ')' COLON block SEMI;
