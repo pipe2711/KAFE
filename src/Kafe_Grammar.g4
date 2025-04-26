@@ -1,99 +1,103 @@
 grammar Kafe_Grammar;
-
 import Kafe_Lexer;
 
-program : importStmt* stmt* ;
-
-importStmt : IMPORT ID SEMI;
+program : (importStmt SEMI)* (stmt SEMI)*;
+importStmt : IMPORT ID;
 
 stmt
-    : varDecl SEMI
-    | assignStmt SEMI
+    : varDecl
+    | assignStmt
     | functionDecl
     | ifElseExpr
     | whileLoop
     | forLoop
-    | returnStmt SEMI
-    | showStmt SEMI
-    | pourStmt SEMI
-    | matchExpr
+    | returnStmt
+    | showStmt
+    | pourStmt
+    | functionCall
     ;
+block : (stmt SEMI)*;
 
-varDecl : typeDecl ID ASSIGN expr;
-assignStmt : ID ASSIGN expr;
+// ======================  VARIABLES ======================
+varDecl   : typeDecl ID ASSIGN expr;
+assignStmt: ID ASSIGN expr;
 
-functionDecl: DRIP ID '(' paramList? ')' ('(' paramList ')')* COLON block SEMI;
 
+// ======================  FUNCIONES ======================
+// Función currificada:       drip id (params) (params)* : block ;
+functionDecl
+    : DRIP ID '(' paramList? ')' ('(' paramList ')')* ARROW typeDecl COLON block
+    ;
 paramList : paramDecl (COMMA paramDecl)*;
 paramDecl
     : ID COLON typeDecl                                      # simpleParam
-    | ID COLON FUNC '(' paramList? ')' COLON typeDecl        # functionParam;
+    | ID COLON FUNC '(' paramList? ')' COLON typeDecl        # functionParam
+    ;
+
+// Llamadas currificables:   f(args) (args)*
+functionCall
+    : ID '(' argList? ')' ('(' argList? ')')*
+    ;
+argList : arg (COMMA arg)*;
+arg
+    : expr        # exprArgument
+    | lambdaExpr  # lambdaArgument
+    ;
+
+lambdaExpr : '(' paramDecl ')' ARROW expr;
 
 returnStmt : RETURN expr;
-showStmt : SHOW '(' expr ')';
-pourStmt : POUR '(' expr ')';
+showStmt   : SHOW '(' expr ')';
+pourStmt   : POUR '(' expr ')';
 
-ifElseExpr: IF '(' expr ')' COLON block (PIPE '(' expr ')' COLON block)* (ELSE COLON block)? SEMI;
 
-whileLoop : 'while' '(' expr ')' COLON block SEMI;
-forLoop : 'for' '(' ID 'in' expr ')' COLON block SEMI;
+// ======================  CONDICIONALES ======================
+ifElseExpr: IF '(' expr ')' COLON block (elifBranch)* (ELSE COLON block)?;
+elifBranch: ELIF '(' expr ')' COLON block;
 
-matchExpr : MATCH expr COLON matchCase+ SEMI;
-matchCase : PIPE pattern ARROW expr;
-pattern
-    : literal                                                # literalPattern
-    | UNDERSCORE                                             # wildcardPattern
-    | ID                                                     # idPattern ;
 
-block : stmt*;
+// ======================  BUCLES ======================
+whileLoop : 'while' '(' expr ')' COLON block;
+forLoop   : 'for' '(' ID 'in' expr ')' COLON block;
 
+
+// ======================  EXPRESIONES ======================
 expr : logicExpr;
 
-logicExpr: equalityExpr ((OR | AND) equalityExpr)*;
-
-equalityExpr: relationalExpr ((EQ | NEQ) relationalExpr)*;
-
-relationalExpr: additiveExpr ((LT | LE | GT | GE) additiveExpr)*;
-
-additiveExpr: multiplicativeExpr ((ADD | SUB) multiplicativeExpr)*;
-
+logicExpr        : equalityExpr ((OR   | AND) equalityExpr)*;
+equalityExpr     : relationalExpr ((EQ | NEQ) relationalExpr)*;
+relationalExpr   : additiveExpr ((LT | LE | GT | GE) additiveExpr)*;
+additiveExpr     : multiplicativeExpr ((ADD | SUB) multiplicativeExpr)*;
 multiplicativeExpr: powerExpr ((MUL | DIV | MOD) powerExpr)*;
-
-powerExpr: unaryExpr (POW unaryExpr)*;
+powerExpr        : unaryExpr (POW unaryExpr)*;
 
 unaryExpr
-    : (SUB | NOT) unaryExpr # unaryExpresion
-    | primaryExpr # primaryExpresion
+    : (SUB | NOT) unaryExpr  # unaryExpresion
+    | primaryExpr            # primaryExpresion
     ;
 
 primaryExpr
     : primaryExpr LBRACK expr RBRACK          # indexingExpr
     | functionCall                            # functionCallExpr
     | pourStmt                                # pourExpr
-    | INT_CAST '(' expr ')'                   # intCastExpr
+    | INT_CAST   '(' expr ')'                 # intCastExpr
     | FLOAT_CAST '(' expr ')'                 # floatCastExpr
-    | STR_CAST '(' expr ')'                   # strCastExpr
-    | BOOL_CAST '(' expr ')'                  # boolCastExpr
+    | STR_CAST   '(' expr ')'                 # strCastExpr
+    | BOOL_CAST  '(' expr ')'                 # boolCastExpr
     | lambdaExpr                              # lambdaExpresion
     | literal                                 # literalExpr
     | ID                                      # idExpr
     | '(' expr ')'                            # parenExpr
     ;
 
-functionCall : ID '(' argList? ')';
-argList : arg (COMMA arg)*;
-arg
-    : expr                                                   # exprArgument
-    | lambdaExpr                                             # lambdaArgument ;
 
-lambdaExpr : '(' paramDecl ')' ARROW expr;
-
+// ====================== TIPOS ======================
 literal
-    : INT                                                    # intLiteral
-    | FLOAT                                                  # floatLiteral
-    | STRING                                                 # stringLiteral
-    | BOOL                                                   # boolLiteral
-    | listLiteral                                            # listLiteralExpr
+    : INT         # intLiteral
+    | FLOAT       # floatLiteral
+    | STRING      # stringLiteral
+    | BOOL        # boolLiteral
+    | listLiteral # listLiteralExpr
     ;
 
 listLiteral : LBRACK (expr (COMMA expr)*)? RBRACK;
@@ -105,4 +109,5 @@ typeDecl
     | VOID_TYPE
     | STRING_TYPE
     | LIST LBRACK typeDecl RBRACK
+    | FUNC '(' paramList? ')' COLON typeDecl
     ;

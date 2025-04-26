@@ -1,0 +1,7 @@
+INT x = 5;
+
+if (x > 10):
+    show("Mayor que 10");
+else:
+    show("Menor o igual que 10");
+;

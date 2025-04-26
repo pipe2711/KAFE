@@ -1,6 +1,7 @@
 INT i = 0;
+INT j = 0;
 while (i < 3):
-    INT j = 0;
+    j = 0;
     while (j < 2):
         show(i * 10 + j);
         j = j + 1;

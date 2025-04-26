@@ -1,0 +1,9 @@
+drip doble(a: INT)=>INT:
+    return a * 2;
+;
+
+drip mostrarLista()=> List[INT]:
+    return [doble(1), doble(2), doble(3)];
+;
+
+show(mostrarLista());  -- [2, 4, 6]

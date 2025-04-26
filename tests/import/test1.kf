@@ -1,0 +1,5 @@
+import math;
+
+-- Debe imprimir primero un saludo y luego el cuadrado de 5
+show("¡Bienvenido a Kafe!");
+show(square(5));
