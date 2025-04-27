@@ -12,10 +12,33 @@ export default function Editor() {
   const [output, setOutput] = useState('$ ./main.kf\n');
   const [theme, setTheme] = useState<'vs-dark' | 'vs-light'>('vs-dark');
 
-  const ejecutar = () => {
-    const simulatedOutput = `$ ./run ${activeFile}\n✔ Output generado: ${files[activeFile].length} caracteres\n`;
-    setOutput((prev) => prev + simulatedOutput);
+  const ejecutar = async () => {
+    if (!activeFile || !files[activeFile]) return;
+  
+    try {
+      const response = await fetch('http://localhost:5000/ejecutar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          filename: activeFile,
+          code: files[activeFile]
+        })
+      });
+  
+      const data = await response.json();
+  
+      console.log('🚀 Respuesta del servidor:', data); // <- Agrega este console.log 🔥
+  
+      setOutput((prev) => prev + (data.output || '❌ No se generó salida.') + "\n");
+    } catch (error) {
+      console.error('Error ejecutando:', error);
+      setOutput((prev) => prev + '❌ Error ejecutando el archivo.\n');
+    }
   };
+  
+  
 
   useEffect(() => {
     const checkTheme = () => {

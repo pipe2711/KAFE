@@ -6,7 +6,9 @@ import Docs from './Pages/Docs';
 import Login from './Pages/Login';
 import { ThemeToggle } from './Components/ThemeToggle';
 
+
 export default function App() {
+
   return (
     <Router>
       <Navbar />
