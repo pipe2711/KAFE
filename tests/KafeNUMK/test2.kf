@@ -1,0 +1,20 @@
+-- Errores Sumar Matrices
+
+->
+INT a = 5;
+INT b = 6;
+show(numk.add(a, b));
+<-
+
+->
+List[List[INT]] A = [[1, 2]]];
+List[List[INT]] B = [[5, 6], [7, 8]];
+
+show(numk.add(A, B));
+<-
+
+->
+List[List[List[INT]]] A = [[[1, 2]], [[3, 4]]];
+List[List[List[INT]]] B = [[[1, 2]], [[3, 4]]];
+show(numk.add(A, B));
+<-

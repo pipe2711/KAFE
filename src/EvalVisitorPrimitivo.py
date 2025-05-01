@@ -5,7 +5,7 @@ from componentes_lenguaje.bucles.funciones import forLoop, whileLoop
 from componentes_lenguaje.condicionales.funciones import ifElseExpr
 from componentes_lenguaje.funciones.funciones import functionCall, functionDecl, lambdaExpr, returnStmt
 from componentes_lenguaje.importar.funciones import importStmt
-
+from lib.KafeNUMK.funciones import numkadd, numksub, numkmul, numkinv, numktranspose
 
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def __init__(self):
@@ -145,6 +145,21 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
 
     # ======================  NUMK Library ======================
+
+    def visitNumkadd(self, ctx):
+        return numkadd(self, ctx)
+
+    def visitNumksub(self, ctx):
+        return numksub(self, ctx)
+
+    def visitNumkmul(self, ctx):
+        return numkmul(self, ctx)
+
+    def visitNumkinv(self, ctx):
+        return numkinv(self, ctx)
+
+    def visitNumktranspose(self, ctx):
+        return numktranspose(self, ctx)
 
 
     # ======================  FILES Library ======================
