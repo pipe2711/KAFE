@@ -1,5 +1,5 @@
 grammar Kafe_Grammar;
-import Kafe_Lexer;
+import Kafe_Lexer, KafePLOT, KafeNUMK, KafeFILES, KafeMATH;
 
 program : (importStmt SEMI)* (stmt SEMI)*;
 importStmt : IMPORT ID;
@@ -79,6 +79,10 @@ unaryExpr
 primaryExpr
     : primaryExpr LBRACK expr RBRACK          # indexingExpr
     | functionCall                            # functionCallExpr
+    | numkLibrary                             # numkLibraryExpr
+    | plotLibrary                             # plotLibraryExpr
+    | filesLibrary                            # filesLibraryExpr
+    | mathLibrary                             # mathLibraryExpr
     | pourStmt                                # pourExpr
     | INT_CAST   '(' expr ')'                 # intCastExpr
     | FLOAT_CAST '(' expr ')'                 # floatCastExpr

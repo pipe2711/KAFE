@@ -142,3 +142,15 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitIntCastExpr(self, ctx):
         print("Casting a int")
         return int(self.visit(ctx.expr()))
+
+
+    # ======================  NUMK Library ======================
+
+
+    # ======================  FILES Library ======================
+
+
+    # ======================  MATH Library ======================
+
+
+    # ======================  PLOT Library ======================
