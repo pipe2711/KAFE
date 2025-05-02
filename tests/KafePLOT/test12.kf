@@ -1,0 +1,6 @@
+plot.legend("Lenguajes de Programación Populares");
+
+List[STR] lenguajes = ["Python", "JavaScript", "Java", "C#", "C++", "Go", "Ruby", "Swift"];
+List[INT] porcentajes = [25, 20, 15, 10, 8, 7, 5, 10];
+
+plot.pie(lenguajes, porcentajes);

@@ -15,6 +15,7 @@ stmt
     | showStmt
     | pourStmt
     | functionCall
+    | expr
     ;
 block : (stmt SEMI)*;
 

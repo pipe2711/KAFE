@@ -5,6 +5,7 @@ from componentes_lenguaje.bucles.funciones import forLoop, whileLoop
 from componentes_lenguaje.condicionales.funciones import ifElseExpr
 from componentes_lenguaje.funciones.funciones import functionCall, functionDecl, lambdaExpr, returnStmt
 from componentes_lenguaje.importar.funciones import importStmt
+from lib.KafePLOT.funciones import plotgraph, set_xlabel, set_ylabel, set_title, set_grid, set_color, set_point_color, set_point_size, plot_bar, set_bar_values, plot_pie, set_legend
 
 
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
@@ -154,3 +155,42 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
 
     # ======================  PLOT Library ======================
+    def visitGraph(self, ctx):
+        return plotgraph(self, ctx)
+
+    def visitXlabel(self, ctx):
+        return set_xlabel(self, ctx)
+
+    def visitYlabel(self, ctx):
+        return set_ylabel(self, ctx)
+    
+    def visitTitle(self, ctx):
+        return set_title(self, ctx)
+    
+    def visitGrid(self, ctx):
+        return set_grid(self, ctx)
+    
+    def visitColor(self, ctx):
+        return set_color(self, ctx)
+    
+    def visitPointColor(self, ctx):    
+        return set_point_color(self, ctx)
+    
+    def visitPointSize(self, ctx):
+        return set_point_size(self, ctx)
+    
+    def visitBar(self, ctx):
+        return plot_bar(self, ctx)
+    
+    def visitBarValues(self, ctx):
+        return set_bar_values(self, ctx)
+    
+    def visitPie(self, ctx):
+        return plot_pie(self, ctx)
+    
+    def visitLegend(self, ctx):
+        return set_legend(self, ctx)
+
+
+
+

@@ -1,0 +1,10 @@
+show("Gráfico de barras");
+
+plot.title("Ventas por producto");
+plot.xlabel("Producto");
+plot.ylabel("Unidades vendidas");
+
+List[STR] productos = ["A", "B", "C", "D", "E"];
+List[INT] ventas = [100, 75, 130, 50, 90];
+
+plot.bar(productos, ventas);
