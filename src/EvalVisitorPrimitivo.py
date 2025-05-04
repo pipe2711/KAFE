@@ -5,10 +5,11 @@ from componentes_lenguaje.bucles.funciones import forLoop, whileLoop
 from componentes_lenguaje.condicionales.funciones import ifElseExpr
 from componentes_lenguaje.funciones.funciones import functionCall, functionDecl, lambdaExpr, returnStmt
 from componentes_lenguaje.importar.funciones import importStmt
-from lib.KafeNUMK.funciones import numkadd, numksub, numkmul, numkinv, numktranspose
+from lib.KafeNUMK.funciones import numkadd, numksub, numkmul, numkinv, numktranspose, Numk
 
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def __init__(self):
+        self.numk = None
         self.variables    = {}
         self.type_mapping = {"INT": int, "FLOAT": float, "STR": str, "BOOL": bool}
         self.nombre_tipos = { int:"INT", float:"FLOAT", str:"STR", bool:"BOOL" }
@@ -16,7 +17,7 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         # Directorio actual de .kf para imports relativos
         self.current_dir  = None
 
-    def visitImportStmt(self, ctx):
+    def visitSimpleImport(self, ctx):
         importStmt(self, ctx)
 
     def visitVarDecl(self, ctx):
@@ -145,20 +146,38 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
     # ======================  NUMK Library ======================
 
+    def visitImportNUMK(self, ctx):
+        self.numk = Numk()
+
     def visitNumkadd(self, ctx):
-        return numkadd(self, ctx)
+        if self.numk == None:
+            raise Exception("numk library not imported")
+
+        return numkadd(self, ctx, self.numk)
 
     def visitNumksub(self, ctx):
-        return numksub(self, ctx)
+        if self.numk == None:
+            raise Exception("numk library not imported")
+
+        return numksub(self, ctx, self.numk)
 
     def visitNumkmul(self, ctx):
-        return numkmul(self, ctx)
+        if self.numk == None:
+            raise Exception("numk library not imported")
+
+        return numkmul(self, ctx, self.numk)
 
     def visitNumkinv(self, ctx):
-        return numkinv(self, ctx)
+        if self.numk == None:
+            raise Exception("numk library not imported")
+
+        return numkinv(self, ctx, self.numk)
 
     def visitNumktranspose(self, ctx):
-        return numktranspose(self, ctx)
+        if self.numk == None:
+            raise Exception("numk library not imported")
+
+        return numktranspose(self, ctx, self.numk)
 
 
     # ======================  FILES Library ======================

@@ -12,12 +12,12 @@ def obtener_matrices(self, ctx):
     matriz1 = self.visit(ctx.expr(0))
     matriz2 = self.visit(ctx.expr(1))
 
-    if verificar_matriz_cuadrada(matriz1) == False or verificar_matriz_cuadrada(matriz2) == False:
+    if verificar_matriz_2dim(matriz1) == False or verificar_matriz_2dim(matriz2) == False:
         raise Exception("numkadd: Expected matrices as arguments")
 
     return (matriz1, matriz2)
 
-def verificar_matriz_cuadrada(lst, depth=1):
+def verificar_matriz_2dim(lst, depth=1):
     if not isinstance(lst, list):
         return False
 
@@ -25,6 +25,6 @@ def verificar_matriz_cuadrada(lst, depth=1):
         return False
     for item in lst:
         if isinstance(item, list):
-            if not verificar_matriz_cuadrada(item, depth + 1):
+            if not verificar_matriz_2dim(item, depth + 1):
                 return False
     return True

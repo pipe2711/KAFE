@@ -66,6 +66,9 @@ BOOL    : 'True' | 'False';
 FLOAT   : [0-9]+ '.' [0-9]+;
 STRING  : '"' .*? '"' | '\'' .*? '\'';
 
+// Librerías
+NUMK_LIB   : 'numk';
+
 // Identificadores
 ID      : [a-zA-Z_][a-zA-Z0-9_]*;
 

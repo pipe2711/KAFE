@@ -1,4 +1,5 @@
 -- Prueba Transpuesta
+import numk;
 
 List[List[INT]] A = [
 	[1, 2],

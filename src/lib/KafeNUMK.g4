@@ -1,8 +1,8 @@
 grammar KafeNUMK;
 
-numkLibrary : 'numk.add' '(' expr ',' expr ')'    # numkadd
-    | 'numk.sub' '(' expr ',' expr ')'            # numksub
-    | 'numk.mul' '(' expr ',' expr ')'            # numkmul
-    | 'numk.inv' '(' expr ')'                     # numkinv
-    | 'numk.transpose' '(' expr ')'               # numktranspose
+numkLibrary : NUMK_LIB '.add' '(' expr ',' expr ')'    # numkadd
+    | NUMK_LIB '.sub' '(' expr ',' expr ')'            # numksub
+    | NUMK_LIB '.mul' '(' expr ',' expr ')'            # numkmul
+    | NUMK_LIB '.inv' '(' expr ')'                     # numkinv
+    | NUMK_LIB '.transpose' '(' expr ')'               # numktranspose
     ;
