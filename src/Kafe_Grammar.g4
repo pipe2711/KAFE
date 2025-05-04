@@ -2,7 +2,11 @@ grammar Kafe_Grammar;
 import Kafe_Lexer, KafePLOT, KafeNUMK, KafeFILES, KafeMATH;
 
 program : (importStmt SEMI)* (stmt SEMI)*;
-importStmt : IMPORT ID;
+
+importStmt
+    : IMPORT NUMK_LIB # importNUMK
+    | IMPORT ID # simpleImport
+    ;
 
 stmt
     : varDecl

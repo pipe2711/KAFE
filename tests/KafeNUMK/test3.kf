@@ -1,4 +1,5 @@
 -- Prueba multiplicar matrices
+import numk;
 
 List[List[INT]] A = [[1, 2]];
 List[List[INT]] B = [[2], [3]];

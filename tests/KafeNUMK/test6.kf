@@ -1,4 +1,5 @@
 -- Error Inversa
+import numk;
 
 ->
 List[List[INT]] A = [
