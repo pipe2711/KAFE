@@ -1,0 +1,3 @@
+-- Comparación con tipo incorrecto
+
+show([123] > 5);

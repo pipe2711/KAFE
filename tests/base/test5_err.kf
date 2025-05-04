@@ -1,0 +1,3 @@
+-- Función Pour y Cast Incorrecto
+
+INT a = pour("> ");

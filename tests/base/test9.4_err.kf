@@ -1,0 +1,3 @@
+-- Obtención por suma de una lista no homogénea
+
+List[BOOL] a = [True] + [[False]];

@@ -1,0 +1,3 @@
+-- Operación con tipo incorrecto
+
+show('asdf' ^ 12);

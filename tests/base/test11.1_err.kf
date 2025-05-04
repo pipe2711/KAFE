@@ -1,0 +1,5 @@
+-- Indexación más allá del tamaño de la lista
+
+STR a = "Hello";
+
+show(a[45]);

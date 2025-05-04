@@ -1,6 +1,3 @@
--- demo_lambda.kafe
--- ============================
-
 -- 1. Orden superior con lambda en línea
 drip aplicar(f: FUNC(x: INT): INT, v: INT)=> INT:
     return f(v);

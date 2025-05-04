@@ -1,0 +1,5 @@
+-- Error sumar matrices con valores de tipo incorrecto
+
+INT a = 5;
+INT b = 6;
+show(numk.add(a, b));

@@ -6,13 +6,11 @@ clean:
 
 test:
 	if [ -z "$(prueba)" ]; then \
-		for i in $(wildcard ../tests/*/test*.kf); do \
-			python3 Kafe.py $$i; \
-			echo "------------------"; \
+		for i in $(wildcard ../tests/test_*.py); do \
+			python3 -m pytest $$i; \
 		done; \
 	else \
-		for i in $(wildcard ../tests/$(prueba)/test*.kf); do \
-			python3 Kafe.py $$i; \
-			echo "------------------"; \
+		for i in $(wildcard ../tests/test_$(prueba).py); do \
+			python3 -m pytest $$i; \
 		done; \
 	fi

@@ -34,6 +34,7 @@
               git
               (python3.withPackages (
                 p: with p; [
+                  pytest
                   antlr4-python3-runtime
                 ]
               ))
