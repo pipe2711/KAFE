@@ -140,7 +140,6 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         return float(self.visit(ctx.expr()))
 
     def visitIntCastExpr(self, ctx):
-        print("Casting a int")
         return int(self.visit(ctx.expr()))
 
 
