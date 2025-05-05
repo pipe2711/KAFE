@@ -1,3 +1,6 @@
+import sys
+import os
+
 from Kafe_GrammarVisitor import Kafe_GrammarVisitor
 from Kafe_GrammarParser import Kafe_GrammarParser
 from componentes_lenguaje.base.funciones import additiveExpr, assignStmt, equalityExpr, expr, idExpr, indexingExpr, logicExpr, multiplicativeExpr, powerExpr, relationalExpr, showStmt, unaryExpresion, varDecl, pourStmt
@@ -6,9 +9,13 @@ from componentes_lenguaje.condicionales.funciones import ifElseExpr
 from componentes_lenguaje.funciones.funciones import functionCall, functionDecl, lambdaExpr, returnStmt
 from componentes_lenguaje.importar.funciones import importStmt
 from lib.KafeNUMK.funciones import numkadd, numksub, numkmul, numkinv, numktranspose, Numk
+from lib.KafePLOT.funciones import plotgraph, set_xlabel, set_ylabel, set_title, set_grid, set_color, set_point_color, set_point_size, plot_bar, set_bar_values, plot_pie, set_legend
+from lib.KafePLOT.Plot import Plot
 
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
-    def __init__(self):
+    def __init__(self, input_file):
+        self.ruta_programa = os.path.abspath(input_file)
+        self.plot = None
         self.numk = None
         self.variables    = {}
         self.type_mapping = {"INT": int, "FLOAT": float, "STR": str, "BOOL": bool}
@@ -102,7 +109,7 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         return self.visitChildren(ctx.expr())
 
     def visitIdExpr(self, ctx):
-        return idExpr(self, ctx) 
+        return idExpr(self, ctx)
 
 
     # ======================  TIPOS ======================
@@ -187,3 +194,77 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
 
     # ======================  PLOT Library ======================
+    def visitImportPLOT(self, ctx):
+        self.plot = Plot()
+
+    def visitGraph(self, ctx):
+        if self.plot == None:
+            raise Exception("plot library not imported")
+
+        return plotgraph(self, ctx, self.plot, self.ruta_programa)
+
+    def visitXlabel(self, ctx):
+        if self.plot == None:
+            raise Exception("plot library not imported")
+
+        return set_xlabel(self, ctx, self.plot)
+
+    def visitYlabel(self, ctx):
+        if self.plot == None:
+            raise Exception("plot library not imported")
+
+        return set_ylabel(self, ctx, self.plot)
+
+    def visitTitle(self, ctx):
+        if self.plot == None:
+            raise Exception("plot library not imported")
+
+        return set_title(self, ctx, self.plot)
+
+    def visitGrid(self, ctx):
+        if self.plot == None:
+            raise Exception("plot library not imported")
+
+        return set_grid(self, ctx, self.plot)
+
+    def visitColor(self, ctx):
+        if self.plot == None:
+            raise Exception("plot library not imported")
+
+        return set_color(self, ctx, self.plot)
+
+    def visitPointColor(self, ctx):
+        if self.plot == None:
+            raise Exception("plot library not imported")
+
+        return set_point_color(self, ctx, self.plot)
+
+    def visitPointSize(self, ctx):
+        if self.plot == None:
+            raise Exception("plot library not imported")
+
+        return set_point_size(self, ctx, self.plot)
+
+    def visitBar(self, ctx):
+        if self.plot == None:
+            raise Exception("plot library not imported")
+
+        return plot_bar(self, ctx, self.plot, self.ruta_programa)
+
+    def visitBarValues(self, ctx):
+        if self.plot == None:
+            raise Exception("plot library not imported")
+
+        return set_bar_values(self, ctx, self.plot)
+
+    def visitPie(self, ctx):
+        if self.plot == None:
+            raise Exception("plot library not imported")
+
+        return plot_pie(self, ctx, self.plot, self.ruta_programa)
+
+    def visitLegend(self, ctx):
+        if self.plot == None:
+            raise Exception("plot library not imported")
+
+        return set_legend(self, ctx, self.plot)

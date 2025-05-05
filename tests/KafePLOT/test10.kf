@@ -1,0 +1,10 @@
+import plot;
+
+plot.title("Preferencias de Librerías");
+plot.ylabel("Número de usuarios");
+plot.barValues(True);
+
+List[STR] nombres = ["Matplotlib", "Seaborn", "Plotly", "Plotnine"];
+List[INT] votos   = [2500, 1800, 3000, 2200];
+
+plot.bar(nombres, votos);

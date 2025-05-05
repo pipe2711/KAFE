@@ -1,0 +1,4 @@
+import plot;
+
+List[INT] valores = [10, 20, 15, 25, 60];
+plot.graph(valores);

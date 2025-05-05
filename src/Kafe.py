@@ -26,7 +26,7 @@ def main():
     old_stdout = sys.stdout
     sys.stdout = mystdout = io.StringIO()
 
-    visitor = EvalVisitorPrimitivo()
+    visitor = EvalVisitorPrimitivo(input_file)
     visitor.current_dir = filepath.parent
 
     input_stream = InputStream(contenido)
