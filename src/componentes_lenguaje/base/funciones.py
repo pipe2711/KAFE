@@ -4,12 +4,31 @@ def varDecl(self, ctx):
     tipo = ctx.typeDecl().getText()
     if tipo == "VOID":
         raise TypeError("VOID cannot be used as variable type")
+
     name = ctx.ID().getText()
-    val  = self.visit(ctx.expr())
+    val = None
+
+    if ctx.expr():
+        val = self.visit(ctx.expr())
+
     if name in self.variables:
         raise NameError(f"Variable '{name}' already defined")
+
+    if val is None:
+        if tipo == "INT":
+            val = 0
+        elif tipo == "FLOAT":
+            val = 0.0
+        elif tipo == "STR":
+            val = ""
+        elif tipo == "BOOL":
+            val = False
+        else:
+            raise TypeError(f"Type '{tipo}' not recognized or missing default value")
+
     if not asignar_variable(self, name, val, tipo):
-        raise TypeError(f"Type '{tipo}' not recognized")
+        raise TypeError(f"Could not assign value of type {type(val).__name__.upper()} to variable '{name}' of type '{tipo}'")
+
 
 def assignStmt(self, ctx):
     id_text = ctx.ID().getText()

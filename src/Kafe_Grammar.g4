@@ -23,8 +23,8 @@ stmt
 block : (stmt SEMI)*;
 
 // ======================  VARIABLES ======================
-varDecl   : typeDecl ID ASSIGN expr;
-assignStmt: ID ASSIGN expr;
+varDecl  : typeDecl ID ('=' expr)? ;
+assignStmt: ID '=' expr ;
 
 
 // ======================  FUNCIONES ======================
