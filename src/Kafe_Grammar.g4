@@ -20,11 +20,15 @@ stmt
     | pourStmt
     | functionCall
     ;
+
 block : (stmt SEMI)*;
 
 // ======================  VARIABLES ======================
 varDecl  : typeDecl ID ('=' expr)? ;
-assignStmt: ID '=' expr ;
+
+assignStmt: ID '=' expr                    # assignVar
+    | ID '[' expr ']' '=' expr      # assignListIndex
+    ;
 
 
 // ======================  FUNCIONES ======================

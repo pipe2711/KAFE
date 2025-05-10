@@ -1,7 +1,8 @@
-STR a;
+drip suma (a: INT, b: INT) => INT :
+    return a + b;
+;
 
-show(a);
+drip suma2 (a: INT, b: INT) => INT :
+    return a - b;
+;
 
- a = "True"; 
-
-show(a);
