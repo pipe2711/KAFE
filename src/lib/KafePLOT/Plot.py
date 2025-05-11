@@ -39,6 +39,18 @@ class Plot:
 
     def set_point_size(self, valor):
         self.tamaño_punto = valor
+    
+    def deg_to_rad(self, grados):
+        return grados * 3.141592653589793 / 180
+
+    def sin(self, angle_deg):
+        x = self.deg_to_rad(angle_deg)
+        return x - (x**3)/6 + (x**5)/120 - (x**7)/5040 + (x**9)/362880
+
+    def cos(self, angle_deg):
+        x = self.deg_to_rad(angle_deg)
+        return 1 - (x**2)/2 + (x**4)/24 - (x**6)/720 + (x**8)/40320
+
 
     def plotgraph(self, xs, ys):
         # ========== ESCALADO Y PUNTOS ==========
@@ -173,10 +185,10 @@ class Plot:
         cy = height // 2
         radio = int(width * 0.3)
 
-        start_angle = 0
+        start_angle = -180
         colores = ["#f4d03f", "#82e0aa", "#ec7063", "#85c1e9", "#bb8fce", "#f5b7b1", "#f1948a", "#7fb3d5", "#f8c471", "#aed6f1"]
 
-        import math
+        
         svg = f'<svg width="{width}" height="{height}" xmlns="http://www.w3.org/2000/svg">\n'
         svg += f'<rect width="100%" height="100%" fill="white"/>\n'
 
@@ -184,10 +196,10 @@ class Plot:
             angle = val / total * 360
             end_angle = start_angle + angle
 
-            x1 = cx + radio * math.cos(math.radians(start_angle))
-            y1 = cy + radio * math.sin(math.radians(start_angle))
-            x2 = cx + radio * math.cos(math.radians(end_angle))
-            y2 = cy + radio * math.sin(math.radians(end_angle))
+            x1 = cx + radio * self.cos(start_angle)
+            y1 = cy + radio * self.sin(start_angle)
+            x2 = cx + radio * self.cos(end_angle)
+            y2 = cy + radio * self.sin(end_angle)
 
             large_arc = 1 if angle > 180 else 0
             color = colores[i % len(colores)]
@@ -196,9 +208,9 @@ class Plot:
             svg += f'<path d="{path}" fill="{color}" stroke="white" stroke-width="1"/>\n'
 
             # Porcentaje centrado
-            mid_angle = math.radians(start_angle + angle / 2)
-            tx = cx + (radio / 1.5) * math.cos(mid_angle)
-            ty = cy + (radio / 1.5) * math.sin(mid_angle)
+            mid_angle = start_angle + angle / 2
+            tx = cx + (radio / 1.5) * self.cos(mid_angle)
+            ty = cy + (radio / 1.5) * self.sin(mid_angle)
             porcentaje = round(val / total * 100, 1)
             svg += f'<text x="{tx}" y="{ty}" font-size="12" text-anchor="middle" dominant-baseline="middle">{porcentaje}%</text>\n'
 
