@@ -5,7 +5,7 @@ import subprocess
 import os
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://149.130.179.251:5173"}})
+CORS(app)
 
 @app.route('/ejecutar', methods=['POST'])
 def ejecutar_codigo():
