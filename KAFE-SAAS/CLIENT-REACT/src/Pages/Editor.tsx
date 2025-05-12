@@ -16,7 +16,7 @@ export default function Editor() {
     if (!activeFile || !files[activeFile]) return;
   
     try {
-      const response = await fetch('http://localhost:5000/ejecutar', {
+      const response = await fetch('http://localhost:5000/ejecutar', { //esto es solo pruebas 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -29,12 +29,12 @@ export default function Editor() {
   
       const data = await response.json();
   
-      console.log('🚀 Respuesta del servidor:', data); // <- Agrega este console.log 🔥
+      console.log(' Respuesta del servidor:', data); // <- Agrega este console.log 🔥
   
-      setOutput((prev) => prev + (data.output || '❌ No se generó salida.') + "\n");
+      setOutput((prev) => prev + (data.output || ' No se generó salida.') + "\n");
     } catch (error) {
       console.error('Error ejecutando:', error);
-      setOutput((prev) => prev + '❌ Error ejecutando el archivo.\n');
+      setOutput((prev) => prev + 'Error ejecutando el archivo.\n');
     }
   };
   
