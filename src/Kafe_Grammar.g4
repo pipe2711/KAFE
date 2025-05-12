@@ -26,9 +26,12 @@ block : (stmt SEMI)*;
 // ======================  VARIABLES ======================
 varDecl  : typeDecl ID ('=' expr)? ;
 
-assignStmt: ID '=' expr                    # assignVar
-    | ID '[' expr ']' '=' expr      # assignListIndex
+assignStmt: 
+      ID '=' expr                          # assignVar
+    | ID '[' expr ']' '=' expr             # assignListIndex
+    | ID '[' expr ']' '[' expr ']' '=' expr # assignMatrixIndex
     ;
+
 
 
 // ======================  FUNCIONES ======================
