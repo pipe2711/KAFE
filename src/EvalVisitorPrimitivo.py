@@ -268,3 +268,26 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
             raise Exception("plot library not imported")
 
         return set_legend(self, ctx, self.plot)
+    
+    def visitIndexedAssignStmt(self, ctx):
+        nombre_lista = ctx.ID().getText()
+        indice = self.visit(ctx.expr(0))
+        nuevo_valor = self.visit(ctx.expr(1))
+
+        if nombre_lista not in self.variables:
+            raise Exception(f"La variable '{nombre_lista}' no existe")
+
+        tipo,lista = self.variables[nombre_lista]  # <<< desempaquetar aquí
+
+        if not isinstance(lista, list):
+            raise Exception(f"'{nombre_lista}' no es una lista mutable (tipo: {type(lista)})")
+
+        if not isinstance(indice, int):
+            raise Exception(f"El índice debe ser entero, pero fue {type(indice)}")
+
+        if indice < 0 or indice >= len(lista):
+            raise Exception(f"Índice fuera de rango para la lista '{nombre_lista}'")
+
+        lista[indice] = nuevo_valor
+
+

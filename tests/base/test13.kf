@@ -1,0 +1,7 @@
+List[STR] hola  = ["h","o"]; 
+
+show(hola);
+
+hola[0] = "f"; 
+
+show(hola); 

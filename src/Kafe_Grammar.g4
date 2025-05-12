@@ -12,6 +12,7 @@ importStmt
 stmt
     : varDecl
     | assignStmt
+    | indexedAssignStmt
     | functionDecl
     | ifElseExpr
     | whileLoop
@@ -121,3 +122,5 @@ typeDecl
     | LIST LBRACK typeDecl RBRACK
     | FUNC '(' paramList? ')' COLON typeDecl
     ;
+
+indexedAssignStmt : ID LBRACK expr RBRACK ASSIGN expr;
