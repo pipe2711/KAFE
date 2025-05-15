@@ -1,17 +1,12 @@
 import { useState, useEffect } from 'react';
-
-// Puedes reemplazar esto por tus importaciones específicas
-// Si usas react-router-dom puedes importarlo así:
-// import { Link } from 'react-router-dom';
+import { ThemeToggle } from '../Components/ThemeToggle';
 
 const Home: React.FC = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
-
   // Theme toggle function
   const toggleTheme = () => {
     setIsDarkTheme(!isDarkTheme);
   };
-
   // CSS Variables
   const theme = {
     dark: {
@@ -35,9 +30,7 @@ const Home: React.FC = () => {
       terminalText: '#333',
     }
   };
-
   const currentTheme = isDarkTheme ? theme.dark : theme.light;
-
   return (
     <div style={{
       backgroundColor: currentTheme.bgColor,
@@ -47,74 +40,7 @@ const Home: React.FC = () => {
       display: 'flex',
       flexDirection: 'column',
     }}>
-      {/* Header */}
-      <header style={{
-        backgroundColor: currentTheme.navbarBg,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '1rem 2rem',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div style={{ 
-            width: '2rem', 
-            height: '2rem', 
-            backgroundColor: currentTheme.accent,
-            borderRadius: '8px',
-            marginRight: '0.5rem'
-          }}></div>
-          <span style={{ fontWeight: 600, fontSize: '1.25rem' }}>KAFE</span>
-        </div>
-        
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <button 
-            onClick={toggleTheme}
-            style={{
-              backgroundColor: currentTheme.buttonBg,
-              color: currentTheme.textColor,
-              border: 'none',
-              borderRadius: '50%',
-              width: '2.5rem',
-              height: '2.5rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              fontSize: '1rem',
-            }}
-          >
-            {isDarkTheme ? '☀️' : '🌙'}
-          </button>
-          
-          <a 
-            href="/docs"
-            style={{
-              backgroundColor: 'transparent',
-              color: currentTheme.textColor,
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              textDecoration: 'none',
-              fontWeight: 500,
-            }}
-          >
-            Documentación
-          </a>
-          
-          <a 
-            href="/editor"
-            style={{
-              backgroundColor: currentTheme.buttonBg,
-              color: currentTheme.textColor,
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              textDecoration: 'none',
-              fontWeight: 500,
-            }}
-          >
-            Comenzar
-          </a>
-        </div>
-      </header>
+      {/* Header eliminado */}
       
       {/* Main Content */}
       <main style={{
@@ -215,6 +141,26 @@ const Home: React.FC = () => {
             >
               Ver Documentación
             </a>
+            
+            {/* Botón de cambio de tema usando la función toggleTheme existente */}
+            <button 
+              onClick={toggleTheme}
+              style={{
+                backgroundColor: currentTheme.buttonBg,
+                color: currentTheme.textColor,
+                border: 'none',
+                borderRadius: '50%',
+                width: '2.5rem',
+                height: '2.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '1rem',
+              }}
+            >
+              {isDarkTheme ? '☀️' : '🌙'}
+            </button>
           </div>
         </div>
         
@@ -270,7 +216,6 @@ modelo ImagenClasificador {
     metricas: [precision, recall]
   }
 }
-
 // Ejecutar y evaluar el modelo
 resultado = ImagenClasificador.entrenar()
 print("Precisión del modelo: " + resultado.precision)`}
@@ -337,5 +282,4 @@ print("Precisión del modelo: " + resultado.precision)`}
     </div>
   );
 };
-
 export default Home;
