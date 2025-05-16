@@ -1,0 +1,11 @@
+import plot;
+
+plot.title("Trayectoria con Rejilla");
+plot.xlabel("Tiempo");
+plot.ylabel("Velocidad");
+plot.grid(True);
+
+List[INT] x = [0, 5, 10, 15, 20];
+List[INT] y = [0, 10, 40, 90, 160];
+
+plot.graph(x, y);

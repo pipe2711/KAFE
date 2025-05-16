@@ -1,0 +1,9 @@
+import plot;
+
+plot.title("Which Visualization Library Do People Prefer?");
+plot.ylabel("Number of Enthusiasts");
+
+List[STR] libs = ["Matplotlib", "Seaborn", "Plotly", "Plotnine"];
+List[INT] users = [2500, 1800, 3000, 2200];
+
+plot.bar(libs, users);

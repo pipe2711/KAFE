@@ -1,0 +1,40 @@
+<svg width="600" height="600" xmlns="http://www.w3.org/2000/svg">
+<rect width="100%" height="100%" fill="white"/>
+<path d="M 240,300 L 64.31600172775063,298.7534512726491 A 180,180 0 0,1 240.00445270974564,119.9993623348285 Z" fill="#f4d03f" stroke="white" stroke-width="1"/>
+<text x="155.3144634930978" y="215.11112625065945" font-size="12" text-anchor="middle" dominant-baseline="middle">25.0%</text>
+<path d="M 240,300 L 240.00445270974564,119.9993623348285 A 180,180 0 0,1 411.19017293359184,244.3769410124962 Z" fill="#82e0aa" stroke="white" stroke-width="1"/>
+<text x="310.5342484390941" y="202.91795911711029" font-size="12" text-anchor="middle" dominant-baseline="middle">20.0%</text>
+<path d="M 240,300 L 411.19017293359184,244.3769410124962 A 180,180 0 0,1 385.6230594617436,405.8013454397469 Z" fill="#ec7063" stroke="white" stroke-width="1"/>
+<text x="358.52260087141684" y="318.7721358048277" font-size="12" text-anchor="middle" dominant-baseline="middle">15.0%</text>
+<path d="M 240,300 L 385.6230594617436,405.8013454397469 A 180,180 0 0,1 295.6235402993648,471.19022801895426 Z" fill="#85c1e9" stroke="white" stroke-width="1"/>
+<text x="310.5342484390941" y="397.0820408828897" font-size="12" text-anchor="middle" dominant-baseline="middle">10.0%</text>
+<path d="M 240,300 L 295.6235402993648,471.19022801895426 A 180,180 0 0,1 206.2851278280878,476.8139144508034 Z" fill="#bb8fce" stroke="white" stroke-width="1"/>
+<text x="247.53683875225317" y="419.7634790675602" font-size="12" text-anchor="middle" dominant-baseline="middle">8.0%</text>
+<path d="M 240,300 L 206.2851278280878,476.8139144508034 A 180,180 0 0,1 134.32518893850641,445.6484969044494 Z" fill="#f5b7b1" stroke="white" stroke-width="1"/>
+<text x="192.3718687106642" y="410.1359078841577" font-size="12" text-anchor="middle" dominant-baseline="middle">7.0%</text>
+<path d="M 240,300 L 134.32518893850641,445.6484969044494 A 180,180 0 0,1 94.85265903406247,405.9108274294801 Z" fill="#f1948a" stroke="white" stroke-width="1"/>
+<text x="155.3144634930978" y="384.8888737493405" font-size="12" text-anchor="middle" dominant-baseline="middle">5.0%</text>
+<path d="M 240,300 L 94.85265903406247,405.9108274294801 A 180,180 0 0,1 64.31600172775063,301.2465487273509 Z" fill="#7fb3d5" stroke="white" stroke-width="1"/>
+<text x="126.89039789233608" y="337.3458922065225" font-size="12" text-anchor="middle" dominant-baseline="middle">10.0%</text>
+<rect x="420" y="15" width="160" height="220" fill="white" stroke="#ccc" rx="5"/>
+<text x="430" y="40" font-size="12" font-weight="bold">
+      <tspan x="430" dy="0">Lenguajes de</tspan>
+      <tspan x="430" dy="15">Programación Populares</tspan>
+    </text>
+<rect x="430" y="60" width="10" height="10" fill="#f4d03f"/>
+<text x="445" y="70" font-size="10">Python</text>
+<rect x="430" y="80" width="10" height="10" fill="#82e0aa"/>
+<text x="445" y="90" font-size="10">JavaScript</text>
+<rect x="430" y="100" width="10" height="10" fill="#ec7063"/>
+<text x="445" y="110" font-size="10">Java</text>
+<rect x="430" y="120" width="10" height="10" fill="#85c1e9"/>
+<text x="445" y="130" font-size="10">C#</text>
+<rect x="430" y="140" width="10" height="10" fill="#bb8fce"/>
+<text x="445" y="150" font-size="10">C++</text>
+<rect x="430" y="160" width="10" height="10" fill="#f5b7b1"/>
+<text x="445" y="170" font-size="10">Go</text>
+<rect x="430" y="180" width="10" height="10" fill="#f1948a"/>
+<text x="445" y="190" font-size="10">Ruby</text>
+<rect x="430" y="200" width="10" height="10" fill="#7fb3d5"/>
+<text x="445" y="210" font-size="10">Swift</text>
+</svg>

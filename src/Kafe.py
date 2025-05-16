@@ -20,7 +20,8 @@ def main():
 
     contenido = filepath.read_text(encoding='utf-8')
 
-    visitor = EvalVisitorPrimitivo()
+    visitor = EvalVisitorPrimitivo(input_file)
+
     visitor.current_dir = filepath.parent
 
     input_stream = InputStream(contenido)

@@ -5,6 +5,7 @@ program : (importStmt SEMI)* (stmt SEMI)*;
 
 importStmt
     : IMPORT NUMK_LIB # importNUMK
+    | IMPORT PLOT_LIB # importPLOT
     | IMPORT ID # simpleImport
     ;
 
@@ -19,6 +20,7 @@ stmt
     | showStmt
     | pourStmt
     | functionCall
+    | expr
     ;
 block : (stmt SEMI)*;
 

@@ -1,0 +1,46 @@
+
+    <svg width="500" height="300" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="500" height="300" fill="white"/>
+      <line x1="72" y1="228" x2="428" y2="228" stroke="#ddd" stroke-width="1"/>
+<line x1="72" y1="197" x2="428" y2="197" stroke="#ddd" stroke-width="1"/>
+<line x1="72" y1="166" x2="428" y2="166" stroke="#ddd" stroke-width="1"/>
+<line x1="72" y1="135" x2="428" y2="135" stroke="#ddd" stroke-width="1"/>
+<line x1="72" y1="104" x2="428" y2="104" stroke="#ddd" stroke-width="1"/>
+<line x1="72" y1="73" x2="428" y2="73" stroke="#ddd" stroke-width="1"/>
+<line x1="72" y1="72" x2="72" y2="228" stroke="#ddd" stroke-width="1"/>
+<line x1="160" y1="72" x2="160" y2="228" stroke="#ddd" stroke-width="1"/>
+<line x1="249" y1="72" x2="249" y2="228" stroke="#ddd" stroke-width="1"/>
+<line x1="338" y1="72" x2="338" y2="228" stroke="#ddd" stroke-width="1"/>
+<line x1="427" y1="72" x2="427" y2="228" stroke="#ddd" stroke-width="1"/>
+
+      <line x1="72" y1="228" x2="428" y2="228" stroke="black" stroke-width="1" />
+      <line x1="72" y1="72" x2="72" y2="228" stroke="black" stroke-width="1" />
+      <text x="62" y="232" font-size="10" text-anchor="end">0.0</text>
+<text x="62" y="201" font-size="10" text-anchor="end">32.0</text>
+<text x="62" y="170" font-size="10" text-anchor="end">64.0</text>
+<text x="62" y="139" font-size="10" text-anchor="end">96.0</text>
+<text x="62" y="108" font-size="10" text-anchor="end">128.0</text>
+<text x="62" y="77" font-size="10" text-anchor="end">160.0</text>
+
+      <text x="72" y="243" font-size="10" text-anchor="middle">0</text>
+<text x="160" y="243" font-size="10" text-anchor="middle">5</text>
+<text x="249" y="243" font-size="10" text-anchor="middle">10</text>
+<text x="338" y="243" font-size="10" text-anchor="middle">15</text>
+<text x="427" y="243" font-size="10" text-anchor="middle">20</text>
+
+      <line x1="72" y1="228" x2="160" y2="219" stroke="blue" stroke-width="2" />
+<line x1="160" y1="219" x2="249" y2="190" stroke="blue" stroke-width="2" />
+<line x1="249" y1="190" x2="338" y2="141" stroke="blue" stroke-width="2" />
+<line x1="338" y1="141" x2="427" y2="73" stroke="blue" stroke-width="2" />
+
+      <circle cx="72" cy="228" r="3" fill="red"/>
+<circle cx="160" cy="219" r="3" fill="red"/>
+<circle cx="249" cy="190" r="3" fill="red"/>
+<circle cx="338" cy="141" r="3" fill="red"/>
+<circle cx="427" cy="73" r="3" fill="red"/>
+
+      <text x="250" y="295" font-size="12" text-anchor="middle">Tiempo</text>
+      <g transform="translate(20,150) rotate(-90)"><text font-size="12" text-anchor="middle">Velocidad</text></g>
+      <text x="250" y="20" font-size="14" text-anchor="middle" font-weight="bold">Trayectoria con Rejilla</text>
+    </svg>
+    
