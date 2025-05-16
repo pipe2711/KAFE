@@ -6,6 +6,13 @@ from componentes_lenguaje.global_utils import asignar_variable
 
 def functionDecl(self, ctx):
     name   = ctx.ID().getText()
+
+    # Verificación para evitar redefinición de funciones
+    if name in self.variables:
+        tipo_existente, _ = self.variables[name]
+        if tipo_existente == "FUNC":
+            raise NameError(f"Function '{name}' is already defined")
+
     retTyp = ctx.typeDecl().getText()
     params = [p for pl in ctx.paramList() for p in pl.paramDecl()]
     for p in params:
@@ -14,32 +21,37 @@ def functionDecl(self, ctx):
             raise TypeError(f"Parameter '{p.ID().getText()}' in '{name}' cannot be of type VOID")
     body  = ctx.block()
     outer = self
+
     class KafeFunction:
         def __init__(self, collected=None):
             self.collected = collected or []
             self.total     = len(params)
+
         def __call__(self, *args):
             if len(self.collected)+len(args) > self.total:
                 raise TypeError(f"{name} expects {self.total} args, got {len(self.collected)+len(args)}")
             new_vals = self.collected+list(args)
-            if len(new_vals)<self.total:
+            if len(new_vals) < self.total:
                 return KafeFunction(new_vals)
             saved = dict(outer.variables)
-            for decl,val in zip(params,new_vals):
+            for decl, val in zip(params, new_vals):
                 pid   = decl.ID().getText()
                 ptype = ("FUNC" if isinstance(decl,Kafe_GrammarParser.FunctionParamContext)
                          else decl.typeDecl().getText())
-                asignar_variable(outer, pid,val,ptype)
-            result=None
+                asignar_variable(outer, pid, val, ptype)
+            result = None
             try:
                 outer.visit(body)
             except ReturnValue as rv:
-                result=rv.value
+                result = rv.value
             finally:
-                outer.variables=saved
-            _check_value_type(outer, result,retTyp)
+                outer.variables = saved
+            _check_value_type(outer, result, retTyp)
             return result
+
+    # Si todo está bien, se guarda la función
     self.variables[name] = ("FUNC", KafeFunction())
+
 
 def lambdaExpr(self, ctx):
     param    = ctx.paramDecl()

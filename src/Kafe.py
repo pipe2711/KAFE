@@ -1,11 +1,9 @@
 import sys
 import pathlib
-import io
 from antlr4 import InputStream, CommonTokenStream
 from Kafe_GrammarLexer import Kafe_GrammarLexer
 from Kafe_GrammarParser import Kafe_GrammarParser
 from EvalVisitorPrimitivo import EvalVisitorPrimitivo
-
 
 def main():
     # Verificar argumento del archivo .kf
@@ -22,11 +20,8 @@ def main():
 
     contenido = filepath.read_text(encoding='utf-8')
 
-    # 🔥 Capturar stdout
-    old_stdout = sys.stdout
-    sys.stdout = mystdout = io.StringIO()
-
     visitor = EvalVisitorPrimitivo(input_file)
+
     visitor.current_dir = filepath.parent
 
     input_stream = InputStream(contenido)
@@ -36,11 +31,6 @@ def main():
     tree = parser.program()
 
     visitor.visit(tree)
-
-
-    sys.stdout = old_stdout
-
-    print(mystdout.getvalue())
 
 
 if __name__ == "__main__":

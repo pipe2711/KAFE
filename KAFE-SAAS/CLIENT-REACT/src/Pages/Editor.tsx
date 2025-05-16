@@ -16,7 +16,7 @@ export default function Editor() {
     if (!activeFile || !files[activeFile]) return;
   
     try {
-      const response = await fetch('http://localhost:5000/ejecutar', {
+      const response = await fetch('http://149.130.179.251:5000/ejecutar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
