@@ -1,0 +1,7 @@
+List[INT] number = [1,2,3];
+
+show(number);
+
+number[0] = 100;
+
+show(number);
