@@ -39,17 +39,10 @@ def assignStmt(self, ctx):
 
     tipo = self.variables[id_text][0]
 
-    
-    if tipo.startswith("List"):
-        if isinstance(valor, list): 
-            raise TypeError(f"Cannot assign a list to a list variable '{id_text}' directly")
-  
-        return self.visit(ctx.indexingExpr())
     variable_asignada = asignar_variable(self, id_text, valor, tipo)
 
-    if not variable_asignada:
+    if (not variable_asignada):
         raise TypeError(f"Cannot assign value to variable '{id_text}' of type '{tipo}'")
-
 
 def showStmt(self, ctx):
     print(self.visit(ctx.expr()))
@@ -148,18 +141,13 @@ def indexingExpr(self, ctx):
     if type(index) != int:
         raise Exception(f"Index must be an integer, got {type(index).__name__}")
 
-   
-    if isinstance(collection, list):
+    if type(collection) == str or type(collection) == list:
         try:
-            collection[index] = self.visit(ctx.expr()) 
-            return collection
+            return collection[index]
         except IndexError:
             raise Exception(f"Index {index} out of bounds for collection of size {len(collection)}")
-    elif isinstance(collection, str):
-        raise TypeError("Cannot assign a value to a string index")  
-
-    raise Exception(f"Type {type(collection).__name__} is not indexable")
-
+    else:
+        raise Exception(f"Type {type(collection).__name__} is not indexable")
 
 def idExpr(self, ctx):
     id_text = ctx.ID().getText()

@@ -1,8 +1,0 @@
-drip suma (a: INT, b: INT) => INT :
-    return a + b;
-;
-
-drip suma2 (a: INT, b: INT) => INT :
-    return a - b;
-;
-
