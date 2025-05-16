@@ -1,7 +1,0 @@
-STR a;
-
-show(a);
-
- a = "True"; 
-
-show(a);
