@@ -23,6 +23,8 @@ def varDecl(self, ctx):
             val = ""
         elif tipo == "BOOL":
             val = False
+        elif tipo.startswith("List"):
+            val = []
         else:
             raise TypeError(f"Type '{tipo}' not recognized or missing default value")
 
