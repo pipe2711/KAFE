@@ -1,12 +1,14 @@
 grammar Kafe_Grammar;
+
+// Importar gramáticas auxiliares, incluida la nueva librería Math
 import Kafe_Lexer, KafePLOT, KafeNUMK, KafeFILES, KafeMATH;
 
 program : (importStmt SEMI)* (stmt SEMI)*;
 
 importStmt
-    : IMPORT NUMK_LIB # importNUMK
-    | IMPORT PLOT_LIB # importPLOT
-    | IMPORT ID # simpleImport
+    : IMPORT NUMK_LIB        # importNUMK
+    | IMPORT PLOT_LIB        # importPLOT
+    | IMPORT ID              # simpleImport
     ;
 
 stmt
@@ -22,15 +24,15 @@ stmt
     | functionCall
     | expr
     ;
+
 block : (stmt SEMI)*;
 
 // ======================  VARIABLES ======================
-varDecl  : typeDecl ID ('=' expr)? ;
+varDecl   : typeDecl ID ('=' expr)? ;
 assignStmt: ID '=' expr ;
 
-
 // ======================  FUNCIONES ======================
-// Función currificada:       drip id (params) (params)* : block ;
+// Función currificada: drip id (params) (params)* ARROW typeDecl COLON block ;
 functionDecl
     : DRIP ID '(' paramList? ')' ('(' paramList ')')* ARROW typeDecl COLON block
     ;
@@ -40,7 +42,7 @@ paramDecl
     | ID COLON FUNC '(' paramList? ')' COLON typeDecl        # functionParam
     ;
 
-// Llamadas currificables:   f(args) (args)*
+// Llamadas currificables: f(args) (args)*
 functionCall
     : ID '(' argList? ')' ('(' argList? ')')*
     ;
@@ -56,16 +58,13 @@ returnStmt : RETURN expr;
 showStmt   : SHOW '(' expr ')';
 pourStmt   : POUR '(' expr ')';
 
-
 // ======================  CONDICIONALES ======================
 ifElseExpr: IF '(' expr ')' COLON block (elifBranch)* (ELSE COLON block)?;
 elifBranch: ELIF '(' expr ')' COLON block;
 
-
 // ======================  BUCLES ======================
 whileLoop : 'while' '(' expr ')' COLON block;
 forLoop   : 'for' '(' ID 'in' expr ')' COLON block;
-
 
 // ======================  EXPRESIONES ======================
 expr : logicExpr;
@@ -100,8 +99,7 @@ primaryExpr
     | '(' expr ')'                            # parenExpr
     ;
 
-
-// ====================== TIPOS ======================
+// ======================  TIPOS ======================
 literal
     : INT         # intLiteral
     | FLOAT       # floatLiteral

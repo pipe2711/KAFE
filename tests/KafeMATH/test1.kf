@@ -1,0 +1,13 @@
+import math;
+
+show(pi());
+show(e());
+show(exp(1));
+show(log(e()));
+show(sqrt(4));
+show(pow(2,10));
+show(sin(pi()/2));
+show(cos(0));
+show(tan(pi()/4));
+show(degrees(pi()/2));
+show(radians(180));

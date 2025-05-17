@@ -11,6 +11,19 @@ from componentes_lenguaje.importar.funciones import importStmt
 from lib.KafeNUMK.funciones import numkadd, numksub, numkmul, numkinv, numktranspose, Numk
 from lib.KafePLOT.funciones import plotgraph, set_xlabel, set_ylabel, set_title, set_grid, set_color, set_point_color, set_point_size, plot_bar, set_bar_values, plot_pie, set_legend
 from lib.KafePLOT.Plot import Plot
+from lib.KafeMATH.funciones import (
+    pi, e,
+    exp, log,
+    pow_, sqrt,
+    degrees, radians,
+    sin, cos, tan,
+    asin, acos, atan,
+    sinh, cosh, tanh,
+    factorial, gcd, lcm,
+    math_abs, floor, ceil, math_round,
+    sum_range, prod_range
+)
+
 
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def __init__(self, input_file):
@@ -192,6 +205,115 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
     # ======================  MATH Library ======================
 
+    def visitSinFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return sin(x)
+
+    def visitCosFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return cos(x)
+
+    def visitTanFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return tan(x)
+
+    def visitAsinFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return asin(x)
+
+    def visitAcosFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return acos(x)
+
+    def visitAtanFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return atan(x)
+
+    def visitSinhFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return sinh(x)
+
+    def visitCoshFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return cosh(x)
+
+    def visitTanhFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return tanh(x)
+
+    def visitExpFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return exp(x)
+
+    def visitLogFunction(self, ctx):
+        exprs = ctx.expr()
+        x = self.visit(exprs[0])
+        if len(exprs) > 1:
+            base = self.visit(exprs[1])
+            return log(x, base)
+        return log(x)
+
+    def visitSqrtFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return sqrt(x)
+
+    def visitPowFunction(self, ctx):
+        a, b = ctx.expr()
+        return pow_( self.visit(a), self.visit(b) )
+
+    def visitFactorialFunction(self, ctx):
+        n = self.visit(ctx.expr())
+        return factorial(n)
+
+    def visitGcdFunction(self, ctx):
+        a, b = ctx.expr()
+        return gcd(self.visit(a), self.visit(b))
+
+    def visitLcmFunction(self, ctx):
+        a, b = ctx.expr()
+        return lcm(self.visit(a), self.visit(b))
+
+    def visitAbsFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return math_abs(x)
+
+    def visitFloorFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return floor(x)
+
+    def visitCeilFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return ceil(x)
+
+    def visitRoundFunction(self, ctx):
+        exprs = ctx.expr()
+        x = self.visit(exprs[0])
+        if len(exprs) > 1:
+            n = self.visit(exprs[1])
+            return math_round(x, n)
+        return math_round(x)
+
+    def visitSumRangeFunction(self, ctx):
+        a, b = ctx.expr()
+        return sum_range(self.visit(a), self.visit(b))
+
+    def visitProdRangeFunction(self, ctx):
+        a, b = ctx.expr()
+        return prod_range(self.visit(a), self.visit(b))
+
+    def visitDegreesFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return degrees(x)
+
+    def visitRadiansFunction(self, ctx):
+        x = self.visit(ctx.expr())
+        return radians(x)
+
+    def visitPiConstant(self, ctx):
+        return pi()
+
+    def visitEConstant(self, ctx):
+        return e()
 
     # ======================  PLOT Library ======================
     def visitImportPLOT(self, ctx):
