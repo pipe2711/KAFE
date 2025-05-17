@@ -1,3 +1,4 @@
+// Kafe_Lexer.g4
 lexer grammar Kafe_Lexer;
 
 // Casting
@@ -17,6 +18,39 @@ ELSE       : 'else';
 MATCH      : 'match';
 FUNC       : 'FUNC';
 IMPORT     : 'import';
+
+// Librerías
+NUMK_LIB   : 'numk';
+PLOT_LIB   : 'plot';
+MATH_LIB   : 'math';
+
+// Math Library Tokens
+SIN        : 'sin';
+COS        : 'cos';
+TAN        : 'tan';
+ASIN       : 'asin';
+ACOS       : 'acos';
+ATAN       : 'atan';
+SINH       : 'sinh';
+COSH       : 'cosh';
+TANH       : 'tanh';
+EXP        : 'exp';
+LOG        : 'log';
+SQRT       : 'sqrt';
+POW_FUNC   : 'pow';
+FACT       : 'factorial';
+GCD        : 'gcd';
+LCM        : 'lcm';
+ABS        : 'abs';
+FLOOR      : 'floor';
+CEIL       : 'ceil';
+ROUND      : 'round';
+SUM        : 'sum';
+PROD       : 'prod';
+DEG        : 'degrees';
+RAD        : 'radians';
+PI_CONST   : 'pi';
+E_CONST    : 'e';
 
 // Operadores
 ADD        : '+';
@@ -49,26 +83,22 @@ COMMA      : ',';
 UNDERSCORE : '_';
 
 // Tipos
-LIST: 'List';
-INT_TYPE   : 'INT';
-FLOAT_TYPE : 'FLOAT';
-BOOL_TYPE  : 'BOOL';
-VOID_TYPE  : 'VOID';
-STRING_TYPE : 'STR';
+LIST         : 'List';
+INT_TYPE     : 'INT';
+FLOAT_TYPE   : 'FLOAT';
+BOOL_TYPE    : 'BOOL';
+VOID_TYPE    : 'VOID';
+STRING_TYPE  : 'STR';
 
 // Comentarios
-LINE_COMMENT : '--' ~[\r\n]* -> skip;
-BLOCK_COMMENT : '->' .*? '<-' -> skip;
+LINE_COMMENT  : '--' ~[\r\n]* -> skip;
+BLOCK_COMMENT : '->' .*? '<-'       -> skip;
 
 // Literales
 INT     : [0-9]+;
 BOOL    : 'True' | 'False';
-FLOAT   : [0-9]+ '.' [0-9]+;
+FLOAT   : [0-9]+'.'[0-9]+;
 STRING  : '"' .*? '"' | '\'' .*? '\'';
-
-// Librerías
-NUMK_LIB   : 'numk';
-PLOT_LIB   : 'plot';
 
 // Identificadores
 ID      : [a-zA-Z_][a-zA-Z0-9_]*;
