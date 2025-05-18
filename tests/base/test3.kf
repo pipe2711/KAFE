@@ -4,7 +4,7 @@ INT a = 5;
 BOOL b = True;
 STR c = 'asdf';
 STR d = "asdfasd";
-FLOAT e = 234.234;
+FLOAT e= 234.234;
 
 List[INT] f = [];
 List[BOOL] g = [True, False, True];

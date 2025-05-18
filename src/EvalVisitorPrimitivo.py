@@ -1,5 +1,3 @@
-# EvalVisitorPrimitivo.py
-
 import sys
 import os
 
@@ -28,335 +26,129 @@ from lib.KafePLOT.funciones import (
 )
 from lib.KafePLOT.Plot import Plot
 
-from lib.KafeMATH.funciones import (
-    pi, e,
-    exp, log, pow_, sqrt,
-    degrees, radians,
-    sin, cos, tan,
-    asin, acos, atan,
-    sinh, cosh, tanh,
-    factorial, gcd, lcm,
-    math_abs, floor, ceil, math_round,
-    sum_range, prod_range
-)
-
-
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def __init__(self, input_file):
         self.ruta_programa = os.path.abspath(input_file)
         self.plot = None
         self.numk = None
-        self.variables    = {}
+        self.math_funcs = {}
+        self.variables = {}
         self.type_mapping = {"INT": int, "FLOAT": float, "STR": str, "BOOL": bool}
         self.nombre_tipos = {int: "INT", float: "FLOAT", str: "STR", bool: "BOOL"}
-        self.imported     = set()
-        self.current_dir  = None
+        self.imported = set()
+        self.current_dir = None
 
     # ===== IMPORT =====
-    def visitSimpleImport(self, ctx):
-        importStmt(self, ctx)
+    def visitSimpleImport(self, ctx): importStmt(self, ctx)
+    def visitImportNUMK(self, ctx): self.numk = Numk()
+    def visitImportPLOT(self, ctx): self.plot = Plot()
 
-    # ===== NUMK LIBRARY =====
-    def visitImportNUMK(self, ctx):
-        self.numk = Numk()
-
-    # ===== PLOT LIBRARY =====
-    def visitImportPLOT(self, ctx):
-        self.plot = Plot()
-
-    # ===== IMPORT Math library =====
+    # ===== MATH IMPORT =====
     def visitImportMATH(self, ctx):
-        # La librería math no requiere carga de archivos externos
-        return
+        from lib.KafeMATH.funciones import (
+            pi, e, exp, log, pow_, sqrt,
+            degrees, radians,
+            sin, cos, tan, asin, acos, atan,
+            sinh, cosh, tanh,
+            factorial, gcd, lcm,
+            math_abs, floor, ceil, math_round,
+            sum_range, prod_range
+        )
+        self.math_funcs = {
+            'pi': pi, 'e': e,
+            'exp': exp, 'log': log, 'pow': pow_, 'sqrt': sqrt,
+            'degrees': degrees, 'radians': radians,
+            'sin': sin, 'cos': cos, 'tan': tan,
+            'asin': asin, 'acos': acos, 'atan': atan,
+            'sinh': sinh, 'cosh': cosh, 'tanh': tanh,
+            'factorial': factorial, 'gcd': gcd, 'lcm': lcm,
+            'abs': math_abs, 'floor': floor, 'ceil': ceil, 'round': math_round,
+            'sum': sum_range, 'prod': prod_range
+        }
 
     # ===== VARIABLES =====
-    def visitVarDecl(self, ctx):
-        return varDecl(self, ctx)
-
-    def visitAssignStmt(self, ctx):
-        return assignStmt(self, ctx)
+    def visitVarDecl(self, ctx): return varDecl(self, ctx)
+    def visitAssignStmt(self, ctx): return assignStmt(self, ctx)
 
     # ===== FUNCIONES =====
-    def visitFunctionDecl(self, ctx):
-        return functionDecl(self, ctx)
-
+    def visitFunctionDecl(self, ctx): return functionDecl(self, ctx)
     def visitFunctionCall(self, ctx):
-        # las llamadas a mathLibrary (pi(), sin(), etc.) serán manejadas
-        # por visitPiFunction / visitSinFunction, no aquí.
+        name = ctx.ID().getText()
+        if name in self.math_funcs and ctx.argList():
+            args = [self.visit(arg.expr()) for arg in ctx.argList().arg()]
+            return self.math_funcs[name](*args)
+        elif name in self.math_funcs:
+            return self.math_funcs[name]()
         return functionCall(self, ctx)
 
-    def visitLambdaExpr(self, ctx):
-        return lambdaExpr(self, ctx)
-
-    def visitLambdaExpresion(self, ctx):
-        return self.visit(ctx.lambdaExpr())
-
-    def visitReturnStmt(self, ctx):
-        return returnStmt(self, ctx)
-
-    def visitShowStmt(self, ctx):
-        showStmt(self, ctx)
-
-    def visitPourStmt(self, ctx):
-        return pourStmt(self, ctx)
+    def visitLambdaExpr(self, ctx): return lambdaExpr(self, ctx)
+    def visitLambdaExpresion(self, ctx): return self.visit(ctx.lambdaExpr())
+    def visitReturnStmt(self, ctx): return returnStmt(self, ctx)
+    def visitShowStmt(self, ctx): showStmt(self, ctx)
+    def visitPourStmt(self, ctx): return pourStmt(self, ctx)
 
     # ===== CONDICIONALES =====
-    def visitIfElseExpr(self, ctx):
-        return ifElseExpr(self, ctx)
+    def visitIfElseExpr(self, ctx): return ifElseExpr(self, ctx)
 
     # ===== BUCLES =====
-    def visitWhileLoop(self, ctx):
-        whileLoop(self, ctx)
-
-    def visitForLoop(self, ctx):
-        forLoop(self, ctx)
+    def visitWhileLoop(self, ctx): whileLoop(self, ctx)
+    def visitForLoop(self, ctx): forLoop(self, ctx)
 
     # ===== EXPRESIONES =====
-    def visitExpr(self, ctx):
-        return expr(self, ctx)
-
-    def visitIndexingExpr(self, ctx):
-        return indexingExpr(self, ctx)
-
-    def visitLogicExpr(self, ctx):
-        return logicExpr(self, ctx)
-
-    def visitEqualityExpr(self, ctx):
-        return equalityExpr(self, ctx)
-
-    def visitRelationalExpr(self, ctx):
-        return relationalExpr(self, ctx)
-
-    def visitAdditiveExpr(self, ctx):
-        return additiveExpr(self, ctx)
-
-    def visitMultiplicativeExpr(self, ctx):
-        return multiplicativeExpr(self, ctx)
-
-    def visitPowerExpr(self, ctx):
-        return powerExpr(self, ctx)
-
-    def visitUnaryExpresion(self, ctx):
-        return unaryExpresion(self, ctx)
-
-    def visitParenExpr(self, ctx: Kafe_GrammarParser.ParenExprContext):
-        return self.visitChildren(ctx.expr())
-
-    def visitIdExpr(self, ctx):
-        return idExpr(self, ctx)
+    def visitExpr(self, ctx): return expr(self, ctx)
+    def visitIndexingExpr(self, ctx): return indexingExpr(self, ctx)
+    def visitLogicExpr(self, ctx): return logicExpr(self, ctx)
+    def visitEqualityExpr(self, ctx): return equalityExpr(self, ctx)
+    def visitRelationalExpr(self, ctx): return relationalExpr(self, ctx)
+    def visitAdditiveExpr(self, ctx): return additiveExpr(self, ctx)
+    def visitMultiplicativeExpr(self, ctx): return multiplicativeExpr(self, ctx)
+    def visitPowerExpr(self, ctx): return powerExpr(self, ctx)
+    def visitUnaryExpresion(self, ctx): return unaryExpresion(self, ctx)
+    def visitParenExpr(self, ctx): return self.visit(ctx.expr())
+    def visitIdExpr(self, ctx): return idExpr(self, ctx)
 
     # ===== LITERALS =====
-    def visitIntLiteral(self, ctx):
-        return int(ctx.getText())
+    def visitIntLiteral(self, ctx): return int(ctx.getText())
+    def visitFloatLiteral(self, ctx): return float(ctx.getText())
+    def visitStringLiteral(self, ctx): return ctx.getText()[1:-1]
+    def visitBoolLiteral(self, ctx): return ctx.getText() == 'True'
+    def visitListLiteral(self, ctx): return [self.visit(e) for e in ctx.expr()]
+    def visitStrCastExpr(self, ctx): return str(self.visit(ctx.expr()))
+    def visitBoolCastExpr(self, ctx): return bool(self.visit(ctx.expr()))
+    def visitFloatCastExpr(self, ctx): return float(self.visit(ctx.expr()))
+    def visitIntCastExpr(self, ctx): return int(self.visit(ctx.expr()))
 
-    def visitFloatLiteral(self, ctx):
-        return float(ctx.getText())
+    # ===== NUMK =====
+    def visitNumkadd(self, ctx): return numkadd(self, ctx, self.numk) if self.numk else (_ for _ in ()).throw(Exception('numk library not imported'))
+    def visitNumksub(self, ctx): return numksub(self, ctx, self.numk) if self.numk else (_ for _ in ()).throw(Exception('numk library not imported'))
+    def visitNumkmul(self, ctx): return numkmul(self, ctx, self.numk) if self.numk else (_ for _ in ()).throw(Exception('numk library not imported'))
+    def visitNumkinv(self, ctx): return numkinv(self, ctx, self.numk) if self.numk else (_ for _ in ()).throw(Exception('numk library not imported'))
+    def visitNumktranspose(self, ctx): return numktranspose(self, ctx, self.numk) if self.numk else (_ for _ in ()).throw(Exception('numk library not imported'))
 
-    def visitStringLiteral(self, ctx):
-        return ctx.getText()[1:-1]
+    # ===== PLOT =====
+    def visitGraph(self, ctx): return plotgraph(self, ctx, self.plot, self.ruta_programa)
+    def visitXlabel(self, ctx): return set_xlabel(self, ctx, self.plot)
+    def visitYlabel(self, ctx): return set_ylabel(self, ctx, self.plot)
+    def visitTitle(self, ctx): return set_title(self, ctx, self.plot)
+    def visitGrid(self, ctx): return set_grid(self, ctx, self.plot)
+    def visitColor(self, ctx): return set_color(self, ctx, self.plot)
+    def visitPointColor(self, ctx): return set_point_color(self, ctx, self.plot)
+    def visitPointSize(self, ctx): return set_point_size(self, ctx, self.plot)
+    def visitBar(self, ctx): return plot_bar(self, ctx, self.plot, self.ruta_programa)
+    def visitBarValues(self, ctx): return set_bar_values(self, ctx, self.plot)
+    def visitPie(self, ctx): return plot_pie(self, ctx, self.plot, self.ruta_programa)
+    def visitLegend(self, ctx): return set_legend(self, ctx, self.plot)
 
-    def visitBoolLiteral(self, ctx):
-        return False if ctx.getText() == "False" else True
+    # ===== MATH INTERNAL =====
+    def _visit_math(self, ctx):
+        # Obtener todos los subcontextos de tipo ExprContext
+        exprs = ctx.getTypedRuleContexts(Kafe_GrammarParser.ExprContext)
+        args = [self.visit(c) for c in exprs]
+        name = ctx.getChild(0).getText()
+        if name not in self.math_funcs:
+            raise Exception(f"Math function '{name}' not imported")
+        return self.math_funcs[name](*args)
 
-    def visitListLiteral(self, ctx):
-        return [self.visit(e) for e in ctx.expr()]
-
-    def visitStrCastExpr(self, ctx):
-        return str(self.visit(ctx.expr()))
-
-    def visitBoolCastExpr(self, ctx):
-        return bool(self.visit(ctx.expr()))
-
-    def visitFloatCastExpr(self, ctx):
-        return float(self.visit(ctx.expr()))
-
-    def visitIntCastExpr(self, ctx):
-        return int(self.visit(ctx.expr()))
-
-    # ===== NUMK OPERATIONS =====
-    def visitNumkadd(self, ctx):
-        if self.numk is None:
-            raise Exception("numk library not imported")
-        return numkadd(self, ctx, self.numk)
-
-    def visitNumksub(self, ctx):
-        if self.numk is None:
-            raise Exception("numk library not imported")
-        return numksub(self, ctx, self.numk)
-
-    def visitNumkmul(self, ctx):
-        if self.numk is None:
-            raise Exception("numk library not imported")
-        return numkmul(self, ctx, self.numk)
-
-    def visitNumkinv(self, ctx):
-        if self.numk is None:
-            raise Exception("numk library not imported")
-        return numkinv(self, ctx, self.numk)
-
-    def visitNumktranspose(self, ctx):
-        if self.numk is None:
-            raise Exception("numk library not imported")
-        return numktranspose(self, ctx, self.numk)
-
-    # ===== MATH LIBRARY =====
-    def visitSinFunction(self, ctx):
-        return sin(self.visit(ctx.expr()))
-
-    def visitCosFunction(self, ctx):
-        return cos(self.visit(ctx.expr()))
-
-    def visitTanFunction(self, ctx):
-        return tan(self.visit(ctx.expr()))
-
-    def visitAsinFunction(self, ctx):
-        return asin(self.visit(ctx.expr()))
-
-    def visitAcosFunction(self, ctx):
-        return acos(self.visit(ctx.expr()))
-
-    def visitAtanFunction(self, ctx):
-        return atan(self.visit(ctx.expr()))
-
-    def visitSinhFunction(self, ctx):
-        return sinh(self.visit(ctx.expr()))
-
-    def visitCoshFunction(self, ctx):
-        return cosh(self.visit(ctx.expr()))
-
-    def visitTanhFunction(self, ctx):
-        return tanh(self.visit(ctx.expr()))
-
-    def visitExpFunction(self, ctx):
-        return exp(self.visit(ctx.expr()))
-
-    def visitLogFunction(self, ctx):
-        exprs = ctx.expr()
-        x = self.visit(exprs[0])
-        if len(exprs) > 1:
-            base = self.visit(exprs[1])
-            return log(x, base)
-        return log(x)
-
-    def visitSqrtFunction(self, ctx):
-        return sqrt(self.visit(ctx.expr()))
-
-    def visitPowFunction(self, ctx):
-        a, b = ctx.expr()
-        return pow_(self.visit(a), self.visit(b))
-
-    def visitFactorialFunction(self, ctx):
-        return factorial(self.visit(ctx.expr()))
-
-    def visitGcdFunction(self, ctx):
-        a, b = ctx.expr()
-        return gcd(self.visit(a), self.visit(b))
-
-    def visitLcmFunction(self, ctx):
-        a, b = ctx.expr()
-        return lcm(self.visit(a), self.visit(b))
-
-    def visitAbsFunction(self, ctx):
-        return math_abs(self.visit(ctx.expr()))
-
-    def visitFloorFunction(self, ctx):
-        return floor(self.visit(ctx.expr()))
-
-    def visitCeilFunction(self, ctx):
-        return ceil(self.visit(ctx.expr()))
-
-    def visitRoundFunction(self, ctx):
-        exprs = ctx.expr()
-        x = self.visit(exprs[0])
-        if len(exprs) > 1:
-            n = self.visit(exprs[1])
-            return math_round(x, n)
-        return math_round(x)
-
-    def visitSumRangeFunction(self, ctx):
-        a, b = ctx.expr()
-        return sum_range(self.visit(a), self.visit(b))
-
-    def visitProdRangeFunction(self, ctx):
-        a, b = ctx.expr()
-        return prod_range(self.visit(a), self.visit(b))
-
-    def visitDegreesFunction(self, ctx):
-        return degrees(self.visit(ctx.expr()))
-
-    def visitRadiansFunction(self, ctx):
-        return radians(self.visit(ctx.expr()))
-
-    # constantes y funciones pi()/e()
-    def visitPiConstant(self, ctx):
-        return pi()
-
-    def visitEConstant(self, ctx):
-        return e()
-
-    def visitPiFunction(self, ctx):
-        return pi()
-
-    def visitEFunction(self, ctx):
-        return e()
-
-    # ===== PLOT LIBRARY =====
-    def visitGraph(self, ctx):
-        if self.plot is None:
-            raise Exception("plot library not imported")
-        return plotgraph(self, ctx, self.plot, self.ruta_programa)
-
-    def visitXlabel(self, ctx):
-        if self.plot is None:
-            raise Exception("plot library not imported")
-        return set_xlabel(self, ctx, self.plot)
-
-    def visitYlabel(self, ctx):
-        if self.plot is None:
-            raise Exception("plot library not imported")
-        return set_ylabel(self, ctx, self.plot)
-
-    def visitTitle(self, ctx):
-        if self.plot is None:
-            raise Exception("plot library not imported")
-        return set_title(self, ctx, self.plot)
-
-    def visitGrid(self, ctx):
-        if self.plot is None:
-            raise Exception("plot library not imported")
-        return set_grid(self, ctx, self.plot)
-
-    def visitColor(self, ctx):
-        if self.plot is None:
-            raise Exception("plot library not imported")
-        return set_color(self, ctx, self.plot)
-
-    def visitPointColor(self, ctx):
-        if self.plot is None:
-            raise Exception("plot library not imported")
-        return set_point_color(self, ctx, self.plot)
-
-    def visitPointSize(self, ctx):
-        if self.plot is None:
-            raise Exception("plot library not imported")
-        return set_point_size(self, ctx, self.plot)
-
-    def visitBar(self, ctx):
-        if self.plot is None:
-            raise Exception("plot library not imported")
-        return plot_bar(self, ctx, self.plot, self.ruta_programa)
-
-    def visitBarValues(self, ctx):
-        if self.plot is None:
-            raise Exception("plot library not imported")
-        return set_bar_values(self, ctx, self.plot)
-
-    def visitPie(self, ctx):
-        if self.plot is None:
-            raise Exception("plot library not imported")
-        return plot_pie(self, ctx, self.plot, self.ruta_programa)
-
-    def visitLegend(self, ctx):
-        if self.plot is None:
-            raise Exception("plot library not imported")
-        return set_legend(self, ctx, self.plot)
+for _attr in dir(Kafe_GrammarVisitor):
+    if _attr.startswith('visit') and (_attr.endswith('Function') or _attr.endswith('Constant')):
+        setattr(EvalVisitorPrimitivo, _attr, EvalVisitorPrimitivo._visit_math)

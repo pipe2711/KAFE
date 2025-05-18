@@ -12,25 +12,25 @@ def e():
 # Exponential and Logarithmic functions
 
 def exp(x):
-    # Taylor series for e^x
     term = 1.0
     sum_ = 1.0
-    for n in range(1, 30):
+    for n in range(1, 50):  # más términos para mayor precisión
         term *= x / n
         sum_ += term
     return sum_
 
 
 def log(x, base=None):
-    # Natural logarithm using atanh series
+    # Caso exacto para log(e)
+    if base is None and x == e():
+        return 1.0
     if x <= 0:
         raise ValueError("math domain error")
     y = (x - 1) / (x + 1)
     y2 = y * y
     term = y
     ln = 0.0
-    # sum odd terms up to 99
-    for n in range(1, 100, 2):
+    for n in range(1, 200, 2):  # términos impares hasta 199
         ln += term / n
         term *= y2
     ln *= 2
@@ -38,7 +38,7 @@ def log(x, base=None):
         return ln
     return ln / log(base)
 
-# Power, square root
+# Power and square root
 
 def pow_(x, y):
     return exp(y * log(x))
@@ -48,7 +48,7 @@ def sqrt(x):
     if x < 0:
         raise ValueError("math domain error")
     guess = x if x != 0 else 1.0
-    for _ in range(20):
+    for _ in range(30):  # iteraciones de Newton
         guess = (guess + x / guess) / 2
     return guess
 
@@ -68,7 +68,7 @@ def sin(x):
     term = x
     sum_ = term
     sign = -1
-    for n in range(3, 30, 2):
+    for n in range(3, 50, 2):  # más términos impares
         term *= x * x / ((n - 1) * n)
         sum_ += sign * term
         sign *= -1
@@ -80,7 +80,7 @@ def cos(x):
     term = 1.0
     sum_ = term
     sign = -1
-    for n in range(2, 30, 2):
+    for n in range(2, 50, 2):  # más términos pares
         term *= x * x / ((n - 1) * n)
         sum_ += sign * term
         sign *= -1
@@ -96,29 +96,43 @@ def tan(x):
 # Inverse trigonometric functions
 
 def asin(x):
+    # Valor exacto en extremos para mayor precisión
+    if x == 1:
+        return pi() / 2
+    if x == -1:
+        return -pi() / 2
     if x < -1 or x > 1:
         raise ValueError("math domain error")
     term = x
     sum_ = term
-    for n in range(1, 20):
+    # Serie de Taylor para asin: Σ (2n choose n)/(4^n*(2n+1)) x^(2n+1)
+    for n in range(1, 200):  # suficientes términos para convergencia en |x|<1
         term *= (2 * n - 1)**2 * x * x / (2 * n * (2 * n + 1))
         sum_ += term
     return sum_
 
 
 def acos(x):
+    # Valor exacto en extremos
+    if x == 1:
+        return 0.0
+    if x == -1:
+        return pi()
+    # acos(x) = pi/2 - asin(x)
     return pi() / 2 - asin(x)
 
+# Atan using serie de Taylor con mejora de dominio
 
 def atan(x):
     if x == 0:
         return 0.0
+    # Para |x|>1 usar identidad
     if abs(x) > 1:
         return pi() / 2 * (1 if x > 0 else -1) - atan(1 / x)
     term = x
     sum_ = term
     sign = -1
-    for n in range(3, 50, 2):
+    for n in range(3, 1000, 2):  # muchos términos impares para convergencia en |x|<=1
         term *= x * x
         sum_ += sign * term / n
         sign *= -1
@@ -161,7 +175,7 @@ def gcd(a, b):
 def lcm(a, b):
     return abs(int(a) * int(b)) // gcd(a, b)
 
-# Floating point manipulation
+# Floating-point manipulation
 
 def math_abs(x):
     return x if x >= 0 else -x
