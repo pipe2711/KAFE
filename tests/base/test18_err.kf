@@ -1,0 +1,4 @@
+-- Modificar un string da error
+STR a = "asdf";
+
+a[0] = 'd';

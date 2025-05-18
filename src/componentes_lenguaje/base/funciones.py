@@ -1,4 +1,4 @@
-from ..global_utils import verificarHomogeneidad, asignar_variable
+from ..global_utils import verificarHomogeneidad, asignar_variable, obtener_tipo_dato
 
 def varDecl(self, ctx):
     tipo = ctx.typeDecl().getText()
@@ -148,8 +148,6 @@ def indexingExpr(self, ctx):
             return collection[index]
         except IndexError:
             raise Exception(f"Index {index} out of bounds for collection of size {len(collection)}")
-    else:
-        raise Exception(f"Type {type(collection).__name__} is not indexable")
 
 def idExpr(self, ctx):
     id_text = ctx.ID().getText()
@@ -161,21 +159,35 @@ def idExpr(self, ctx):
 
 def indexedAssignStmt(self, ctx):
     nombre_lista = ctx.ID().getText()
-    indice = self.visit(ctx.expr(0))
-    nuevo_valor = self.visit(ctx.expr(1))
+    indexes = self.visit(ctx.indexing())
+
+    for index in indexes:
+        if type(index) != int:
+            raise Exception(f"Index must be an integer, got {type(index).__name__}")
+
+    _, lista = self.variables[nombre_lista]
 
     if nombre_lista not in self.variables:
-        raise Exception(f"La variable '{nombre_lista}' no existe")
+        raise Exception(f"Variable '{nombre_lista}' not defined")
 
-    tipo, lista = self.variables[nombre_lista]  # <<< desempaquetar aquí
+    nuevo_valor = self.visit(ctx.expr())
+    tipo_nuevo_valor = obtener_tipo_dato(nuevo_valor, self.nombre_tipos)
 
-    if not isinstance(lista, list):
-        raise Exception(f"'{nombre_lista}' no es una lista mutable (tipo: {type(lista)})")
+    listaIndexada = lista
+    for i in range(len(indexes) - 1):
+       try:
+            listaIndexada = listaIndexada[indexes[i]]
+       except IndexError:
+            raise Exception(f"Index {indexes[i]} out of bounds for collection of size {len(listaIndexada)}")
 
-    if not isinstance(indice, int):
-        raise Exception(f"El índice debe ser entero, pero fue {type(indice)}")
+    ultimo_indice = indexes[len(indexes) - 1]
+    try:
+        anterior_valor = listaIndexada[ultimo_indice]
+        tipo_anterior_valor = obtener_tipo_dato(anterior_valor, self.nombre_tipos)
 
-    if indice < 0 or indice >= len(lista):
-        raise Exception(f"Índice fuera de rango para la lista '{nombre_lista}'")
+        if tipo_nuevo_valor != tipo_anterior_valor:
+            raise TypeError(f"Could not assign value of type {tipo_nuevo_valor} to variable of type '{tipo_anterior_valor}'")
 
-    lista[indice] = nuevo_valor
+        listaIndexada[ultimo_indice] = nuevo_valor
+    except IndexError:
+        raise Exception(f"Index {indexes[len(indexes) - 1]} out of bounds for collection of size {len(listaIndexada)}")

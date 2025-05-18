@@ -26,7 +26,8 @@ block : (stmt SEMI)*;
 // ======================  VARIABLES ======================
 varDecl  : typeDecl ID ('=' expr)? ;
 assignStmt: ID '=' expr ;
-
+indexedAssignStmt : ID indexing ASSIGN expr;
+indexing: (LBRACK expr RBRACK) (LBRACK expr RBRACK)*;
 
 // ======================  FUNCIONES ======================
 // Función currificada:       drip id (params) (params)* : block ;
@@ -120,5 +121,3 @@ typeDecl
     | LIST LBRACK typeDecl RBRACK
     | FUNC '(' paramList? ')' COLON typeDecl
     ;
-
-indexedAssignStmt : ID LBRACK expr RBRACK ASSIGN expr;

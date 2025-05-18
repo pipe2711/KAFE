@@ -29,6 +29,10 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitIndexedAssignStmt(self, ctx):
         indexedAssignStmt(self, ctx)
 
+    def visitIndexing(self, ctx):
+        indexes = [self.visit(expr) for expr in ctx.expr()]
+        return indexes
+
     # ======================  FUNCIONES ======================
 
     def visitFunctionDecl(self, ctx):

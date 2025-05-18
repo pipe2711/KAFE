@@ -2,21 +2,20 @@ def obtener_tipo_lista(lista, nombre_tipos):
     tipo = "List["
 
     if len(lista) != 0:
-        if type(lista[0]) is int:
-            tipo += nombre_tipos[int]
-        elif type(lista[0]) is float:
-            tipo += nombre_tipos[float]
-        elif type(lista[0]) is str:
-            tipo += nombre_tipos[str]
-        elif type(lista[0]) is bool:
-            tipo += nombre_tipos[bool]
-        else:
+        if type(lista[0]) is list:
             tipo += obtener_tipo_lista(lista[0], nombre_tipos)
+        else:
+            tipo += nombre_tipos[type(lista[0])]
 
     tipo += ']'
 
     return tipo
 
+def obtener_tipo_dato(dato, nombre_tipos):
+    if type(dato) is list:
+        return obtener_tipo_lista(dato, nombre_tipos)
+    else:
+        return nombre_tipos[type(dato)]
 
 def asignar_variable(self, name, valor, tipo):
     if tipo.startswith("FUNC"):
