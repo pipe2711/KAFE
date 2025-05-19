@@ -1,44 +1,27 @@
-def obtener_tipo_lista(lista, nombre_tipos):
-    tipo = "List["
+def verificar_tipo(tipo, tipo_valor):
+    tipo_original = tipo
 
-    if len(lista) != 0:
-        if type(lista[0]) is list:
-            tipo += obtener_tipo_lista(lista[0], nombre_tipos)
-        else:
-            tipo += nombre_tipos[type(lista[0])]
+    if tipo.startswith("FUNC"):
+        tipo = tipo[:4]
 
-    tipo += ']'
+    if tipo_valor.startswith("List") and tipo_original.startswith("List"):
+        no_tiene_valores = not any(t in tipo_valor for t in ["INT","FLOAT","STR","BOOL"])
+        es_lista_vacia = tipo_valor == "List[]"
 
-    return tipo
+        if es_lista_vacia:
+            tipo_valor = tipo_original
+        elif no_tiene_valores:
+            tipo = tipo.replace("INT","").replace("FLOAT","").replace("STR","").replace("BOOL","")
 
-def obtener_tipo_dato(dato, nombre_tipos):
-    if type(dato) is list:
-        return obtener_tipo_lista(dato, nombre_tipos)
-    else:
-        return nombre_tipos[type(dato)]
+    if tipo != tipo_valor:
+        raise TypeError(f"Expected {tipo_original}, obtained {tipo_valor}")
 
 def asignar_variable(self, name, valor, tipo):
-    if tipo.startswith("FUNC"):
-        if not callable(valor):
-            raise TypeError(f"Expected function, got {type(valor).__name__}")
-        self.variables[name] = (tipo, valor)
-        return True
-    if tipo in self.type_mapping:
-        if type(valor) is not self.type_mapping[tipo]:
-            raise TypeError(f"Expected {tipo}, obtained {type(valor).__name__.upper()}")
-        self.variables[name] = (tipo, valor)
-        return True
-    if tipo.startswith("List") and any(t in tipo for t in ["INT","FLOAT","STR","BOOL"]):
-        if not verificarHomogeneidad(valor):
-            raise TypeError("Expected homogeneous list")
-        tipo_valor = obtener_tipo_lista(valor, self.nombre_tipos)
-        tipo_base  = tipo.replace("INT","").replace("FLOAT","")
-        tipo_base  = tipo_base.replace("STR","").replace("BOOL","")
-        if valor and tipo_valor not in (tipo, tipo_base):
-            raise TypeError(f"Expected {tipo}, obtained {tipo_valor}")
-        self.variables[name] = (tipo, valor)
-        return True
-    return False
+    tipo_valor = self.obtener_tipo_dato(valor)
+
+    verificar_tipo(tipo, tipo_valor)
+
+    self.variables[name] = (tipo, valor)
 
 def flatten_list(nested_list):
     flat_list = []

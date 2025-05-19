@@ -1,5 +1,3 @@
-from ..global_utils import obtener_tipo_lista
-
 def whileLoop(self, ctx):
     cond = self.visit(ctx.expr())
     if not isinstance(cond, bool):
@@ -25,7 +23,7 @@ def forLoop(self, ctx):
 
     if isinstance(iterable, list):
         try:
-            tipo_elemento = obtener_tipo_lista(iterable, self.nombre_tipos).replace("List[", "").replace("]", "")
+            tipo_elemento = self.obtener_tipo_lista(iterable).replace("List[", "").replace("]", "")
         except Exception as e:
             raise RuntimeError(f"Error determining type of iterable: {str(e)}")
     elif isinstance(iterable, str):

@@ -1,4 +1,4 @@
-from ..global_utils import verificarHomogeneidad, asignar_variable, obtener_tipo_dato
+from ..global_utils import verificarHomogeneidad, asignar_variable
 
 def varDecl(self, ctx):
     tipo = ctx.typeDecl().getText()
@@ -28,8 +28,7 @@ def varDecl(self, ctx):
         else:
             raise TypeError(f"Type '{tipo}' not recognized or missing default value")
 
-    if not asignar_variable(self, name, val, tipo):
-        raise TypeError(f"Could not assign value of type {type(val).__name__.upper()} to variable '{name}' of type '{tipo}'")
+    asignar_variable(self, name, val, tipo)
 
 
 def assignStmt(self, ctx):
@@ -41,10 +40,8 @@ def assignStmt(self, ctx):
 
     tipo = self.variables[id_text][0]
 
-    variable_asignada = asignar_variable(self, id_text, valor, tipo)
+    asignar_variable(self, id_text, valor, tipo)
 
-    if (not variable_asignada):
-        raise TypeError(f"Cannot assign value to variable '{id_text}' of type '{tipo}'")
 
 def showStmt(self, ctx):
     print(self.visit(ctx.expr()))
@@ -171,7 +168,7 @@ def indexedAssignStmt(self, ctx):
         raise Exception(f"Variable '{nombre_lista}' not defined")
 
     nuevo_valor = self.visit(ctx.expr())
-    tipo_nuevo_valor = obtener_tipo_dato(nuevo_valor, self.nombre_tipos)
+    tipo_nuevo_valor = self.obtener_tipo_dato(nuevo_valor)
 
     listaIndexada = lista
     for i in range(len(indexes) - 1):
@@ -183,7 +180,7 @@ def indexedAssignStmt(self, ctx):
     ultimo_indice = indexes[len(indexes) - 1]
     try:
         anterior_valor = listaIndexada[ultimo_indice]
-        tipo_anterior_valor = obtener_tipo_dato(anterior_valor, self.nombre_tipos)
+        tipo_anterior_valor = self.obtener_tipo_dato(anterior_valor)
 
         if tipo_nuevo_valor != tipo_anterior_valor:
             raise TypeError(f"Could not assign value of type {tipo_nuevo_valor} to variable of type '{tipo_anterior_valor}'")

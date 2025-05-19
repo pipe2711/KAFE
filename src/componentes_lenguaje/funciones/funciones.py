@@ -1,7 +1,7 @@
 import sys
 sys.path.append("../..")
 from Kafe_GrammarParser import Kafe_GrammarParser
-from componentes_lenguaje.funciones.utils import ReturnValue, _check_value_type
+from componentes_lenguaje.funciones.utils import ReturnValue, check_value_type
 from componentes_lenguaje.global_utils import asignar_variable
 
 def functionDecl(self, ctx):
@@ -46,7 +46,7 @@ def functionDecl(self, ctx):
                 result = rv.value
             finally:
                 outer.variables = saved
-            _check_value_type(outer, result, retTyp)
+            check_value_type(outer, result, retTyp)
             return result
 
     # Si todo está bien, se guarda la función
@@ -67,7 +67,7 @@ def lambdaExpr(self, ctx):
             local = dict(captured)
             saved = outer.variables
             outer.variables = local
-            asignar_variable(outer, pid,val,ptype)
+            asignar_variable(outer,pid,val,ptype)
             try: res=outer.visit(body)
             finally: outer.variables=saved
             return res

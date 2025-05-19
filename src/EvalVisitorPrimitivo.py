@@ -1,4 +1,3 @@
-import sys
 import os
 
 from Kafe_GrammarVisitor import Kafe_GrammarVisitor
@@ -24,6 +23,31 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         # Directorio actual de .kf para imports relativos
         self.current_dir  = None
 
+
+    def obtener_tipo_lista(self, lista):
+        tipo = "List["
+
+        if len(lista) != 0:
+            if type(lista[0]) is list:
+                tipo += self.obtener_tipo_lista(lista[0])
+            else:
+                tipo += self.nombre_tipos[type(lista[0])]
+
+        tipo += ']'
+
+        return tipo
+
+    def obtener_tipo_dato(self, dato):
+        if type(dato) is list:
+            return self.obtener_tipo_lista(dato)
+        elif callable(dato):
+            return "FUNC"
+        else:
+            return self.nombre_tipos[type(dato)]
+
+
+    # ====================== VARIABLES  ======================
+
     def visitSimpleImport(self, ctx):
         importStmt(self, ctx)
 
@@ -39,6 +63,7 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitIndexing(self, ctx):
         indexes = [self.visit(expr) for expr in ctx.expr()]
         return indexes
+
 
     # ======================  FUNCIONES ======================
 

@@ -39,7 +39,7 @@ class Plot:
 
     def set_point_size(self, valor):
         self.tamaño_punto = valor
-    
+
     def deg_to_rad(self, grados):
         return grados * 3.141592653589793 / 180
 
@@ -188,7 +188,7 @@ class Plot:
         start_angle = -180
         colores = ["#f4d03f", "#82e0aa", "#ec7063", "#85c1e9", "#bb8fce", "#f5b7b1", "#f1948a", "#7fb3d5", "#f8c471", "#aed6f1"]
 
-        
+
         svg = f'<svg width="{width}" height="{height}" xmlns="http://www.w3.org/2000/svg">\n'
         svg += f'<rect width="100%" height="100%" fill="white"/>\n'
 
