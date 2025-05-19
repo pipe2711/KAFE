@@ -1,0 +1,5 @@
+drip sumar(a: INT)(b: INT) => VOID:
+    return 5;
+;
+
+sumar(10)(5);  -- 15

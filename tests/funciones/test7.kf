@@ -1,8 +1,8 @@
-drip doble(a: INT)=>INT:
+drip doble(a: INT) => INT:
     return a * 2;
 ;
 
-drip mostrarLista()=> List[INT]:
+drip mostrarLista() => List[INT]:
     return [doble(1), doble(2), doble(3)];
 ;
 

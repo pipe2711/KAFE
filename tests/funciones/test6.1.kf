@@ -2,7 +2,7 @@ drip multiplicar(a: INT)(b: INT) => INT:
     return a * b;
 ;
 
-drip aplicarCurried(f: FUNC(a: INT): FUNC(b: INT): INT, x: INT, y: INT) => INT:
+drip aplicarCurried(f: FUNC(INT) => FUNC(INT) => INT, x: INT, y: INT) => INT:
     return f(x)(y);
 ;
 
