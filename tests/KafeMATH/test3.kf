@@ -1,0 +1,54 @@
+import math;
+
+-- Number-theoretic functions
+show(factorial(5));
+show(comb(5, 2));
+show(perm(5, 2));
+show(gcd(48, 18));
+show(gcd(48, 18, 30));
+show(lcm(12, 15));
+show(lcm(12, 15, 20));
+
+-- Floating-point arithmetic
+show(trunc(3.7));
+show(trunc(-3.7));
+show(fmod(7.3, 2.5));
+show(fmod(-7.3, 2.5));
+show(remainder(7.3, 2.5));
+show(remainder(-7.3, 2.5));
+
+-- Floating-point manipulation
+show(copysign(3, -0.0));
+show(copysign(-3, 5));
+show(isclose(1.000000001, 1));
+show(isfinite(inf));
+show(isinf(inf));
+show(isnan(nan));
+show(ulp(1.0));
+show(ulp(0.0));
+
+-- Power, exponential & logarithmic
+show(exp2(3));
+show(cbrt(27));
+show(expm1(1));
+show(log2(8));
+show(log10(1000));
+
+-- Summation & product
+show(dist([0,0], [3,4]));
+show(fsum([0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1]));
+show(hypot(3, 4));
+show(prod([1,2,3,4]));
+show(sumprod([1,2,3], [4,5,6]));
+
+-- Special functions
+show(erf(0));
+show(erf(1));
+show(erfc(0));
+show(gamma(5));
+show(lgamma(5));
+
+-- Constants
+show(tau);
+show(inf);
+show(nan);

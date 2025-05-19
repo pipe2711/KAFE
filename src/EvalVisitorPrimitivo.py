@@ -39,46 +39,83 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         self.current_dir = None
 
     # ===== IMPORT =====
-    def visitSimpleImport(self, ctx): importStmt(self, ctx)
-    def visitImportNUMK(self, ctx): self.numk = Numk()
-    def visitImportPLOT(self, ctx): self.plot = Plot()
+    def visitSimpleImport(self, ctx):
+        importStmt(self, ctx)
 
-    # ===== MATH IMPORT =====
+    # ===== NUMK LIBRARY =====
+    def visitImportNUMK(self, ctx):
+        self.numk = Numk()
+
+    # ===== PLOT LIBRARY =====
+    def visitImportPLOT(self, ctx):
+        self.plot = Plot()
+
+    # ===== MATH LIBRARY =====
     def visitImportMATH(self, ctx):
         from lib.KafeMATH.funciones import (
-            pi, e, exp, log, pow_, sqrt,
+            pi, e,
+            exp, exp2, expm1, log, log2, log10,
+            pow_, cbrt, sqrt,
             degrees, radians,
-            sin, cos, tan, asin, acos, atan,
+            sin, cos, tan,
+            asin, acos, atan,
             sinh, cosh, tanh,
-            factorial, gcd, lcm,
+            factorial, comb, perm, gcd, lcm,
+            trunc, fmod, remainder,
             math_abs, floor, ceil, math_round,
-            sum_range, prod_range
+            copysign, isclose, isfinite, isinf, isnan, ulp,
+            sum_range, prod_range, dist, fsum, hypot, prod, sumprod,
+            erf, erfc, gamma, lgamma,
+            tau, inf, nan
         )
+        # Populate math functions
         self.math_funcs = {
             'pi': pi, 'e': e,
-            'exp': exp, 'log': log, 'pow': pow_, 'sqrt': sqrt,
+            'exp': exp, 'exp2': exp2, 'expm1': expm1,
+            'log': log, 'log2': log2, 'log10': log10,
+            'pow': pow_, 'cbrt': cbrt, 'sqrt': sqrt,
             'degrees': degrees, 'radians': radians,
             'sin': sin, 'cos': cos, 'tan': tan,
             'asin': asin, 'acos': acos, 'atan': atan,
             'sinh': sinh, 'cosh': cosh, 'tanh': tanh,
-            'factorial': factorial, 'gcd': gcd, 'lcm': lcm,
+            'factorial': factorial, 'comb': comb, 'perm': perm,
+            'gcd': gcd, 'lcm': lcm,
+            'trunc': trunc, 'fmod': fmod, 'remainder': remainder,
             'abs': math_abs, 'floor': floor, 'ceil': ceil, 'round': math_round,
-            'sum': sum_range, 'prod': prod_range
+            'copysign': copysign, 'isclose': isclose, 'isfinite': isfinite,
+            'isinf': isinf, 'isnan': isnan, 'ulp': ulp,
+            'sum': sum_range, 'prod': prod_range,
+            'dist': dist, 'fsum': fsum, 'hypot': hypot, 'prod_list': prod, 'sumprod': sumprod,
+            'erf': erf, 'erfc': erfc, 'gamma': gamma, 'lgamma': lgamma
         }
+        # Constants for idExpr
+        self.variables['tau'] = (self.nombre_tipos[type(tau)], tau)
+        self.variables['inf'] = (self.nombre_tipos[type(inf)], inf)
+        self.variables['nan'] = (self.nombre_tipos[type(nan)], nan)
+        # Wrapper for unified prod()
+        def prod_wrapper(*p_args):
+            if len(p_args) == 1 and isinstance(p_args[0], list):
+                return prod(p_args[0])
+            if len(p_args) == 2 and all(isinstance(x, (int, float)) for x in p_args):
+                return prod_range(p_args[0], p_args[1])
+            raise TypeError(f"prod() expects 1 iterable or 2 numeric args, got {len(p_args)}")
+        self.math_funcs['prod'] = prod_wrapper
 
     # ===== VARIABLES =====
     def visitVarDecl(self, ctx): return varDecl(self, ctx)
     def visitAssignStmt(self, ctx): return assignStmt(self, ctx)
 
-    # ===== FUNCIONES =====
+    # ===== FUNCTIONS =====
     def visitFunctionDecl(self, ctx): return functionDecl(self, ctx)
     def visitFunctionCall(self, ctx):
         name = ctx.ID().getText()
-        if name in self.math_funcs and ctx.argList():
-            args = [self.visit(arg.expr()) for arg in ctx.argList().arg()]
+        if name in self.math_funcs:
+            args = []
+            for al in ctx.argList() or []:
+                for argu in al.arg():
+                    if argu.expr(): args.append(self.visit(argu.expr()))
+                    else: args.append(self.visit(argu.lambdaExpr()))
             return self.math_funcs[name](*args)
-        elif name in self.math_funcs:
-            return self.math_funcs[name]()
         return functionCall(self, ctx)
 
     def visitLambdaExpr(self, ctx): return lambdaExpr(self, ctx)
@@ -87,14 +124,12 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitShowStmt(self, ctx): showStmt(self, ctx)
     def visitPourStmt(self, ctx): return pourStmt(self, ctx)
 
-    # ===== CONDICIONALES =====
+    # ===== CONTROL FLOW =====
     def visitIfElseExpr(self, ctx): return ifElseExpr(self, ctx)
-
-    # ===== BUCLES =====
     def visitWhileLoop(self, ctx): whileLoop(self, ctx)
     def visitForLoop(self, ctx): forLoop(self, ctx)
 
-    # ===== EXPRESIONES =====
+    # ===== EXPRESSIONS =====
     def visitExpr(self, ctx): return expr(self, ctx)
     def visitIndexingExpr(self, ctx): return indexingExpr(self, ctx)
     def visitLogicExpr(self, ctx): return logicExpr(self, ctx)
@@ -112,20 +147,20 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitFloatLiteral(self, ctx): return float(ctx.getText())
     def visitStringLiteral(self, ctx): return ctx.getText()[1:-1]
     def visitBoolLiteral(self, ctx): return ctx.getText() == 'True'
-    def visitListLiteral(self, ctx): return [self.visit(e) for e in ctx.expr()]
+    def visitListLiteral(self, ctx): return [self.visit(e) for e in ctx.expr()] 
     def visitStrCastExpr(self, ctx): return str(self.visit(ctx.expr()))
     def visitBoolCastExpr(self, ctx): return bool(self.visit(ctx.expr()))
     def visitFloatCastExpr(self, ctx): return float(self.visit(ctx.expr()))
     def visitIntCastExpr(self, ctx): return int(self.visit(ctx.expr()))
 
-    # ===== NUMK =====
+    # ===== NUMK OPERATIONS =====
     def visitNumkadd(self, ctx): return numkadd(self, ctx, self.numk) if self.numk else (_ for _ in ()).throw(Exception('numk library not imported'))
     def visitNumksub(self, ctx): return numksub(self, ctx, self.numk) if self.numk else (_ for _ in ()).throw(Exception('numk library not imported'))
     def visitNumkmul(self, ctx): return numkmul(self, ctx, self.numk) if self.numk else (_ for _ in ()).throw(Exception('numk library not imported'))
     def visitNumkinv(self, ctx): return numkinv(self, ctx, self.numk) if self.numk else (_ for _ in ()).throw(Exception('numk library not imported'))
     def visitNumktranspose(self, ctx): return numktranspose(self, ctx, self.numk) if self.numk else (_ for _ in ()).throw(Exception('numk library not imported'))
 
-    # ===== PLOT =====
+    # ===== PLOT LIBRARY =====
     def visitGraph(self, ctx): return plotgraph(self, ctx, self.plot, self.ruta_programa)
     def visitXlabel(self, ctx): return set_xlabel(self, ctx, self.plot)
     def visitYlabel(self, ctx): return set_ylabel(self, ctx, self.plot)
@@ -139,9 +174,8 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitPie(self, ctx): return plot_pie(self, ctx, self.plot, self.ruta_programa)
     def visitLegend(self, ctx): return set_legend(self, ctx, self.plot)
 
-    # ===== MATH INTERNAL =====
+    # ===== INTERNAL MATH =====
     def _visit_math(self, ctx):
-        # Obtener todos los subcontextos de tipo ExprContext
         exprs = ctx.getTypedRuleContexts(Kafe_GrammarParser.ExprContext)
         args = [self.visit(c) for c in exprs]
         name = ctx.getChild(0).getText()
@@ -149,6 +183,7 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
             raise Exception(f"Math function '{name}' not imported")
         return self.math_funcs[name](*args)
 
+# Monkey-patch for mathLibrary rules
 for _attr in dir(Kafe_GrammarVisitor):
     if _attr.startswith('visit') and (_attr.endswith('Function') or _attr.endswith('Constant')):
         setattr(EvalVisitorPrimitivo, _attr, EvalVisitorPrimitivo._visit_math)
