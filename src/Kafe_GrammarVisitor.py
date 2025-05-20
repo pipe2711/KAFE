@@ -439,8 +439,33 @@ class Kafe_GrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by Kafe_GrammarParser#expm1Function.
+    def visitExpm1Function(self, ctx:Kafe_GrammarParser.Expm1FunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#exp2Function.
+    def visitExp2Function(self, ctx:Kafe_GrammarParser.Exp2FunctionContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by Kafe_GrammarParser#logFunction.
     def visitLogFunction(self, ctx:Kafe_GrammarParser.LogFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#log2Function.
+    def visitLog2Function(self, ctx:Kafe_GrammarParser.Log2FunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#log10Function.
+    def visitLog10Function(self, ctx:Kafe_GrammarParser.Log10FunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#cbrtFunction.
+    def visitCbrtFunction(self, ctx:Kafe_GrammarParser.CbrtFunctionContext):
         return self.visitChildren(ctx)
 
 
@@ -456,6 +481,16 @@ class Kafe_GrammarVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by Kafe_GrammarParser#factorialFunction.
     def visitFactorialFunction(self, ctx:Kafe_GrammarParser.FactorialFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#combFunction.
+    def visitCombFunction(self, ctx:Kafe_GrammarParser.CombFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#permFunction.
+    def visitPermFunction(self, ctx:Kafe_GrammarParser.PermFunctionContext):
         return self.visitChildren(ctx)
 
 
@@ -489,6 +524,61 @@ class Kafe_GrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by Kafe_GrammarParser#truncFunction.
+    def visitTruncFunction(self, ctx:Kafe_GrammarParser.TruncFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#fmodFunction.
+    def visitFmodFunction(self, ctx:Kafe_GrammarParser.FmodFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#remainderFunction.
+    def visitRemainderFunction(self, ctx:Kafe_GrammarParser.RemainderFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#copysignFunction.
+    def visitCopysignFunction(self, ctx:Kafe_GrammarParser.CopysignFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#iscloseFunction.
+    def visitIscloseFunction(self, ctx:Kafe_GrammarParser.IscloseFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#isfiniteFunction.
+    def visitIsfiniteFunction(self, ctx:Kafe_GrammarParser.IsfiniteFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#isinfFunction.
+    def visitIsinfFunction(self, ctx:Kafe_GrammarParser.IsinfFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#isnanFunction.
+    def visitIsnanFunction(self, ctx:Kafe_GrammarParser.IsnanFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#ulpFunction.
+    def visitUlpFunction(self, ctx:Kafe_GrammarParser.UlpFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#sumFunction.
+    def visitSumFunction(self, ctx:Kafe_GrammarParser.SumFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#prodFunction.
+    def visitProdFunction(self, ctx:Kafe_GrammarParser.ProdFunctionContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by Kafe_GrammarParser#sumRangeFunction.
     def visitSumRangeFunction(self, ctx:Kafe_GrammarParser.SumRangeFunctionContext):
         return self.visitChildren(ctx)
@@ -496,6 +586,46 @@ class Kafe_GrammarVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by Kafe_GrammarParser#prodRangeFunction.
     def visitProdRangeFunction(self, ctx:Kafe_GrammarParser.ProdRangeFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#distFunction.
+    def visitDistFunction(self, ctx:Kafe_GrammarParser.DistFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#fsumFunction.
+    def visitFsumFunction(self, ctx:Kafe_GrammarParser.FsumFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#hypotFunction.
+    def visitHypotFunction(self, ctx:Kafe_GrammarParser.HypotFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#sumprodFunction.
+    def visitSumprodFunction(self, ctx:Kafe_GrammarParser.SumprodFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#erfFunction.
+    def visitErfFunction(self, ctx:Kafe_GrammarParser.ErfFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#erfcFunction.
+    def visitErfcFunction(self, ctx:Kafe_GrammarParser.ErfcFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#gammaFunction.
+    def visitGammaFunction(self, ctx:Kafe_GrammarParser.GammaFunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#lgammaFunction.
+    def visitLgammaFunction(self, ctx:Kafe_GrammarParser.LgammaFunctionContext):
         return self.visitChildren(ctx)
 
 
@@ -509,23 +639,28 @@ class Kafe_GrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by Kafe_GrammarParser#piFunction.
-    def visitPiFunction(self, ctx:Kafe_GrammarParser.PiFunctionContext):
+    # Visit a parse tree produced by Kafe_GrammarParser#piValue.
+    def visitPiValue(self, ctx:Kafe_GrammarParser.PiValueContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by Kafe_GrammarParser#eFunction.
-    def visitEFunction(self, ctx:Kafe_GrammarParser.EFunctionContext):
+    # Visit a parse tree produced by Kafe_GrammarParser#eValue.
+    def visitEValue(self, ctx:Kafe_GrammarParser.EValueContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by Kafe_GrammarParser#piConstant.
-    def visitPiConstant(self, ctx:Kafe_GrammarParser.PiConstantContext):
+    # Visit a parse tree produced by Kafe_GrammarParser#tauConstant.
+    def visitTauConstant(self, ctx:Kafe_GrammarParser.TauConstantContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by Kafe_GrammarParser#eConstant.
-    def visitEConstant(self, ctx:Kafe_GrammarParser.EConstantContext):
+    # Visit a parse tree produced by Kafe_GrammarParser#infConstant.
+    def visitInfConstant(self, ctx:Kafe_GrammarParser.InfConstantContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by Kafe_GrammarParser#nanConstant.
+    def visitNanConstant(self, ctx:Kafe_GrammarParser.NanConstantContext):
         return self.visitChildren(ctx)
 
 

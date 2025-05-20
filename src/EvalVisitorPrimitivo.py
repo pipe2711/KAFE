@@ -1,5 +1,4 @@
 # EvalVisitorPrimitivo.py
-
 import sys
 import os
 
@@ -40,23 +39,20 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         self.imported = set()
         self.current_dir = None
 
-    # IMPORT
+    # ──────────────────── IMPORTS ────────────────────
     def visitSimpleImport(self, ctx):
         importStmt(self, ctx)
 
     def visitImportNUMK(self, ctx):
-        # import numk;
         self.numk = Numk()
 
     def visitImportPLOT(self, ctx):
-        # import plot;
         self.plot = Plot()
 
     def visitImportMATH(self, ctx):
-        # import math;
         return None
 
-    # VARIABLES
+    # ──────────────────── VARIABLES ────────────────────
     def visitVarDecl(self, ctx):
         varDecl(self, ctx)
 
@@ -67,10 +63,9 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         indexedAssignStmt(self, ctx)
 
     def visitIndexing(self, ctx):
-        indexes = [self.visit(e) for e in ctx.expr()]
-        return indexes
+        return [self.visit(e) for e in ctx.expr()]
 
-    # FUNCIONES
+    # ──────────────────── FUNCIONES ────────────────────
     def visitFunctionDecl(self, ctx):
         return functionDecl(self, ctx)
 
@@ -92,18 +87,18 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitPourStmt(self, ctx):
         return pourStmt(self, ctx)
 
-    # CONDICIONALES
+    # ──────────────────── CONDICIONALES ────────────────────
     def visitIfElseExpr(self, ctx):
         return ifElseExpr(self, ctx)
 
-    # BUCLES
+    # ──────────────────── BUCLES ────────────────────
     def visitWhileLoop(self, ctx):
         whileLoop(self, ctx)
 
     def visitForLoop(self, ctx):
         forLoop(self, ctx)
 
-    # EXPRESIONES
+    # ──────────────────── EXPRESIONES ────────────────────
     def visitExpr(self, ctx):
         return expr(self, ctx)
 
@@ -137,7 +132,7 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitIdExpr(self, ctx):
         return idExpr(self, ctx)
 
-    # LITERALES
+    # ──────────────────── LITERALES ────────────────────
     def visitIntLiteral(self, ctx):
         return int(ctx.getText())
 
@@ -165,10 +160,7 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitIntCastExpr(self, ctx):
         return int(self.visit(ctx.expr()))
 
-    # NUMK
-    def visitImportNUMK(self, ctx):
-        self.numk = Numk()
-
+    # ──────────────────── NUMK ────────────────────
     def visitNumkadd(self, ctx):
         if self.numk is None:
             raise Exception("numk library not imported")
@@ -194,7 +186,7 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
             raise Exception("numk library not imported")
         return numktranspose(self, ctx, self.numk)
 
-    # MATH
+        # ────────── Funciones trigonométricas ──────────
     def visitSinFunction(self, ctx):
         return math_funcs_module.sin(self.visit(ctx.expr()))
 
@@ -225,26 +217,18 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitExpFunction(self, ctx):
         return math_funcs_module.exp(self.visit(ctx.expr()))
 
-    def visitExpm1Function(self, ctx):
-        return math_funcs_module.expm1(self.visit(ctx.expr()))
-
     def visitLogFunction(self, ctx):
-        return math_funcs_module.log(*[self.visit(e) for e in ctx.expr()])
-
-    def visitLog2Function(self, ctx):
-        return math_funcs_module.log2(self.visit(ctx.expr()))
-
-    def visitLog10Function(self, ctx):
-        return math_funcs_module.log10(self.visit(ctx.expr()))
+        args = [self.visit(e) for e in ctx.expr()]
+        if len(args) == 1:
+            return math_funcs_module.log(args[0])
+        return math_funcs_module.log(args[0], args[1])
 
     def visitSqrtFunction(self, ctx):
         return math_funcs_module.sqrt(self.visit(ctx.expr()))
 
     def visitPowFunction(self, ctx):
-        return math_funcs_module.pow_(
-            self.visit(ctx.expr(0)),
-            self.visit(ctx.expr(1))
-        )
+        return math_funcs_module.pow_( self.visit(ctx.expr(0)),
+                                       self.visit(ctx.expr(1)) )
 
     def visitFactorialFunction(self, ctx):
         return math_funcs_module.factorial(self.visit(ctx.expr()))
@@ -254,6 +238,31 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
     def visitLcmFunction(self, ctx):
         return math_funcs_module.lcm(*[self.visit(e) for e in ctx.expr()])
+
+    def visitCombFunction(self, ctx):
+        return math_funcs_module.comb(self.visit(ctx.expr(0)),
+                                      self.visit(ctx.expr(1)))
+
+    def visitPermFunction(self, ctx):
+        return math_funcs_module.perm(self.visit(ctx.expr(0)),
+                                      self.visit(ctx.expr(1)))
+
+    def visitDegreesFunction(self, ctx):
+        return math_funcs_module.degrees(self.visit(ctx.expr()))
+
+    def visitRadiansFunction(self, ctx):
+        return math_funcs_module.radians(self.visit(ctx.expr()))
+
+    def visitTruncFunction(self, ctx):
+        return math_funcs_module.trunc(self.visit(ctx.expr()))
+
+    def visitFmodFunction(self, ctx):
+        return math_funcs_module.fmod(self.visit(ctx.expr(0)),
+                                      self.visit(ctx.expr(1)))
+
+    def visitRemainderFunction(self, ctx):
+        return math_funcs_module.remainder(self.visit(ctx.expr(0)),
+                                           self.visit(ctx.expr(1)))
 
     def visitAbsFunction(self, ctx):
         return math_funcs_module.math_abs(self.visit(ctx.expr()))
@@ -265,60 +274,76 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         return math_funcs_module.ceil(self.visit(ctx.expr()))
 
     def visitRoundFunction(self, ctx):
-        return math_funcs_module.math_round(*[self.visit(e) for e in ctx.expr()])
+        args = [self.visit(e) for e in ctx.expr()]
+        return math_funcs_module.math_round(*args)
 
-    def visitSumRangeFunction(self, ctx):
-        return math_funcs_module.sum_range(
-            self.visit(ctx.expr(0)),
-            self.visit(ctx.expr(1))
-        )
+    # ……… Floating-point manipulation ………
+    def visitCopysignFunction(self, ctx):
+        return math_funcs_module.copysign(self.visit(ctx.expr(0)),
+                                          self.visit(ctx.expr(1)))
 
-    def visitProdRangeFunction(self, ctx):
-        return math_funcs_module.prod_range(
-            self.visit(ctx.expr(0)),
-            self.visit(ctx.expr(1))
-        )
+    def visitIscloseFunction(self, ctx):
+        return math_funcs_module.isclose(self.visit(ctx.expr(0)),
+                                         self.visit(ctx.expr(1)))
 
-    def visitDegreesFunction(self, ctx):
-        return math_funcs_module.degrees(self.visit(ctx.expr()))
+    def visitIsfiniteFunction(self, ctx):
+        return math_funcs_module.isfinite(self.visit(ctx.expr()))
 
-    def visitRadiansFunction(self, ctx):
-        return math_funcs_module.radians(self.visit(ctx.expr()))
+    def visitIsinfFunction(self, ctx):
+        return math_funcs_module.isinf(self.visit(ctx.expr()))
 
-    def visitPiFunction(self, ctx):
-        return math_funcs_module.pi()
+    def visitIsnanFunction(self, ctx):
+        return math_funcs_module.isnan(self.visit(ctx.expr()))
 
-    def visitEFunction(self, ctx):
-        return math_funcs_module.e()
+    def visitUlpFunction(self, ctx):
+        return math_funcs_module.ulp(self.visit(ctx.expr()))
 
-    def visitPiConstant(self, ctx):
-        return math_funcs_module.pi()
+    # ……… Power / exponential / logarithmic ………
+    def visitExp2Function(self, ctx):
+        return math_funcs_module.exp2(self.visit(ctx.expr()))
 
-    def visitEConstant(self, ctx):
-        return math_funcs_module.e()
+    def visitCbrtFunction(self, ctx):
+        return math_funcs_module.cbrt(self.visit(ctx.expr()))
 
-    # SPECIAL
+    def visitExpm1Function(self, ctx):
+        return math_funcs_module.expm1(self.visit(ctx.expr()))
+
+    def visitLog2Function(self, ctx):
+        return math_funcs_module.log2(self.visit(ctx.expr()))
+
+    def visitLog10Function(self, ctx):
+        return math_funcs_module.log10(self.visit(ctx.expr()))
+
+    # ……… Summation & products ………
     def visitDistFunction(self, ctx):
-        return math_funcs_module.dist(
-            [self.visit(e) for e in ctx.expr(0).expr()],
-            [self.visit(e) for e in ctx.expr(1).expr()]
-        )
+        return math_funcs_module.dist(self.visit(ctx.expr(0)),
+                                      self.visit(ctx.expr(1)))
 
     def visitFsumFunction(self, ctx):
-        return math_funcs_module.fsum(self.visit(ctx.expr(0)))
+        return math_funcs_module.fsum(self.visit(ctx.expr()))
 
     def visitHypotFunction(self, ctx):
         return math_funcs_module.hypot(*[self.visit(e) for e in ctx.expr()])
 
     def visitProdFunction(self, ctx):
-        return math_funcs_module.prod(*[self.visit(e) for e in ctx.expr()])
+        return math_funcs_module.prod(self.visit(ctx.expr()))
+
+    def visitSumFunction(self, ctx):
+        return sum(self.visit(ctx.expr()))  # built-in • no propio en funciones.py
+
+    def visitSumRangeFunction(self, ctx):
+        return math_funcs_module.sum_range(self.visit(ctx.expr(0)),
+                                           self.visit(ctx.expr(1)))
+
+    def visitProdRangeFunction(self, ctx):
+        return math_funcs_module.prod_range(self.visit(ctx.expr(0)),
+                                            self.visit(ctx.expr(1)))
 
     def visitSumprodFunction(self, ctx):
-        return math_funcs_module.sumprod(
-            [self.visit(e) for e in ctx.expr(0).expr()],
-            [self.visit(e) for e in ctx.expr(1).expr()]
-        )
+        return math_funcs_module.sumprod(self.visit(ctx.expr(0)),
+                                         self.visit(ctx.expr(1)))
 
+    # ……… Special functions ………
     def visitErfFunction(self, ctx):
         return math_funcs_module.erf(self.visit(ctx.expr()))
 
@@ -331,7 +356,23 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitLgammaFunction(self, ctx):
         return math_funcs_module.lgamma(self.visit(ctx.expr()))
 
-    # PLOT
+    # ……… Constantes ………
+    def visitPiValue(self, ctx):
+        return math_funcs_module.pi()
+
+    def visitEValue(self, ctx):
+        return math_funcs_module.e()
+
+    def visitTauConstant(self, ctx):
+        return math_funcs_module.tau
+
+    def visitInfConstant(self, ctx):
+        return math_funcs_module.inf
+
+    def visitNanConstant(self, ctx):
+        return math_funcs_module.nan
+
+    # ──────────────────── PLOT ────────────────────
     def visitGraph(self, ctx):
         return plotgraph(self, ctx, self.plot, self.ruta_programa)
 

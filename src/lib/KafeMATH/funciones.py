@@ -184,6 +184,7 @@ def lcm(*ints):
         result = _lcm(result, int(x))
     return result
 
+
 # ===== Aritmética flotante =====
 
 def trunc(x):
@@ -220,20 +221,15 @@ def copysign(x, y):
         return -abs(x)
     return abs(x) if y >= 0 else -abs(x)
 
+# -------- CORREGIDAS ----------
 def isclose(a, b, rel_tol=1e-9, abs_tol=0.0):
- 
-    if a == b:
+    if a == b:                       # atajos rápidos
         return True
     diff = abs(a - b)
-    tol = max(rel_tol * max(abs(a), abs(b)), abs_tol)
-    if diff >= tol:
-        return True
-    if b != 0:
-        return abs(a/b - 1) <= rel_tol
-    return False
+    tol  = max(rel_tol * max(abs(a), abs(b)), abs_tol)
+    return diff <= tol
+  
 
-def isfinite(x):
-    return not isinf(x) and not isnan(x)
 
 def isinf(x):
     return x == inf or x == -inf
@@ -241,11 +237,18 @@ def isinf(x):
 def isnan(x):
     return x != x
 
+def isfinite(x):
+    return not isinf(x) and not isnan(x)
+# ------------------------------
+
 def ulp(x):
     if x == 0:
         return 2 ** -1074
     exp_val = floor(log(abs(x), 2))
     return 2 ** (exp_val - 52)
+
+# … (el resto del archivo permanece igual) …
+
 
 # ===== Potencia, exponencial y logarítmico =====
 

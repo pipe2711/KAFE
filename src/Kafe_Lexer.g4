@@ -1,111 +1,159 @@
 lexer grammar Kafe_Lexer;
 
-// Casting
-INT_CAST    : 'int';
-FLOAT_CAST  : 'float';
-STR_CAST    : 'str';
-BOOL_CAST   : 'bool';
+///////////////////////////////////////////////////////////////////////////
+//  Casting
+///////////////////////////////////////////////////////////////////////////
+INT_CAST  : 'int';
+FLOAT_CAST: 'float';
+STR_CAST  : 'str';
+BOOL_CAST : 'bool';
 
-// Palabras clave y funciones
-DRIP        : 'drip';
-POUR        : 'pour';
-SHOW        : 'show';
-RETURN      : 'return';
-IF          : 'if';
-ELIF        : 'elif';
-ELSE        : 'else';
-FUNC        : 'FUNC';
-IMPORT      : 'import';
+///////////////////////////////////////////////////////////////////////////
+//  Palabras clave
+///////////////////////////////////////////////////////////////////////////
+DRIP   : 'drip';
+POUR   : 'pour';
+SHOW   : 'show';
+RETURN : 'return';
+IF     : 'if';
+ELIF   : 'elif';
+ELSE   : 'else';
+FUNC   : 'FUNC';
+IMPORT : 'import';
 
-// Librerías
-NUMK_LIB    : 'numk';
-PLOT_LIB    : 'plot';
-MATH_LIB    : 'math';
+///////////////////////////////////////////////////////////////////////////
+//  Librerías
+///////////////////////////////////////////////////////////////////////////
+NUMK_LIB : 'numk';
+PLOT_LIB : 'plot';
+MATH_LIB : 'math';
 
-// Math Library Tokens (constantes con lookahead)
-PI_CONST
-    : 'pi' { self._input.LA(1)=='(' }?   // solo si viene '('
-;
-E_CONST
-    : 'e'  { self._input.LA(1)=='(' }?   // solo si viene '('
-;
+///////////////////////////////////////////////////////////////////////////
+//  Constantes y funciones de la librería math  ( SIEMPRE con “.” )
+///////////////////////////////////////////////////////////////////////////
+// --- constantes ---
+DOT_PI      : '.pi';
+DOT_E       : '.e';
+DOT_TAU     : '.tau';
+DOT_INF     : '.inf';
+DOT_NAN     : '.nan';
 
-// Funciones matemáticas
-SIN         : 'sin';
-COS         : 'cos';
-TAN         : 'tan';
-ASIN        : 'asin';
-ACOS        : 'acos';
-ATAN        : 'atan';
-SINH        : 'sinh';
-COSH        : 'cosh';
-TANH        : 'tanh';
-EXP         : 'exp';
-LOG         : 'log';
-SQRT        : 'sqrt';
-POW_FUNC    : 'pow';
-FACT        : 'factorial';
-GCD         : 'gcd';
-LCM         : 'lcm';
-ABS         : 'abs';
-FLOOR       : 'floor';
-CEIL        : 'ceil';
-ROUND       : 'round';
-SUM         : 'sum';
-PROD        : 'prod';
-DEG         : 'degrees';
-RAD         : 'radians';
+// --- trigonometría ---
+DOT_SIN     : '.sin';
+DOT_COS     : '.cos';
+DOT_TAN     : '.tan';
+DOT_ASIN    : '.asin';
+DOT_ACOS    : '.acos';
+DOT_ATAN    : '.atan';
+DOT_SINH    : '.sinh';
+DOT_COSH    : '.cosh';
+DOT_TANH    : '.tanh';
 
-// Operadores
-ADD         : '+';
-SUB         : '-';
-MUL         : '*';
-DIV         : '/';
-MOD         : '%';
-POW         : '^';
-AND         : '&&';
-OR          : '||';
-EQ          : '==';
-NEQ         : '!=';
-LT          : '<';
-GT          : '>';
-LE          : '<=';
-GE          : '>=';
-ASSIGN      : '=';
-NOT         : '!';
+// --- exponenciales / logaritmos ---
+DOT_EXP     : '.exp';
+DOT_EXPM1   : '.expm1';
+DOT_EXP2    : '.exp2';
+DOT_LOG     : '.log';
+DOT_LOG2    : '.log2';
+DOT_LOG10   : '.log10';
+DOT_CBRT    : '.cbrt';
+DOT_SQRT    : '.sqrt';
+DOT_POW     : '.pow';
 
-// Símbolos
-LPAREN      : '(';
-RPAREN      : ')';
-LBRACK      : '[';
-RBRACK      : ']';
-DOT         : '.';
-COLON       : ':';
-SEMI        : ';';
-COMMA       : ',';
-PIPE        : '|';
-ARROW       : '=>';
+// --- teoría de números ---
+DOT_FACTORIAL : '.factorial';
+DOT_GCD       : '.gcd';
+DOT_LCM       : '.lcm';
+DOT_COMB      : '.comb';
+DOT_PERM      : '.perm';
 
-// Tipos
-LIST        : 'List';
-INT_TYPE    : 'INT';
-FLOAT_TYPE  : 'FLOAT';
-BOOL_TYPE   : 'BOOL';
-VOID_TYPE   : 'VOID';
-STRING_TYPE : 'STR';
+// --- aritmética flotante básica ---
+DOT_ABS       : '.abs';
+DOT_FLOOR     : '.floor';
+DOT_CEIL      : '.ceil';
+DOT_ROUND     : '.round';
+DOT_TRUNC     : '.trunc';
+DOT_FMOD      : '.fmod';
+DOT_REMAINDER : '.remainder';
 
-// Literales
-FLOAT       : [0-9]+ '.' [0-9]+;
-INT         : [0-9]+;
-BOOL        : 'True' | 'False';
-STRING      : '"' (~["\\])* '"' | '\'' (~['\\])* '\'';
+// --- manipulación flotante ---
+DOT_COPYSIGN  : '.copysign';
+DOT_ISCLOSE   : '.isclose';
+DOT_ISFINITE  : '.isfinite';
+DOT_ISINF     : '.isinf';
+DOT_ISNAN     : '.isnan';
+DOT_ULP       : '.ulp';
 
-// Identificadores
-ID          : [a-zA-Z_] [a-zA-Z0-9_]*;
+// --- sumatorias y productos ---
+DOT_SUM       : '.sum';
+DOT_PROD      : '.prod';
+DOT_DIST      : '.dist';
+DOT_FSUM      : '.fsum';
+DOT_HYPOT     : '.hypot';
+DOT_SUMPROD   : '.sumprod';
 
-// Comentarios
-LINE_COMMENT  : '--' ~[\r\n]* -> skip;
-BLOCK_COMMENT : '->' .*? '<-'       -> skip;
+// --- funciones especiales ---
+DOT_ERF       : '.erf';
+DOT_ERFC      : '.erfc';
+DOT_GAMMA     : '.gamma';
+DOT_LGAMMA    : '.lgamma';
 
-// Espacios
-WS           : [ \t\r\n]+ -> skip;
+// --- conversión angular ---
+DOT_DEGREES   : '.degrees';
+DOT_RADIANS   : '.radians';
+
+
+//  Operadores
+
+ADD   : '+';
+SUB   : '-';
+MUL   : '*';
+DIV   : '/';
+MOD   : '%';
+POW   : '^';
+AND   : '&&';
+OR    : '||';
+EQ    : '==';
+NEQ   : '!=';
+LT    : '<';
+GT    : '>';
+LE    : '<=';
+GE    : '>=';
+ASSIGN: '=';
+NOT   : '!';
+
+
+//  Símbolos
+
+LPAREN: '(';
+RPAREN: ')';
+LBRACK: '[';
+RBRACK: ']';
+DOT   : '.';               // ¡Después de todos los DOT_*!
+COLON : ':';
+SEMI  : ';';
+COMMA : ',';
+PIPE  : '|';
+ARROW : '=>';
+
+
+//  Tipos
+
+LIST       : 'List';
+INT_TYPE   : 'INT';
+FLOAT_TYPE : 'FLOAT';
+BOOL_TYPE  : 'BOOL';
+VOID_TYPE  : 'VOID';
+STRING_TYPE: 'STR';
+
+FLOAT : [0-9]+ '.' [0-9]+;
+INT   : [0-9]+;
+BOOL  : 'True' | 'False';
+STRING: '"' (~["\\])* '"' | '\'' (~['\\])* '\'';
+
+
+ID : [a-zA-Z_] [a-zA-Z0-9_]*;
+
+
+BLOCK_COMMENT: '->' .*? '<-'         -> skip;
+WS           : [ \t\r\n]+            -> skip;
