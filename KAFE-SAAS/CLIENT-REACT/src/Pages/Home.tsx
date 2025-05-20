@@ -82,7 +82,7 @@ const Home: React.FC = () => {
             maxWidth: '600px',
             margin: '0 auto 2rem',
           }}>
-            Un lenguaje de programación intuitivo que facilita el aprendizaje y la creación de modelos de Deep learning.
+            Un lenguaje de programación intuitivo que facilita el aprendizaje y la creación de modelos de deep learning.
           </p>
           
           <div style={{
