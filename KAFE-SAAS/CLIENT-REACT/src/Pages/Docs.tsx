@@ -47,13 +47,28 @@ export default function Docs() {
       </aside>
 
       <main className="docs-content">
-        <section id="intro">
-          <h1>Introduction</h1>
-          <p>
-            KAFE es un lenguaje diseñado para facilitar la definición de redes
-            neuronales en contextos educativos.
-          </p>
-        </section>
+      <section id="intro">
+        <h1>Introducción</h1>
+        <p>
+          <strong>KAFE</strong> es un lenguaje de programación diseñado para la comunidad académica. 
+          <em>Domain-Specific Language</em> (DSL) enfocado en el desarrollo de redes neuronales, con una orientación 
+          funcional que permite el uso de funciones currificables, composición funcional y estructuras declarativas.
+        </p>
+        <p>
+          Este lenguaje ha sido creado para facilitar el aprendizaje de conceptos fundamentales en programación 
+          y bases de <strong>Deep Learning</strong>. Nuestro objetivo es proporcionar una herramienta simple, clara 
+          y educativa que promueva una comprensión profunda del funcionamiento interno de los modelos neuronales.
+        </p>
+        <p>
+        <strong>KAFE</strong> es desarrollado por un equipo de cuatro estudiantes de Ciencias de la Computación e Inteligencia Artificial, 
+          con el propósito de contribuir al ecosistema educativo. Nos alegra que estés explorando y utilizando este proyecto.
+        </p>
+        <p>
+          Inicialmente, <strong>KAFE</strong> está pensado para ejecutarse en este entorno web: puedes escribir tu código, compilarlo, 
+          descargar los archivos generados y, si deseas continuar más adelante, simplemente vuelve a subirlos para 
+          seguir trabajando donde lo dejaste.
+        </p>
+      </section>
 
         <section id="install">
           <h2>Installation</h2>
