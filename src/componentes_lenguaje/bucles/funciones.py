@@ -30,8 +30,10 @@ def forLoop(self, ctx):
             raise RuntimeError(f"Error determining type of iterable: {str(e)}")
     elif isinstance(iterable, str):
         tipo_elemento = self.nombre_tipos[str]
+    elif isinstance(iterable, range):
+        tipo_elemento = self.nombre_tipos[int]
     else:
-        raise TypeError(f"Variable in 'for' must be iterable (list or string), got {type(iterable).__name__}")
+        raise TypeError(f"Variable in 'for' must be iterable (list, string, or range), got {type(iterable).__name__}")
 
     for item in iterable:
         try:
@@ -41,4 +43,4 @@ def forLoop(self, ctx):
             raise RuntimeError(f"Error in 'for' block: {str(e)}")
 
     if var_name in self.variables:
-       del self.variables[var_name]
+        del self.variables[var_name]
