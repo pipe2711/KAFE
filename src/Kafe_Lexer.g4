@@ -1,4 +1,3 @@
-// Kafe_Lexer.g4
 lexer grammar Kafe_Lexer;
 
 // Casting
@@ -26,10 +25,10 @@ MATH_LIB    : 'math';
 // Math Library Tokens (constantes con lookahead)
 PI_CONST
     : 'pi' { self._input.LA(1)=='(' }?   // solo si viene '('
-    ;
+;
 E_CONST
     : 'e'  { self._input.LA(1)=='(' }?   // solo si viene '('
-    ;
+;
 
 // Funciones matemáticas
 SIN         : 'sin';
@@ -80,6 +79,7 @@ LPAREN      : '(';
 RPAREN      : ')';
 LBRACK      : '[';
 RBRACK      : ']';
+DOT         : '.';
 COLON       : ':';
 SEMI        : ';';
 COMMA       : ',';

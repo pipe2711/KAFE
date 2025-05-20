@@ -1,66 +1,36 @@
-// KafeMATH.g4
-grammar KafeMATH;
+// KafeMATH.g4  (parser grammar sin el bloque options)
+parser grammar KafeMATH;
 
-// Reglas de la librería Math
+// Importa los tokens del lexer
+import Kafe_Lexer;
+
 mathLibrary
-    : SIN        LPAREN expr RPAREN                 # sinFunction
-    | COS        LPAREN expr RPAREN                 # cosFunction
-    | TAN        LPAREN expr RPAREN                 # tanFunction
-    | ASIN       LPAREN expr RPAREN                 # asinFunction
-    | ACOS       LPAREN expr RPAREN                 # acosFunction
-    | ATAN       LPAREN expr RPAREN                 # atanFunction
-    | SINH       LPAREN expr RPAREN                 # sinhFunction
-    | COSH       LPAREN expr RPAREN                 # coshFunction
-    | TANH       LPAREN expr RPAREN                 # tanhFunction
-    | EXP        LPAREN expr RPAREN                 # expFunction
-    | LOG        LPAREN expr (COMMA expr)? RPAREN   # logFunction
-    | SQRT       LPAREN expr RPAREN                 # sqrtFunction
-    | POW_FUNC   LPAREN expr COMMA expr RPAREN      # powFunction
-    | FACT       LPAREN expr RPAREN                 # factorialFunction
-    // Aquí permitimos 2 o más argumentos:
-    | GCD        LPAREN expr (COMMA expr)+ RPAREN   # gcdFunction
-    | LCM        LPAREN expr (COMMA expr)+ RPAREN   # lcmFunction
-    | ABS        LPAREN expr RPAREN                 # absFunction
-    | FLOOR      LPAREN expr RPAREN                 # floorFunction
-    | CEIL       LPAREN expr RPAREN                 # ceilFunction
-    | ROUND      LPAREN expr (COMMA expr)? RPAREN   # roundFunction
-    | SUM        LPAREN expr COMMA expr RPAREN      # sumRangeFunction
-    | PROD       LPAREN expr COMMA expr RPAREN      # prodRangeFunction
-    | PROD       LPAREN expr ( COMMA expr )? RPAREN # prodFunction
-    | DEG        LPAREN expr RPAREN                 # degreesFunction
-    | RAD        LPAREN expr RPAREN                 # radiansFunction
-    | PI_CONST   LPAREN RPAREN                      # piFunction
-    | E_CONST    LPAREN RPAREN                      # eFunction
-    | PI_CONST                                    # piConstant
-    | E_CONST                                     # eConstant
+    : MATH_LIB DOT SIN        LPAREN expr RPAREN                 # sinFunction
+    | MATH_LIB DOT COS        LPAREN expr RPAREN                 # cosFunction
+    | MATH_LIB DOT TAN        LPAREN expr RPAREN                 # tanFunction
+    | MATH_LIB DOT ASIN       LPAREN expr RPAREN                 # asinFunction
+    | MATH_LIB DOT ACOS       LPAREN expr RPAREN                 # acosFunction
+    | MATH_LIB DOT ATAN       LPAREN expr RPAREN                 # atanFunction
+    | MATH_LIB DOT SINH       LPAREN expr RPAREN                 # sinhFunction
+    | MATH_LIB DOT COSH       LPAREN expr RPAREN                 # coshFunction
+    | MATH_LIB DOT TANH       LPAREN expr RPAREN                 # tanhFunction
+    | MATH_LIB DOT EXP        LPAREN expr RPAREN                 # expFunction
+    | MATH_LIB DOT LOG        LPAREN expr (COMMA expr)? RPAREN   # logFunction
+    | MATH_LIB DOT SQRT       LPAREN expr RPAREN                 # sqrtFunction
+    | MATH_LIB DOT POW_FUNC   LPAREN expr COMMA expr RPAREN      # powFunction
+    | MATH_LIB DOT FACT       LPAREN expr RPAREN                 # factorialFunction
+    | MATH_LIB DOT GCD        LPAREN expr (COMMA expr)+ RPAREN   # gcdFunction
+    | MATH_LIB DOT LCM        LPAREN expr (COMMA expr)+ RPAREN   # lcmFunction
+    | MATH_LIB DOT ABS        LPAREN expr RPAREN                 # absFunction
+    | MATH_LIB DOT FLOOR      LPAREN expr RPAREN                 # floorFunction
+    | MATH_LIB DOT CEIL       LPAREN expr RPAREN                 # ceilFunction
+    | MATH_LIB DOT ROUND      LPAREN expr (COMMA expr)? RPAREN   # roundFunction
+    | MATH_LIB DOT SUM        LPAREN expr COMMA expr RPAREN      # sumRangeFunction
+    | MATH_LIB DOT PROD       LPAREN expr COMMA expr RPAREN      # prodRangeFunction
+    | MATH_LIB DOT DEG        LPAREN expr RPAREN                 # degreesFunction
+    | MATH_LIB DOT RAD        LPAREN expr RPAREN                 # radiansFunction
+    | MATH_LIB DOT PI_CONST   LPAREN RPAREN                      # piFunction
+    | MATH_LIB DOT E_CONST    LPAREN RPAREN                      # eFunction
+    | MATH_LIB DOT PI_CONST                                      # piConstant
+    | MATH_LIB DOT E_CONST                                       # eConstant
     ;
-
-// Tokens
-SIN        : 'sin';
-COS        : 'cos';
-TAN        : 'tan';
-ASIN       : 'asin';
-ACOS       : 'acos';
-ATAN       : 'atan';
-SINH       : 'sinh';
-COSH       : 'cosh';
-TANH       : 'tanh';
-EXP        : 'exp';
-LOG        : 'log';
-SQRT       : 'sqrt';
-POW_FUNC   : 'pow';
-FACT       : 'factorial';
-GCD        : 'gcd';
-LCM        : 'lcm';
-ABS        : 'abs';
-FLOOR      : 'floor';
-CEIL       : 'ceil';
-ROUND      : 'round';
-SUM        : 'sum';
-PROD       : 'prod';
-DEG        : 'degrees';
-RAD        : 'radians';
-PI_CONST   : 'pi';
-E_CONST    : 'e';
-
-WS         : [ \t\r\n]+ -> skip;

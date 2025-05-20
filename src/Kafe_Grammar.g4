@@ -1,11 +1,15 @@
-
 grammar Kafe_Grammar;
 
-// Importar gramáticas auxiliares, incluida la nueva librería Math
-import Kafe_Lexer, KafePLOT, KafeNUMK, KafeFILES, KafeMATH;
+import 
+    Kafe_Lexer, 
+    KafePLOT, 
+    KafeNUMK, 
+    KafeFILES, 
+    KafeMATH
+  ;
 
 program 
-    : (importStmt SEMI)* (stmt SEMI)*
+    : (importStmt SEMI)* (stmt SEMI)* 
     ;
 
 importStmt
@@ -18,6 +22,7 @@ importStmt
 stmt
     : varDecl
     | assignStmt
+    | indexedAssignStmt
     | functionDecl
     | ifElseExpr
     | whileLoop
@@ -33,14 +38,26 @@ block
     : (stmt SEMI)*
     ;
 
-
 // ======================  VARIABLES ======================
-varDecl    : typeDecl ID ('=' expr)? ;
-assignStmt : ID '=' expr ;
+varDecl    
+    : typeDecl ID ASSIGN? expr? /* o bien: typeDecl ID (ASSIGN expr)? */
+    ;
+
+assignStmt 
+    : ID ASSIGN expr  
+    ;
+
+indexedAssignStmt 
+    : ID indexing ASSIGN expr
+    ;
+
+indexing
+    : (LBRACK expr RBRACK)+
+    ;
 
 // ======================  FUNCIONES ======================
 functionDecl
-    : DRIP ID '(' paramList? ')' ('(' paramList ')')* ARROW typeDecl COLON block
+    : DRIP ID LPAREN paramList? RPAREN (LPAREN paramList RPAREN)* ARROW typeDecl COLON block
     ;
 
 paramList 
@@ -49,11 +66,11 @@ paramList
 
 paramDecl
     : ID COLON typeDecl                                      # simpleParam
-    | ID COLON FUNC '(' paramList? ')' COLON typeDecl        # functionParam
+    | ID COLON FUNC LPAREN paramList? RPAREN COLON typeDecl  # functionParam
     ;
 
 functionCall
-    : ID '(' argList? ')' ('(' argList? ')')*
+    : ID LPAREN argList? RPAREN (LPAREN argList? RPAREN)*
     ;
 
 argList 
@@ -66,30 +83,37 @@ arg
     ;
 
 lambdaExpr 
-    : '(' paramDecl ')' ARROW expr
+    : LPAREN paramDecl RPAREN ARROW expr
     ;
 
-returnStmt : RETURN expr ;
-showStmt   : SHOW '(' expr ')' ;
-pourStmt   : POUR '(' expr ')' ;
+returnStmt 
+    : RETURN expr
+    ;
 
+showStmt   
+    : SHOW LPAREN expr RPAREN
+    ;
+
+pourStmt   
+    : POUR LPAREN expr RPAREN
+    ;
 
 // ======================  CONDICIONALES ======================
 ifElseExpr 
-    : IF '(' expr ')' COLON block (elifBranch)* (ELSE COLON block)?
+    : IF LPAREN expr RPAREN COLON block (elifBranch)* (ELSE COLON block)?
     ;
 
 elifBranch 
-    : ELIF '(' expr ')' COLON block
+    : ELIF LPAREN expr RPAREN COLON block
     ;
 
 // ======================  BUCLES ======================
 whileLoop 
-    : 'while' '(' expr ')' COLON block
+    : 'while' LPAREN expr RPAREN COLON block
     ;
 
 forLoop   
-    : 'for' '(' ID 'in' expr ')' COLON block
+    : 'for' LPAREN ID 'in' expr RPAREN COLON block
     ;
 
 // ======================  EXPRESIONES ======================
@@ -122,27 +146,27 @@ powerExpr
     ;
 
 unaryExpr
-    : (SUB | NOT) unaryExpr  # unaryExpresion
-    | primaryExpr            # primaryExpresion
+    : (SUB | NOT) unaryExpr    # unaryExpresion
+    | primaryExpr              # primaryExpresion
     ;
 
 // ======================  PRIMARY EXPRESSIONS ======================
 primaryExpr
     : primaryExpr LBRACK expr RBRACK          # indexingExpr
-    | mathLibrary                             # mathLibraryExpr
-    | functionCall                            # functionCallExpr
-    | numkLibrary                             # numkLibraryExpr
-    | plotLibrary                             # plotLibraryExpr
-    | filesLibrary                            # filesLibraryExpr
-    | pourStmt                                # pourExpr
-    | INT_CAST '(' expr ')'                   # intCastExpr
-    | FLOAT_CAST '(' expr ')'                 # floatCastExpr
-    | STR_CAST '(' expr ')'                   # strCastExpr
-    | BOOL_CAST '(' expr ')'                  # boolCastExpr
-    | lambdaExpr                              # lambdaExpresion
-    | literal                                 # literalExpr
-    | ID                                      # idExpr
-    | '(' expr ')'                            # parenExpr
+    | mathLibrary                              # mathLibraryExpr
+    | functionCall                             # functionCallExpr
+    | numkLibrary                              # numkLibraryExpr
+    | plotLibrary                              # plotLibraryExpr
+    | filesLibrary                             # filesLibraryExpr
+    | pourStmt                                 # pourExpr
+    | INT_CAST LPAREN expr RPAREN              # intCastExpr
+    | FLOAT_CAST LPAREN expr RPAREN            # floatCastExpr
+    | STR_CAST LPAREN expr RPAREN              # strCastExpr
+    | BOOL_CAST LPAREN expr RPAREN             # boolCastExpr
+    | lambdaExpr                               # lambdaExpresion
+    | literal                                  # literalExpr
+    | ID                                       # idExpr
+    | LPAREN expr RPAREN                       # parenExpr
     ;
 
 // ======================  LITERALES ======================
@@ -166,5 +190,5 @@ typeDecl
     | VOID_TYPE
     | STRING_TYPE
     | LIST LBRACK typeDecl RBRACK
-    | FUNC '(' paramList? ')' COLON typeDecl
+    | FUNC LPAREN paramList? RPAREN COLON typeDecl
     ;

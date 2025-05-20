@@ -1,48 +1,49 @@
+-- test2.kf
 import math;
 
 -- Constantes
-show(pi());
-show(e());
+show(math.pi());
+show(math.e());
 
 -- Funciones trigonométricas
-show(sin(pi() / 2));
-show(cos(0));
-show(tan(pi() / 4));
+show(math.sin(math.pi() / 2));
+show(math.cos(0));
+show(math.tan(math.pi() / 4));
 
---  Inversas
-show(asin(1));
-show(acos(1));
-show(atan(1));
+-- Inversas
+show(math.asin(1));
+show(math.acos(1));
+show(math.atan(1));
 
 -- Hiperbólicas
-show(sinh(0));
-show(cosh(0));
-show(tanh(0));
+show(math.sinh(0));
+show(math.cosh(0));
+show(math.tanh(0));
 
 -- Exponenciales y logaritmos
-show(exp(1));
-show(log(e()));
-show(log(8, 2));
+show(math.exp(1));
+show(math.log(math.e()));
+show(math.log(8, 2));
 
 -- Potencia y raíz
-show(sqrt(16));
-show(pow(2, 8));
+show(math.sqrt(16));
+show(math.pow(2, 8));
 
 -- Factoriales y aritmética de enteros
-show(factorial(5));
-show(gcd(48, 18));
-show(lcm(12, 15));
+show(math.factorial(5));
+show(math.gcd(48, 18));
+show(math.lcm(12, 15));
 
 -- Manipulación de flotantes
-show(abs(-42));
-show(floor(3.7));
-show(ceil(3.1));
-show(round(3.14159, 3));
+show(math.abs(-42));
+show(math.floor(3.7));
+show(math.ceil(3.1));
+show(math.round(3.14159, 3));
 
 -- Sumatorio y producto en rango
-show(sum(1, 5));
-show(prod(1, 5));
+show(math.sum(1, 5));
+show(math.prod(1, 5));
 
 -- Conversión de ángulos
-show(degrees(pi()));
-show(radians(180));
+show(math.degrees(math.pi()));
+show(math.radians(180));

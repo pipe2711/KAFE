@@ -157,4 +157,12 @@ def idExpr(self, ctx):
     if id_text in self.variables:
         return self.variables[id_text][1]
 
-    raise NameError(f"Variable '{id_text}' not defined")
+    raise NameError(f"Variable '{id_text}' not defined")\
+
+def indexedAssignStmt(visitor, ctx):
+    name = ctx.ID().getText()
+    idx = visitor.visit(ctx.expr(0))
+    value = visitor.visit(ctx.expr(1))
+    lst_type, lst = visitor.variables[name]
+    lst[idx] = value
+    return None
