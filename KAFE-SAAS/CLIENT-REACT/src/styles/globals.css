@@ -405,4 +405,24 @@ input:focus {
   margin-top: 0.5rem;
 }
 
+/*Barra*/
+.gutter {
+  background-color: #444;
+  background-clip: content-box;
+  z-index: 10;
+  transition: background 0.3s;
+}
+
+.gutter-vertical {
+  height: 4px; /* más delgado */
+  padding: 0;  /* sin espacio interno */
+  margin: 0;   /* sin margen */
+  cursor: row-resize;
+}
+
+
+.gutter {
+  background-color: #333; /* más sutil */
+}
+
 
