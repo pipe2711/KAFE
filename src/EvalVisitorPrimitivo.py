@@ -1,4 +1,3 @@
-# EvalVisitorPrimitivo.py
 import sys
 import os
 
@@ -186,7 +185,23 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
             raise Exception("numk library not imported")
         return numktranspose(self, ctx, self.numk)
 
-        # ────────── Funciones trigonométricas ──────────
+        # ────────── MATH──────────
+
+    def visitMathFunctionCall(self, ctx):
+        name = ctx.ID().getText()
+        args = [self.visit(e) for e in ctx.expr()]
+        func = getattr(math_funcs_module, name, None)
+        if func is None:
+            raise Exception(f"Unknown math function: {name}")
+        return func(*args)
+
+    def visitMathConstant(self, ctx):
+        name = ctx.ID().getText()
+        const = getattr(math_funcs_module, name, None)
+        if const is None:
+            raise Exception(f"Unknown math constant: {name}")
+        return const
+        
     def visitSinFunction(self, ctx):
         return math_funcs_module.sin(self.visit(ctx.expr()))
 
@@ -329,7 +344,7 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         return math_funcs_module.prod(self.visit(ctx.expr()))
 
     def visitSumFunction(self, ctx):
-        return sum(self.visit(ctx.expr()))  # built-in • no propio en funciones.py
+        return sum(self.visit(ctx.expr())) 
 
     def visitSumRangeFunction(self, ctx):
         return math_funcs_module.sum_range(self.visit(ctx.expr(0)),

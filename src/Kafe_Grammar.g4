@@ -1,5 +1,7 @@
 grammar Kafe_Grammar;
 
+options { tokenVocab=Kafe_Lexer; }
+
 import 
     Kafe_Lexer, 
     KafePLOT, 

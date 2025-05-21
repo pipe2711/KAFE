@@ -213,7 +213,13 @@ def ceil(x):
     return i if x <= i else i + 1
 
 def math_round(x, n=0):
-    return round(x, n)
+    factor = 10 ** n
+    t = x * factor
+    f = floor(t)                
+    if t - f >= 0.5:
+        f += 1
+    return f / factor
+
 
 def copysign(x, y):
     x, y = float(x), float(y)
@@ -287,14 +293,27 @@ def log10(x):
 
 # ===== Sumatorias y productos =====
 
-def sum_range(a, b):
-    return sum(range(int(a), int(b) + 1))
-
-def prod_range(a, b):
-    res = 1
+def sum_range(a, b=None):
+    if b is None:
+        total = 0
+        for x in a:
+            total += x
+        return total
+    total = 0
     for i in range(int(a), int(b) + 1):
-        res *= i
-    return res
+        total += i
+    return total
+
+def prod_range(a, b=None):
+    if b is None:
+        result = 1
+        for x in a:
+            result *= x
+        return result
+    result = 1
+    for i in range(int(a), int(b) + 1):
+        result *= i
+    return result
 
 def dist(p, q):
     if len(p) != len(q):
@@ -357,3 +376,10 @@ def gamma(x):
 
 def lgamma(x):
     return log(gamma(x))
+
+
+pow   = pow_
+abs   = math_abs
+round = math_round
+sum   = sum_range
+prod  = prod_range
