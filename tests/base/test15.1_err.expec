@@ -1,1 +1,1 @@
-TypeError: Could not assign value of type INT to variable of type 'List[INT]'
+TypeError: Expected List[INT], obtained INT

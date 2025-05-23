@@ -1,9 +1,13 @@
+from ..errores import (
+    raiseTypeMismatch, raiseVariableAlreadyDefined, raiseVariableNotDefined, raiseVoidAsVariableType,
+    raiseExpectedHomogeneousList, raiseNonIntegerIndex, raiseIndexOutOfBounds,
+)
 from ..global_utils import verificarHomogeneidad, asignar_variable
 
 def varDecl(self, ctx):
     tipo = ctx.typeDecl().getText()
     if tipo == "VOID":
-        raise TypeError("VOID cannot be used as variable type")
+        raiseVoidAsVariableType()
 
     name = ctx.ID().getText()
     val = None
@@ -12,7 +16,7 @@ def varDecl(self, ctx):
         val = self.visit(ctx.expr())
 
     if name in self.variables:
-        raise NameError(f"Variable '{name}' already defined")
+        raiseVariableAlreadyDefined(name)
 
     if val is None:
         if tipo == "INT":
@@ -25,8 +29,6 @@ def varDecl(self, ctx):
             val = False
         elif tipo.startswith("List"):
             val = []
-        else:
-            raise TypeError(f"Type '{tipo}' not recognized or missing default value")
 
     asignar_variable(self, name, val, tipo)
 
@@ -36,7 +38,7 @@ def assignStmt(self, ctx):
     valor = self.visit(ctx.expr())
 
     if id_text not in self.variables:
-        raise NameError(f"Variable '{id_text}' not defined")
+        raiseVariableNotDefined(id_text)
 
     tipo = self.variables[id_text][0]
 
@@ -54,7 +56,7 @@ def expr(self, ctx):
 
     if (type(resultado) == list):
         if (verificarHomogeneidad(resultado) == False):
-            raise TypeError(f"Expected homogeneous list")
+            raiseExpectedHomogeneousList()
 
     return resultado
 
@@ -138,13 +140,13 @@ def indexingExpr(self, ctx):
     index = self.visit(ctx.expr())
 
     if type(index) != int:
-        raise Exception(f"Index must be an integer, got {type(index).__name__}")
+        raiseNonIntegerIndex(self.obtener_tipo_dato(index))
 
     if type(collection) == str or type(collection) == list:
         try:
             return collection[index]
         except IndexError:
-            raise Exception(f"Index {index} out of bounds for collection of size {len(collection)}")
+            raiseIndexOutOfBounds(index, len(collection))
 
 def idExpr(self, ctx):
     id_text = ctx.ID().getText()
@@ -152,30 +154,32 @@ def idExpr(self, ctx):
     if id_text in self.variables:
         return self.variables[id_text][1]
 
-    raise NameError(f"Variable '{id_text}' not defined")
+    raiseVariableNotDefined(id_text)
 
 def indexedAssignStmt(self, ctx):
     nombre_lista = ctx.ID().getText()
     indexes = self.visit(ctx.indexing())
 
     for index in indexes:
-        if type(index) != int:
-            raise Exception(f"Index must be an integer, got {type(index).__name__}")
+        tipo_indice = self.obtener_tipo_dato(index)
 
-    _, lista = self.variables[nombre_lista]
+        if type(index) != int:
+            raiseNonIntegerIndex(tipo_indice)
 
     if nombre_lista not in self.variables:
-        raise Exception(f"Variable '{nombre_lista}' not defined")
+        raiseVariableNotDefined(nombre_lista)
+
+    _, lista = self.variables[nombre_lista]
 
     nuevo_valor = self.visit(ctx.expr())
     tipo_nuevo_valor = self.obtener_tipo_dato(nuevo_valor)
 
     listaIndexada = lista
     for i in range(len(indexes) - 1):
-       try:
+        try:
             listaIndexada = listaIndexada[indexes[i]]
-       except IndexError:
-            raise Exception(f"Index {indexes[i]} out of bounds for collection of size {len(listaIndexada)}")
+        except IndexError:
+            raiseIndexOutOfBounds(indexes[i], len(listaIndexada))
 
     ultimo_indice = indexes[len(indexes) - 1]
     try:
@@ -183,8 +187,8 @@ def indexedAssignStmt(self, ctx):
         tipo_anterior_valor = self.obtener_tipo_dato(anterior_valor)
 
         if tipo_nuevo_valor != tipo_anterior_valor:
-            raise TypeError(f"Could not assign value of type {tipo_nuevo_valor} to variable of type '{tipo_anterior_valor}'")
+            raiseTypeMismatch(tipo_nuevo_valor, tipo_anterior_valor)
 
         listaIndexada[ultimo_indice] = nuevo_valor
     except IndexError:
-        raise Exception(f"Index {indexes[len(indexes) - 1]} out of bounds for collection of size {len(listaIndexada)}")
+        raiseIndexOutOfBounds(ultimo_indice, len(listaIndexada))

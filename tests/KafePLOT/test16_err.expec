@@ -1,0 +1,1 @@
+TypeError: plot: Function xlabel expects argument of type STR, got type INT

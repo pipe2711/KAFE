@@ -1,5 +1,6 @@
 class Plot:
     def __init__(self):
+        self.nombre_lib = "plot"
         self.eje_x_label = ""
         self.eje_y_label = ""
         self.titulo_grafico = ""
@@ -9,6 +10,21 @@ class Plot:
         self.tamaño_punto = 3
         self.mostrar_valores_barras = False
         self.leyenda_pastel = None
+        self.funciones = {
+            "graph": "graph",
+            "xlabel": "xlabel",
+            "ylabel": "ylabel",
+            "title": "title",
+            "grid": "grid",
+            "color": "color",
+            "pointColor": "pointColor",
+            "pointSize": "pointSize",
+            "legend": "legend",
+            "bar": "bar",
+            "barValues": "barValues",
+            "pie": "pie",
+            "legend": "legend"
+        };
 
     def reset(self):
         self.__init__()

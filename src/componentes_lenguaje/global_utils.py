@@ -1,3 +1,5 @@
+from .errores import raiseTypeMismatch
+
 def verificar_tipo(tipo, tipo_valor):
     tipo_original = tipo
 
@@ -14,7 +16,7 @@ def verificar_tipo(tipo, tipo_valor):
             tipo = tipo.replace("INT","").replace("FLOAT","").replace("STR","").replace("BOOL","")
 
     if tipo != tipo_valor:
-        raise TypeError(f"Expected {tipo_original}, obtained {tipo_valor}")
+        raiseTypeMismatch(tipo_valor, tipo_original)
 
 def asignar_variable(self, name, valor, tipo):
     tipo_valor = self.obtener_tipo_dato(valor)

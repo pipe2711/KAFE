@@ -1,3 +1,4 @@
+from ..errores import raiseFunctionCantReturnVoid
 from componentes_lenguaje.global_utils import verificar_tipo
 
 class ReturnValue(Exception):
@@ -8,7 +9,7 @@ class ReturnValue(Exception):
 def check_value_type(self, value, declared_type):
     if declared_type == "VOID":
         if value is not None:
-            raise TypeError("Function declared VOID must not return a value")
+            raiseFunctionCantReturnVoid()
         return
 
     tipo_valor = self.obtener_tipo_dato(value)

@@ -1,19 +1,31 @@
-def verificar_misma_dimension(matriz1, matriz2):
-    if len(matriz1) != len(matriz2):
-        raise Exception("numkadd: Matrices don't have the same dimension")
-    for i in range(len(matriz1)):
-        if len(matriz1[i]) != len(matriz2[i]):
-            raise Exception("numkadd: Matrices don't have the same dimension")
+from componentes_lenguaje.errores import raiseFunctionIncorrectArgumentType
 
-    return
+def verificar_misma_dimension(matriz1, matriz2, nombre_lib, funcion):
+    if len(matriz1) == len(matriz2):
+        mismaDimension_filas = True
+        for i in range(len(matriz1)):
+            if len(matriz1[i]) != len(matriz2[i]):
+                mismaDimension_filas = False
+                break
 
-def obtener_matrices(self, ctx):
+        if (mismaDimension_filas):
+            return
+
+    raise Exception(f"{nombre_lib}.{funcion}: Matrices don't have the same dimension")
+
+def obtener_matrices(self, ctx, nombre_lib, funcion):
     # Obtener las matrices
     matriz1 = self.visit(ctx.expr(0))
     matriz2 = self.visit(ctx.expr(1))
 
-    if verificar_matriz_2dim(matriz1) == False or verificar_matriz_2dim(matriz2) == False:
-        raise Exception("numkadd: Expected matrices as arguments")
+    tipo_matriz1 = self.obtener_tipo_dato(matriz1)
+    tipo_matriz2 = self.obtener_tipo_dato(matriz2)
+
+    if verificar_matriz_2dim(matriz1) == False:
+        raiseFunctionIncorrectArgumentType(funcion, tipo_matriz1, "matrix", origin=nombre_lib)
+
+    if verificar_matriz_2dim(matriz2) == False:
+        raiseFunctionIncorrectArgumentType(funcion, tipo_matriz2, "matrix", origin=nombre_lib)
 
     return (matriz1, matriz2)
 

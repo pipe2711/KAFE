@@ -1,1 +1,1 @@
-Exception: Index 45 out of bounds for collection of size 5
+IndexError: Index 45 out of bounds for collection of size 5

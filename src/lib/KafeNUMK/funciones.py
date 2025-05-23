@@ -1,6 +1,17 @@
+from componentes_lenguaje.errores import raiseWrongNumberOfArgs, raiseFunctionIncorrectArgumentType
 from lib.KafeNUMK.utils import verificar_misma_dimension, obtener_matrices, verificar_matriz_2dim
 
 class Numk:
+    def __init__(self):
+        self.nombre_lib = "numk"
+        self.funciones = {
+            "add": "add",
+            "sub": "sub",
+            "mul": "mul",
+            "inv": "inv",
+            "transpose": "transpose"
+        }
+
     def operar_matrices(self, matriz1, matriz2, operacion):
         # Sumar las matrices
         resultado = []
@@ -21,7 +32,7 @@ class Numk:
     def mul(self, matriz1, matriz2):
         # Verificar si las matrices son compatibles para la multiplicación
         if len(matriz1[0]) != len(matriz2):
-            raise Exception("numkmul: Matrices are not compatible for multiplication")
+            raise Exception(f"{self.nombre_lib}.{self.funciones['mul']}: Matrices are not compatible for multiplication")
 
         # Multiplicar las matrices
         resultado = []
@@ -39,7 +50,7 @@ class Numk:
     def inv(self, matriz):
         # Verificar que la matriz sea cuadrada
         if len(matriz) != len(matriz[0]):
-            raise Exception("numkinv: Matrix is not square")
+            raise Exception(f"{self.nombre_lib}.{self.funciones['inv']}: Matrix is not square")
 
         # Calcular la inversa de la matriz
         n = len(matriz)
@@ -60,7 +71,7 @@ class Numk:
             # Hacer que el elemento diagonal sea 1
             factor = matriz_aumentada[i][i]
             if factor == 0:
-                raise Exception("numkinv: Matrix is singular")
+                raise Exception(f"{self.nombre_lib}.{self.funciones['inv']}: Matrix is singular")
             for j in range(m):
                 matriz_aumentada[i][j] /= factor
             # Hacer que los elementos de la columna sean 0
@@ -88,43 +99,48 @@ class Numk:
         return transpuesta
 
 def numkadd(self, ctx, numk):
-    if len(ctx.expr()) != 2:
-        raise Exception("numkadd: Expected 2 arguments")
+    nombre_funcion = numk.funciones["add"]
 
-    matriz1, matriz2 = obtener_matrices(self, ctx)
-    verificar_misma_dimension(matriz1, matriz2)
+    if len(ctx.expr()) != 2:
+        raiseWrongNumberOfArgs(nombre_funcion, 2, len(ctx.expr()), origin=numk.nombre_lib)
+
+    matriz1, matriz2 = obtener_matrices(self, ctx, numk.nombre_lib, nombre_funcion)
+    verificar_misma_dimension(matriz1, matriz2, numk.nombre_lib, nombre_funcion)
 
     return numk.add(matriz1, matriz2)
 
 def numksub(self, ctx, numk):
+    nombre_funcion = numk.funciones["sub"]
     if len(ctx.expr()) != 2:
-        raise Exception("numkadd: Expected 2 arguments")
+        raiseWrongNumberOfArgs(nombre_funcion, 2, len(ctx.expr()), origin=numk.nombre_lib)
 
-    matriz1, matriz2 = obtener_matrices(self, ctx)
-    verificar_misma_dimension(matriz1, matriz2)
+    matriz1, matriz2 = obtener_matrices(self, ctx, numk.nombre_lib, nombre_funcion)
+    verificar_misma_dimension(matriz1, matriz2, numk.nombre_lib, nombre_funcion)
 
     return numk.sub(matriz1, matriz2)
 
 def numkmul(self, ctx, numk):
+    nombre_funcion = numk.funciones["mul"]
     if len(ctx.expr()) != 2:
-        raise Exception("numkadd: Expected 2 arguments")
+        raiseWrongNumberOfArgs(nombre_funcion, 2, len(ctx.expr()), origin=numk.nombre_lib)
 
-    matriz1, matriz2 = obtener_matrices(self, ctx)
-
+    matriz1, matriz2 = obtener_matrices(self, ctx, numk.nombre_lib, nombre_funcion)
     return numk.mul(matriz1, matriz2)
 
 def numkinv(self, ctx, numk):
     matriz = self.visit(ctx.expr())
+    tipo_matriz = self.obtener_tipo_dato(matriz)
 
     if verificar_matriz_2dim(matriz) == False:
-        raise Exception("numkadd: Expected matrix as argument")
+        raiseFunctionIncorrectArgumentType(numk.funciones['inv'], tipo_matriz, "matrix", origin=numk.nombre_lib)
 
     return numk.inv(matriz)
 
 def numktranspose(self, ctx, numk):
     matriz = self.visit(ctx.expr())
+    tipo_matriz = self.obtener_tipo_dato(matriz)
 
     if verificar_matriz_2dim(matriz) == False:
-        raise Exception("numkadd: Expected matrix as argument")
+        raiseFunctionIncorrectArgumentType(numk.funciones['inv'], tipo_matriz, "matrix", origin=numk.nombre_lib)
 
     return numk.transpose(matriz)

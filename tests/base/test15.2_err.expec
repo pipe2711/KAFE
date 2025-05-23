@@ -1,1 +1,1 @@
-TypeError: Could not assign value of type INT to variable of type 'FLOAT'
+TypeError: Expected FLOAT, obtained INT

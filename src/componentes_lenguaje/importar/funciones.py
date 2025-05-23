@@ -1,5 +1,7 @@
 import pathlib
 import sys
+
+from ..errores import raiseModuleNotFound
 sys.path.append("../..")
 from antlr4 import FileStream, CommonTokenStream
 from Kafe_GrammarLexer import Kafe_GrammarLexer
@@ -26,7 +28,7 @@ def importStmt(self, ctx):
             break
     if filename is None:
         tried = ", ".join(str(p) for p in candidates)
-        raise FileNotFoundError(f"Module file for '{module}' not found. Tried: {tried}")
+        raiseModuleNotFound(module, tried)
 
     # Ajustar directorio para imports dentro del módulo
     prev_dir = self.current_dir

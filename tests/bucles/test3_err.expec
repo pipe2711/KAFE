@@ -1,1 +1,1 @@
-RuntimeError: Maximum number of iterations exceeded in 'while' loop (possible infinite loop)
+RuntimeError: Maximum number of iterations exceeded in while loop (possible infinite loop)
