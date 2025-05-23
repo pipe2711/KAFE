@@ -64,7 +64,7 @@ export default function Docs() {
           con el propósito de contribuir al ecosistema educativo. Nos alegra que estés explorando y utilizando este proyecto.
         </p>
         <p>
-          Inicialmente, <strong>KAFE</strong> está pensado para ejecutarse en este entorno web: puedes escribir tu código, compilarlo, 
+          Inicialmente, <strong></strong> está pensado para ejecutarse en este entorno web: puedes escribir tu código, compilarlo, 
           descargar los archivos generados y, si deseas continuar más adelante, simplemente vuelve a subirlos para 
           seguir trabajando donde lo dejaste.
         </p>
