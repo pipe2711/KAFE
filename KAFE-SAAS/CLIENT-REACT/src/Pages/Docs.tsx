@@ -11,35 +11,40 @@ export default function Docs() {
                 <a href="#intro">Introduction</a>
               </li>
               <li>
-                <a href="#install">Installation</a>
-              </li>
-              <li>
                 <a href="#quick">Quick Start Guide</a>
               </li>
-              <li>
-                <a href="#structure">Project Structure</a>
-              </li>
             </ul>
           </details>
-          <details>
-            <summary>Components</summary>
-            <ul>
-              <li>Stepper</li>
-              <li>Tabs</li>
-              <li>Note</li>
-              <li>Code Block</li>
-              <li>Image & Link</li>
-              <li>
-                File System <span className="badge">New</span>
-              </li>
-              <li>Custom</li>
-            </ul>
-          </details>
+          <details open>
+          <summary>Lenguaje KAFE<span className="badge">New</span></summary>
           <ul>
-            <li>Internationalization</li>
-            <li>
-              Algolia Search <span className="badge">New</span>
-            </li>
+            <li><a href="#comentarios">Comentarios</a></li>
+            <li><a href="#variables">Variables y Tipos</a></li>
+            <li><a href="#numeros-strings">Números y Strings</a></li>
+            <li><a href="#booleanos-operadores">Booleanos y Operadores</a></li>
+            <li><a href="#listas-matrices">Listas y Matrices</a></li>
+            <li><a href="#condicionales">Condicionales</a></li>
+            <li><a href="#bucles">Bucles</a></li>
+            <li><a href="#funciones">Funciones</a></li>
+            <li><a href="#currificables">Funciones Currificables</a></li>
+            <li><a href="#alto-nivel">Funciones de Alto Nivel</a></li>
+            <li><a href="#recursivas">Funciones Recursivas</a></li>
+          </ul>
+        </details>
+
+          <ul>
+          <details open>
+            <summary>NUMK<span className="badge">New</span></summary>
+            </details>
+            <details open>
+            <summary>KAFEPLOT<span className="badge">New</span></summary>
+            </details>
+            <details open>
+            <summary>KAFEMATH<span className="badge">New</span></summary>
+            </details>
+            <details open>
+            <summary>GESHADEEP<span className="badge">New</span></summary>
+            </details>
             <li>Themes</li>
             <li>Customize</li>
           </ul>
@@ -69,32 +74,24 @@ export default function Docs() {
           seguir trabajando donde lo dejaste.
         </p>
       </section>
-
-        <section id="install">
-          <h2>Installation</h2>
-          <p>
-            Puedes instalar el intérprete de KAFE desde nuestra página oficial o
-            usar un contenedor Docker preconfigurado.
-          </p>
-        </section>
-
         <section id="quick">
-          <h2>Quick Start Guide</h2>
-          <p>
-            Sigue esta guía rápida para comenzar a definir tu primer modelo en
-            KAFE.
-          </p>
-          <pre>{`CODIGUITO`}</pre>
-        </section>
+  <h2>Quick Start Guide</h2>
+  <p>
+    Para comenzar rápidamente, abre el <strong>Editor</strong> en línea desde el menú principal y pega el siguiente código. 
+    Puedes ejecutarlo inmediatamente para ver el resultado.
+  </p>
+  <p>
+    Este ejemplo importa el módulo <code>NUMK</code> y realiza una operación aritmética básica.
+  </p>
+  <pre>{`import NUMK;
 
-        <section id="structure">
-          <h2>Project Structure</h2>
-          <p>Organiza tu proyecto KAFE de la siguiente manera:</p>
-          <pre>{`src/
- ├── models/
- ├── datasets/
- ├── run.kf`}</pre>
-        </section>
+let a = 5;
+let b = 10;
+let resultado = a + b;
+show(resultado);`}</pre>
+</section>
+
+
       </main>
     </div>
   );
