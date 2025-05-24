@@ -18,14 +18,11 @@ def obtener_matrices(self, ctx, nombre_lib, funcion):
     matriz1 = self.visit(ctx.expr(0))
     matriz2 = self.visit(ctx.expr(1))
 
-    tipo_matriz1 = self.obtener_tipo_dato(matriz1)
-    tipo_matriz2 = self.obtener_tipo_dato(matriz2)
-
     if verificar_matriz_2dim(matriz1) == False:
-        raiseFunctionIncorrectArgumentType(funcion, tipo_matriz1, "matrix", origin=nombre_lib)
+        raiseFunctionIncorrectArgumentType(funcion, matriz1, "matrix", origin=nombre_lib)
 
     if verificar_matriz_2dim(matriz2) == False:
-        raiseFunctionIncorrectArgumentType(funcion, tipo_matriz2, "matrix", origin=nombre_lib)
+        raiseFunctionIncorrectArgumentType(funcion, matriz2, "matrix", origin=nombre_lib)
 
     return (matriz1, matriz2)
 

@@ -1,8 +1,6 @@
 import pathlib
-import sys
 
 from ..errores import raiseModuleNotFound
-sys.path.append("../..")
 from antlr4 import FileStream, CommonTokenStream
 from Kafe_GrammarLexer import Kafe_GrammarLexer
 from Kafe_GrammarParser import Kafe_GrammarParser
