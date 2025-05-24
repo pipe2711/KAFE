@@ -37,10 +37,10 @@ functionDecl
     : DRIP ID '(' paramList? ')' ('(' paramList ')')* ARROW typeDecl COLON block
     ;
 paramList : paramDecl (COMMA paramDecl)*;
-paramDecl
-    : ID COLON typeDecl                                      # simpleParam
-    | ID COLON FUNC '(' paramList? ')' COLON typeDecl        # functionParam
-    ;
+paramDecl : ID COLON typeDecl   # simpleParam;
+
+functionParam: FUNC '(' paramList_typeDecl? ')' ARROW typeDecl;
+paramList_typeDecl : typeDecl (COMMA typeDecl)*;
 
 // Llamadas currificables:   f(args) (args)*
 functionCall
@@ -114,6 +114,7 @@ literal
 
 listLiteral : LBRACK (expr (COMMA expr)*)? RBRACK;
 
+
 typeDecl
     : INT_TYPE
     | FLOAT_TYPE
@@ -121,5 +122,5 @@ typeDecl
     | VOID_TYPE
     | STRING_TYPE
     | LIST LBRACK typeDecl RBRACK
-    | FUNC '(' paramList? ')' COLON typeDecl
+    | functionParam
     ;

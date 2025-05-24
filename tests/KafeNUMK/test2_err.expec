@@ -1,1 +1,1 @@
-Exception: numkadd: Expected matrices as arguments
+TypeError: numk: Function add expects argument of type matrix, got type INT

@@ -1,5 +1,6 @@
 class Plot:
     def __init__(self):
+        self.nombre_lib = "plot"
         self.eje_x_label = ""
         self.eje_y_label = ""
         self.titulo_grafico = ""
@@ -9,6 +10,21 @@ class Plot:
         self.tamaño_punto = 3
         self.mostrar_valores_barras = False
         self.leyenda_pastel = None
+        self.funciones = {
+            "graph": "graph",
+            "xlabel": "xlabel",
+            "ylabel": "ylabel",
+            "title": "title",
+            "grid": "grid",
+            "color": "color",
+            "pointColor": "pointColor",
+            "pointSize": "pointSize",
+            "legend": "legend",
+            "bar": "bar",
+            "barValues": "barValues",
+            "pie": "pie",
+            "legend": "legend"
+        };
 
     def reset(self):
         self.__init__()
@@ -39,7 +55,7 @@ class Plot:
 
     def set_point_size(self, valor):
         self.tamaño_punto = valor
-    
+
     def deg_to_rad(self, grados):
         return grados * 3.141592653589793 / 180
 
@@ -188,7 +204,7 @@ class Plot:
         start_angle = -180
         colores = ["#f4d03f", "#82e0aa", "#ec7063", "#85c1e9", "#bb8fce", "#f5b7b1", "#f1948a", "#7fb3d5", "#f8c471", "#aed6f1"]
 
-        
+
         svg = f'<svg width="{width}" height="{height}" xmlns="http://www.w3.org/2000/svg">\n'
         svg += f'<rect width="100%" height="100%" fill="white"/>\n'
 

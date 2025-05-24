@@ -1,0 +1,14 @@
+import plot;
+
+plot.title("Altura máxima alcanzada");
+plot.xlabel("Tiempo");
+plot.ylabel("Altura");
+plot.grid(True);
+plot.color("black");
+plot.pointColor("green");
+plot.pointSize(True);
+
+List[FLOAT] t = [0.0, 2.0, 4.0, 6.0, 8.0];
+List[INT] h = [0, 20, 40, 20, 0];
+
+plot.graph(t, h);

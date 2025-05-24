@@ -1,1 +1,1 @@
-TypeError: add expects 2 args, got 1
+Exception: 'add' expects 2 args, got 1
