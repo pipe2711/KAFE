@@ -95,7 +95,7 @@ def raiseExceededIterationCount(origin=""):
 def raiseNonIterableVariable(variable, origin=""):
     tipo = obtener_tipo_dato(variable)
 
-    message = f"Variable in for must be iterable (list or string), got {tipo}"
+    message = f"Variable in for must be iterable (list or string or range), got {tipo}"
     if origin:
         message = origin + ": " + message
     raise TypeError(message)

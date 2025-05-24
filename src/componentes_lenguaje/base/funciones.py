@@ -1,5 +1,5 @@
 from ..errores import (
-    raiseVariableAlreadyDefined, raiseVariableNotDefined, raiseVoidAsVariableType,
+    raiseFunctionIncorrectArgumentType, raiseVariableAlreadyDefined, raiseVariableNotDefined, raiseVoidAsVariableType,
     raiseExpectedHomogeneousList, raiseNonIntegerIndex, raiseIndexOutOfBounds, raiseTypeMismatch
 )
 from TypeUtils import nombre_tipos, obtener_tipo_dato
@@ -190,3 +190,31 @@ def indexedAssignStmt(self, ctx):
         listaIndexada[ultimo_indice] = nuevo_valor
     except IndexError:
         raiseIndexOutOfBounds(ultimo_indice, len(listaIndexada))
+
+def rangeExpr(self, ctx):
+    start = None
+    stop = None
+    step = None
+
+    stop = self.visit(ctx.expr(0))
+    if type(stop) != int:
+        raiseFunctionIncorrectArgumentType("range", stop, nombre_tipos[int])
+
+    if ctx.expr(1) is not None:
+        start = self.visit(ctx.expr(0))
+        stop = self.visit(ctx.expr(1))
+
+        if type(stop) != int:
+            raiseFunctionIncorrectArgumentType("range", stop, nombre_tipos[int])
+
+    if ctx.expr(2) is not None:
+        step = self.visit(ctx.expr(2))
+        if type(step) != int:
+            raiseFunctionIncorrectArgumentType("range", step, nombre_tipos[int])
+
+    if ctx.expr(1) is None:
+        return list(range(stop))
+    elif ctx.expr(2) is None:
+        return list(range(start, stop))
+    else:
+        return list(range(start, stop, step))

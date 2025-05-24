@@ -92,6 +92,7 @@ primaryExpr
     | filesLibrary                            # filesLibraryExpr
     | mathLibrary                             # mathLibraryExpr
     | pourStmt                                # pourExpr
+    | RANGE '(' expr (COMMA expr)? (COMMA expr)? ')' # rangeExpr
     | INT_CAST   '(' expr ')'                 # intCastExpr
     | FLOAT_CAST '(' expr ')'                 # floatCastExpr
     | STR_CAST   '(' expr ')'                 # strCastExpr

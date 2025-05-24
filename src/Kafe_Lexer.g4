@@ -17,6 +17,7 @@ ELSE       : 'else';
 MATCH      : 'match';
 FUNC       : 'FUNC';
 IMPORT     : 'import';
+RANGE      :  'range';
 
 // Operadores
 ADD        : '+';

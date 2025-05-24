@@ -3,7 +3,7 @@ import os
 from Kafe_GrammarVisitor import Kafe_GrammarVisitor
 
 from componentes_lenguaje.errores import raiseLibraryNotImported
-from componentes_lenguaje.base.funciones import additiveExpr, assignStmt, equalityExpr, expr, idExpr, indexedAssignStmt, indexingExpr, logicExpr, multiplicativeExpr, powerExpr, relationalExpr, showStmt, unaryExpresion, varDecl, pourStmt
+from componentes_lenguaje.base.funciones import additiveExpr, assignStmt, equalityExpr, expr, idExpr, indexedAssignStmt, indexingExpr, logicExpr, multiplicativeExpr, powerExpr, relationalExpr, showStmt, unaryExpresion, varDecl, pourStmt, rangeExpr
 from componentes_lenguaje.bucles.funciones import forLoop, whileLoop
 from componentes_lenguaje.condicionales.funciones import ifElseExpr
 from componentes_lenguaje.funciones.funciones import functionCall, functionDecl, lambdaExpr, returnStmt
@@ -53,6 +53,8 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitShowStmt(self, ctx): showStmt(self, ctx)
 
     def visitPourStmt(self, ctx): return pourStmt(self, ctx)
+
+    def visitRangeExpr(self, ctx): return rangeExpr(self, ctx)
 
 
     # ======================  CONDICIONALES ======================
