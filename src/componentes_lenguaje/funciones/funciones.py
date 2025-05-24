@@ -1,12 +1,10 @@
-import sys
-
+from TypeUtils import nombre_tipos
 from ..errores import (
     raiseFunctionAlreadyDefined, raiseVoidAsParameterType, raiseWrongNumberOfArgs, raiseFunctionNotDefined
 )
-sys.path.append("../..")
 from Kafe_GrammarParser import Kafe_GrammarParser
-from componentes_lenguaje.funciones.utils import ReturnValue, check_value_type
-from componentes_lenguaje.global_utils import asignar_variable
+from .utils import ReturnValue, check_value_type
+from ..global_utils import asignar_variable
 
 def functionDecl(self, ctx):
     name = ctx.ID().getText()
@@ -14,14 +12,14 @@ def functionDecl(self, ctx):
     # Verificación para evitar redefinición de funciones
     if name in self.variables:
         tipo_existente, _ = self.variables[name]
-        if tipo_existente == "FUNC":
+        if tipo_existente == nombre_tipos["func"]:
             raiseFunctionAlreadyDefined(name)
 
     retTyp = ctx.typeDecl().getText()
     params = [p for pl in ctx.paramList() for p in pl.paramDecl()]
     for p in params:
         if (not isinstance(p, Kafe_GrammarParser.FunctionParamContext)
-                and p.typeDecl().getText() == "VOID"):
+                and p.typeDecl().getText() == nombre_tipos["void"]):
             raiseVoidAsParameterType()
     body = ctx.block()
     outer = self
@@ -40,7 +38,7 @@ def functionDecl(self, ctx):
             saved = dict(outer.variables)
             for decl, val in zip(params, new_vals):
                 pid = decl.ID().getText()
-                ptype = ("FUNC" if isinstance(decl, Kafe_GrammarParser.FunctionParamContext)
+                ptype = (nombre_tipos["func"] if isinstance(decl, Kafe_GrammarParser.FunctionParamContext)
                          else decl.typeDecl().getText())
                 asignar_variable(outer, pid, val, ptype)
             result = None
@@ -50,18 +48,18 @@ def functionDecl(self, ctx):
                 result = rv.value
             finally:
                 outer.variables = saved
-            check_value_type(outer, result, retTyp)
+            check_value_type(result, retTyp)
             return result
 
     # Si todo está bien, se guarda la función
-    self.variables[name] = ("FUNC", KafeFunction())
+    self.variables[name] = (nombre_tipos["func"], KafeFunction())
 
 
 def lambdaExpr(self, ctx):
     param = ctx.paramDecl()
     pid = param.ID().getText()
     ptype = param.typeDecl().getText()
-    if ptype == "VOID":
+    if ptype == nombre_tipos["func"]:
         raiseVoidAsParameterType()
     body = ctx.expr()
     captured = dict(self.variables)

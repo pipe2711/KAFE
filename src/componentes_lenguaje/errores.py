@@ -1,11 +1,13 @@
+from TypeUtils import nombre_tipos, obtener_tipo_dato
+
 def raiseVoidAsVariableType(origin=""):
-    message = "VOID cannot be used as variable type"
+    message = f"{nombre_tipos['void']} cannot be used as variable type"
     if origin:
         message = origin + ": " + message
     raise TypeError(message)
 
 def raiseVoidAsParameterType(origin=""):
-    message = "VOID cannot be used as parameter type"
+    message = f"{nombre_tipos['void']} cannot be used as parameter type"
     if origin:
         message = origin + ": " + message
     raise TypeError(message)
@@ -40,7 +42,8 @@ def raiseExpectedHomogeneousList(origin=""):
         message = origin + ": " + message
     raise Exception(message)
 
-def raiseNonIntegerIndex(tipo, origin=""):
+def raiseNonIntegerIndex(valor, origin=""):
+    tipo = obtener_tipo_dato(valor)
     message = f"Index must be an integer, got {tipo}"
     if origin:
         message = origin + ": " + message
@@ -52,13 +55,16 @@ def raiseIndexOutOfBounds(index, length, origin=""):
         message = origin + ": " + message
     raise IndexError(message)
 
-def raiseTypeMismatch(tipo_valor, tipo_definido, origin=""):
+def raiseTypeMismatch(variable, tipo_definido, origin=""):
+    tipo_valor = obtener_tipo_dato(variable)
     message = f"Expected {tipo_definido}, obtained {tipo_valor}"
     if origin:
         message = origin + ": " + message
     raise TypeError(message)
 
-def raiseFunctionIncorrectArgumentType(function_name, tipo_valor, tipo_definido, origin=""):
+def raiseFunctionIncorrectArgumentType(function_name, valor, tipo_definido, origin=""):
+    tipo_valor = obtener_tipo_dato(valor)
+
     if type(tipo_definido) == list:
         tipos_esperados = ""
         for i in range(len(tipo_definido) - 1):
@@ -72,7 +78,9 @@ def raiseFunctionIncorrectArgumentType(function_name, tipo_valor, tipo_definido,
         message = origin + ": " + message
     raise TypeError(message)
 
-def raiseConditionMustBeBoolean(place, tipo, origin=""):
+def raiseConditionMustBeBoolean(place, variable, origin=""):
+    tipo = obtener_tipo_dato(variable)
+
     message = f"Condition in {place} must be boolean, got {tipo}"
     if origin:
         message = origin + ": " + message
@@ -84,7 +92,9 @@ def raiseExceededIterationCount(origin=""):
         message = origin + ": " + message
     raise RuntimeError(message)
 
-def raiseNonIterableVariable(tipo, origin=""):
+def raiseNonIterableVariable(variable, origin=""):
+    tipo = obtener_tipo_dato(variable)
+
     message = f"Variable in for must be iterable (list or string), got {tipo}"
     if origin:
         message = origin + ": " + message
@@ -109,7 +119,7 @@ def raiseRuntimeError(place, exception, origin=""):
     raise RuntimeError(message)
 
 def raiseFunctionCantReturnVoid(origin=""):
-    message = "Function declared VOID must not return a value"
+    message = f"Function declared {nombre_tipos['void']} must not return a value"
     if origin:
         message = origin + ": " + message
     raise TypeError(message)

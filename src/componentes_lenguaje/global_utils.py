@@ -1,27 +1,33 @@
-from .errores import raiseTypeMismatch
+from componentes_lenguaje.errores import raiseTypeMismatch
+from TypeUtils import nombre_tipos, obtener_tipo_dato
 
-def verificar_tipo(tipo, tipo_valor):
+def esTipoCorrecto(valor, tipo):
+    tipo_valor = obtener_tipo_dato(valor)
     tipo_original = tipo
 
-    if tipo.startswith("FUNC"):
+    if tipo.startswith(nombre_tipos["func"]):
         tipo = tipo[:4]
 
-    if tipo_valor.startswith("List") and tipo_original.startswith("List"):
-        no_tiene_valores = not any(t in tipo_valor for t in ["INT","FLOAT","STR","BOOL"])
-        es_lista_vacia = tipo_valor == "List[]"
+    if tipo_valor.startswith(nombre_tipos[list]) and tipo_original.startswith(nombre_tipos[list]):
+        no_tiene_valores = not any(t in tipo_valor for t in [
+            nombre_tipos[tipo] for tipo in [int, float, str, bool]
+        ])
+        es_lista_vacia = tipo_valor == obtener_tipo_dato([])
 
         if es_lista_vacia:
             tipo_valor = tipo_original
         elif no_tiene_valores:
-            tipo = tipo.replace("INT","").replace("FLOAT","").replace("STR","").replace("BOOL","")
+            tipo = tipo.replace(nombre_tipos[int],"").replace(nombre_tipos[float],"")
+            tipo = tipo.replace(nombre_tipos[str],"").replace(nombre_tipos[bool],"")
 
     if tipo != tipo_valor:
-        raiseTypeMismatch(tipo_valor, tipo_original)
+        return False
+    else:
+        return True
 
 def asignar_variable(self, name, valor, tipo):
-    tipo_valor = self.obtener_tipo_dato(valor)
-
-    verificar_tipo(tipo, tipo_valor)
+    if not esTipoCorrecto(valor, tipo):
+        raiseTypeMismatch(valor, tipo)
 
     self.variables[name] = (tipo, valor)
 

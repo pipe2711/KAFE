@@ -129,18 +129,16 @@ def numkmul(self, ctx, numk):
 
 def numkinv(self, ctx, numk):
     matriz = self.visit(ctx.expr())
-    tipo_matriz = self.obtener_tipo_dato(matriz)
 
     if verificar_matriz_2dim(matriz) == False:
-        raiseFunctionIncorrectArgumentType(numk.funciones['inv'], tipo_matriz, "matrix", origin=numk.nombre_lib)
+        raiseFunctionIncorrectArgumentType(numk.funciones['inv'], matriz, "matrix", origin=numk.nombre_lib)
 
     return numk.inv(matriz)
 
 def numktranspose(self, ctx, numk):
     matriz = self.visit(ctx.expr())
-    tipo_matriz = self.obtener_tipo_dato(matriz)
 
     if verificar_matriz_2dim(matriz) == False:
-        raiseFunctionIncorrectArgumentType(numk.funciones['inv'], tipo_matriz, "matrix", origin=numk.nombre_lib)
+        raiseFunctionIncorrectArgumentType(numk.funciones['inv'], matriz, "matrix", origin=numk.nombre_lib)
 
     return numk.transpose(matriz)

@@ -1,12 +1,13 @@
 from ..errores import (
-    raiseTypeMismatch, raiseVariableAlreadyDefined, raiseVariableNotDefined, raiseVoidAsVariableType,
-    raiseExpectedHomogeneousList, raiseNonIntegerIndex, raiseIndexOutOfBounds,
+    raiseVariableAlreadyDefined, raiseVariableNotDefined, raiseVoidAsVariableType,
+    raiseExpectedHomogeneousList, raiseNonIntegerIndex, raiseIndexOutOfBounds, raiseTypeMismatch
 )
-from ..global_utils import verificarHomogeneidad, asignar_variable
+from TypeUtils import nombre_tipos, obtener_tipo_dato
+from ..global_utils import esTipoCorrecto, verificarHomogeneidad, asignar_variable
 
 def varDecl(self, ctx):
     tipo = ctx.typeDecl().getText()
-    if tipo == "VOID":
+    if tipo == nombre_tipos["void"]:
         raiseVoidAsVariableType()
 
     name = ctx.ID().getText()
@@ -19,15 +20,15 @@ def varDecl(self, ctx):
         raiseVariableAlreadyDefined(name)
 
     if val is None:
-        if tipo == "INT":
+        if tipo == nombre_tipos[int]:
             val = 0
-        elif tipo == "FLOAT":
+        elif tipo == nombre_tipos[float]:
             val = 0.0
-        elif tipo == "STR":
+        elif tipo == nombre_tipos[str]:
             val = ""
-        elif tipo == "BOOL":
+        elif tipo == nombre_tipos[bool]:
             val = False
-        elif tipo.startswith("List"):
+        elif tipo.startswith(nombre_tipos[list]):
             val = []
 
     asignar_variable(self, name, val, tipo)
@@ -140,7 +141,7 @@ def indexingExpr(self, ctx):
     index = self.visit(ctx.expr())
 
     if type(index) != int:
-        raiseNonIntegerIndex(self.obtener_tipo_dato(index))
+        raiseNonIntegerIndex(index)
 
     if type(collection) == str or type(collection) == list:
         try:
@@ -161,10 +162,8 @@ def indexedAssignStmt(self, ctx):
     indexes = self.visit(ctx.indexing())
 
     for index in indexes:
-        tipo_indice = self.obtener_tipo_dato(index)
-
         if type(index) != int:
-            raiseNonIntegerIndex(tipo_indice)
+            raiseNonIntegerIndex(index)
 
     if nombre_lista not in self.variables:
         raiseVariableNotDefined(nombre_lista)
@@ -172,7 +171,6 @@ def indexedAssignStmt(self, ctx):
     _, lista = self.variables[nombre_lista]
 
     nuevo_valor = self.visit(ctx.expr())
-    tipo_nuevo_valor = self.obtener_tipo_dato(nuevo_valor)
 
     listaIndexada = lista
     for i in range(len(indexes) - 1):
@@ -184,10 +182,10 @@ def indexedAssignStmt(self, ctx):
     ultimo_indice = indexes[len(indexes) - 1]
     try:
         anterior_valor = listaIndexada[ultimo_indice]
-        tipo_anterior_valor = self.obtener_tipo_dato(anterior_valor)
+        tipo_anterior_valor = obtener_tipo_dato(anterior_valor)
 
-        if tipo_nuevo_valor != tipo_anterior_valor:
-            raiseTypeMismatch(tipo_nuevo_valor, tipo_anterior_valor)
+        if not esTipoCorrecto(nuevo_valor, tipo_anterior_valor):
+            raiseTypeMismatch(nuevo_valor, tipo_anterior_valor)
 
         listaIndexada[ultimo_indice] = nuevo_valor
     except IndexError:
