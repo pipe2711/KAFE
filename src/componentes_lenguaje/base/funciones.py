@@ -158,8 +158,6 @@ def idExpr(self, ctx):
     raise NameError(f"Variable '{id_text}' not defined")
 
 
-##AGREGANDO RANGE FUNTION ACA 
-
 def rangeExpr(self, ctx):
     start = None
     stop = None
@@ -167,14 +165,13 @@ def rangeExpr(self, ctx):
 
     if ctx.expr(1) is None:
         stop = self.visit(ctx.expr(0))
-        return range(stop)
+        return list(range(stop))
     elif ctx.expr(2) is None:
         start = self.visit(ctx.expr(0))
         stop = self.visit(ctx.expr(1))
-        return range(start, stop)
+        return list(range(start, stop))
     else:
         start = self.visit(ctx.expr(0))
         stop = self.visit(ctx.expr(1))
         step = self.visit(ctx.expr(2))
-        return range(start, stop, step)
-
+        return list(range(start, stop, step))

@@ -1,0 +1,7 @@
+List[INT] a = range(0, -10, -1);
+
+show(a);
+
+for(i in range(0, 10, 2)):
+    show(i);
+;
