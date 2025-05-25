@@ -80,7 +80,8 @@ def lambdaExpr(self, ctx):
     return LambdaFn()
 
 
-def visitRegularCall(self, ctx):
+
+def functionCall(self, ctx):
     name = ctx.ID().getText()
     if name not in self.variables:
         raiseFunctionNotDefined(name)
@@ -89,7 +90,7 @@ def visitRegularCall(self, ctx):
     while i < len(ch):
         if ch[i].getText() == '(':
             if (i + 1 < len(ch) and isinstance(ch[i + 1], Kafe_GrammarParser.ArgListContext)):
-                args = [self.visit(a) for a in ctx.argList().arg()]
+                args = [self.visit(a) for a in ch[i + 1].arg()]
                 func = func(*args)
                 i += 3
             else:
@@ -118,10 +119,11 @@ def visitRemoveCall(self, ctx):
     return None
 
 def visitLenCall(self, ctx):
-    lista = self.visit(ctx.expr(0))
+    lista = self.visit(ctx.expr()) 
     if not isinstance(lista, list):
         raise Exception("len solo funciona sobre listas")
     return len(lista)
+
 
 def returnStmt(self, ctx):
     raise ReturnValue(self.visit(ctx.expr()))

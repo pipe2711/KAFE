@@ -1,0 +1,21 @@
+List[INT] numeros = [1, 2, 3];
+List[STR] letras = ["a", "b"];
+List[BOOL] flags = [True];
+
+show(numeros);
+
+append(numeros, 99);
+append(letras, "z");
+append(flags, False);
+
+show(numeros);  
+show(letras);  
+show(flags);    
+
+remove(numeros, 2);
+remove(letras, "a");
+
+show(numeros);  
+show(letras);   
+
+show(len(numeros)); 

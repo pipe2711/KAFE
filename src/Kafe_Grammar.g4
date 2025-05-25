@@ -46,11 +46,12 @@ paramList_typeDecl : typeDecl (COMMA typeDecl)*;
 
 functionCall
     : ID '(' argList? ')' ('(' argList? ')')*
-    | APPEND '(' expr ',' expr ')'
-    | REMOVE '(' expr ',' expr ')'
-    | LEN '(' expr ')'
     ;
 
+
+appendCall: APPEND '(' expr ',' expr ')' ;
+removeCall: REMOVE '(' expr ',' expr ')' ;
+lenCall: LEN '(' expr ')' ;
 
 argList : arg (COMMA arg)*;
 arg
@@ -98,6 +99,9 @@ primaryExpr
     | filesLibrary                            # filesLibraryExpr
     | mathLibrary                             # mathLibraryExpr
     | pourStmt                                # pourExpr
+    | appendCall                              # appendCallExpr
+    | removeCall                              # removeCallExpr
+    | lenCall                                 # lenCallExpr
     | RANGE '(' expr (COMMA expr)? (COMMA expr)? ')' # rangeExpr
     | INT_CAST   '(' expr ')'                 # intCastExpr
     | FLOAT_CAST '(' expr ')'                 # floatCastExpr

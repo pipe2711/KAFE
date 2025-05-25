@@ -6,7 +6,7 @@ from componentes_lenguaje.errores import raiseLibraryNotImported
 from componentes_lenguaje.base.funciones import additiveExpr, assignStmt, equalityExpr, expr, idExpr, indexedAssignStmt, indexingExpr, logicExpr, multiplicativeExpr, powerExpr, relationalExpr, showStmt, unaryExpresion, varDecl, pourStmt, rangeExpr
 from componentes_lenguaje.bucles.funciones import forLoop, whileLoop
 from componentes_lenguaje.condicionales.funciones import ifElseExpr
-from componentes_lenguaje.funciones.funciones import  functionDecl, lambdaExpr, returnStmt,visitAppendCall,visitRegularCall,visitRemoveCall,visitLenCall
+from componentes_lenguaje.funciones.funciones import  functionDecl, lambdaExpr, returnStmt, visitAppendCall,functionCall,visitRemoveCall,visitLenCall
 from componentes_lenguaje.importar.funciones import importStmt
 from lib.KafeNUMK.funciones import numkadd, numksub, numkmul, numkinv, numktranspose, Numk
 from lib.KafePLOT.funciones import plotgraph, set_xlabel, set_ylabel, set_title, set_grid, set_color, set_point_color, set_point_size, plot_bar, set_bar_values, plot_pie, set_legend
@@ -42,16 +42,13 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
     def visitFunctionDecl(self, ctx): return functionDecl(self, ctx)
 
-    def visitFunctionCall(self, ctx):
-      
-        if ctx.APPEND():
-            return self.visitAppendCall(ctx)
-        elif ctx.REMOVE():
-            return self.visitRemoveCall(ctx)
-        elif ctx.LEN():
-            return self.visitLenCall(ctx)
-        else:
-            return self.visitRegularCall(ctx)
+    def visitFunctionCall(self, ctx): return functionCall(self,ctx)
+
+    def visitAppendCall(self,ctx):return visitAppendCall(self,ctx)
+
+    def visitRemoveCall(self,ctx):return visitRemoveCall(self,ctx)
+
+    def visitLenCall(self,ctx): return visitLenCall(self,ctx)
 
 
     def visitLambdaExpr(self, ctx): return lambdaExpr(self, ctx)
