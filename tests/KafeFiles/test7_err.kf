@@ -1,0 +1,3 @@
+import file;
+STR contenido = file.read("asdfasdf");
+show(contenido);

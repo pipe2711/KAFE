@@ -15,10 +15,11 @@ program
     ;
 
 importStmt
-    : IMPORT NUMK_LIB        # importNUMK
-    | IMPORT PLOT_LIB        # importPLOT
-    | IMPORT MATH_LIB        # importMATH
-    | IMPORT ID              # simpleImport
+     : IMPORT NUMK_LIB # importNUMK
+     | IMPORT PLOT_LIB # importPLOT
+     | IMPORT MATH_LIB # importMATH
+     | IMPORT FILE_LIB # importFILE
+     | IMPORT ID # simpleImport
     ;
 
 stmt

@@ -129,3 +129,16 @@ def raiseLibraryNotImported(library, origin=""):
     if origin:
         message = origin + ": " + message
     raise Exception(message)
+
+def raiseFileAlreadyExists(nombre, ruta, origin=""):
+    message = f"File '{nombre}' already exists at {ruta}"
+    if origin:
+        message = origin + ": " + message
+    raise FileExistsError(message)
+
+def raiseFileNotFound(nombre, ruta, origin=""):
+    message = f"File '{nombre}' not found at {ruta}"
+    if origin:
+        message = origin + ": " + message
+    raise FileNotFoundError(message)
+

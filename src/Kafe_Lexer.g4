@@ -25,6 +25,7 @@ IMPORT      : 'import';
 NUMK_LIB    : 'numk';
 PLOT_LIB    : 'plot';
 MATH_LIB    : 'math';
+FILE_LIB   : 'file';
 
 
 //  Operadores

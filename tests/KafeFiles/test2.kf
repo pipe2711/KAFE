@@ -1,0 +1,2 @@
+import file;
+file.write("archivo_test2.txt", "Hola desde KAFE");

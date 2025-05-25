@@ -1,0 +1,3 @@
+import file;
+file.create("test1.kf");
+
