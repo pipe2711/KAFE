@@ -1,12 +1,24 @@
 grammar Kafe_Grammar;
-import Kafe_Lexer, KafePLOT, KafeNUMK, KafeFILES, KafeMATH;
 
-program : (importStmt SEMI)* (stmt SEMI)*;
+options { tokenVocab=Kafe_Lexer; }
+
+import
+    Kafe_Lexer,
+    KafePLOT,
+    KafeNUMK,
+    KafeFILES,
+    KafeMATH
+  ;
+
+program
+    : (importStmt SEMI)* (stmt SEMI)*
+    ;
 
 importStmt
-    : IMPORT NUMK_LIB # importNUMK
-    | IMPORT PLOT_LIB # importPLOT
-    | IMPORT ID # simpleImport
+    : IMPORT NUMK_LIB        # importNUMK
+    | IMPORT PLOT_LIB        # importPLOT
+    | IMPORT MATH_LIB        # importMATH
+    | IMPORT ID              # simpleImport
     ;
 
 stmt
@@ -23,88 +35,131 @@ stmt
     | functionCall
     | expr
     ;
-block : (stmt SEMI)*;
+
+block
+    : (stmt SEMI)*
+    ;
 
 // ======================  VARIABLES ======================
-varDecl  : typeDecl ID ('=' expr)? ;
-assignStmt: ID '=' expr ;
-indexedAssignStmt : ID indexing ASSIGN expr;
-indexing: (LBRACK expr RBRACK) (LBRACK expr RBRACK)*;
+varDecl
+    : typeDecl ID (ASSIGN expr)?
+    ;
+
+assignStmt
+    : ID ASSIGN expr
+    ;
+
+indexedAssignStmt
+    : ID indexing ASSIGN expr
+    ;
+
+indexing
+    : (LBRACK expr RBRACK)+
+    ;
 
 // ======================  FUNCIONES ======================
-// Función currificada:       drip id (params) (params)* : block ;
 functionDecl
-    : DRIP ID '(' paramList? ')' ('(' paramList ')')* ARROW typeDecl COLON block
+    : DRIP ID LPAREN paramList? RPAREN (LPAREN paramList RPAREN)* ARROW typeDecl COLON block
     ;
-paramList : paramDecl (COMMA paramDecl)*;
+
+paramList
+    : paramDecl (COMMA paramDecl)*
+    ;
 paramDecl : ID COLON typeDecl   # simpleParam;
 
-functionParam: FUNC '(' paramList_typeDecl? ')' ARROW typeDecl;
+functionParam: FUNC LPAREN paramList_typeDecl? RPAREN ARROW typeDecl;
 paramList_typeDecl : typeDecl (COMMA typeDecl)*;
 
-// Llamadas currificables:   f(args) (args)*
 functionCall
-    : ID '(' argList? ')' ('(' argList? ')')*
+    : ID LPAREN argList? RPAREN (LPAREN argList? RPAREN)*
     ;
-argList : arg (COMMA arg)*;
+argList
+    : arg (COMMA arg)*
+    ;
 arg
     : expr        # exprArgument
     | lambdaExpr  # lambdaArgument
     ;
 
-lambdaExpr : '(' paramDecl ')' ARROW expr;
+lambdaExpr
+    : LPAREN paramDecl RPAREN ARROW expr
+    ;
 
-returnStmt : RETURN expr;
-showStmt   : SHOW '(' expr ')';
-pourStmt   : POUR '(' expr ')';
-
+returnStmt
+    : RETURN expr
+    ;
+showStmt
+    : SHOW LPAREN expr RPAREN
+    ;
+pourStmt
+    : POUR LPAREN expr RPAREN
+    ;
 
 // ======================  CONDICIONALES ======================
-ifElseExpr: IF '(' expr ')' COLON block (elifBranch)* (ELSE COLON block)?;
-elifBranch: ELIF '(' expr ')' COLON block;
-
+ifElseExpr
+    : IF LPAREN expr RPAREN COLON block (elifBranch)* (ELSE COLON block)?
+    ;
+elifBranch
+    : ELIF LPAREN expr RPAREN COLON block
+    ;
 
 // ======================  BUCLES ======================
-whileLoop : 'while' '(' expr ')' COLON block;
-forLoop   : 'for' '(' ID 'in' expr ')' COLON block;
-
+whileLoop
+    : 'while' LPAREN expr RPAREN COLON block
+    ;
+forLoop
+    : 'for' LPAREN ID 'in' expr RPAREN COLON block
+    ;
 
 // ======================  EXPRESIONES ======================
-expr : logicExpr;
-
-logicExpr        : equalityExpr ((OR   | AND) equalityExpr)*;
-equalityExpr     : relationalExpr ((EQ | NEQ) relationalExpr)*;
-relationalExpr   : additiveExpr ((LT | LE | GT | GE) additiveExpr)*;
-additiveExpr     : multiplicativeExpr ((ADD | SUB) multiplicativeExpr)*;
-multiplicativeExpr: powerExpr ((MUL | DIV | MOD) powerExpr)*;
-powerExpr        : unaryExpr (POW unaryExpr)*;
-
-unaryExpr
-    : (SUB | NOT) unaryExpr  # unaryExpresion
-    | primaryExpr            # primaryExpresion
+expr
+    : logicExpr
     ;
 
+logicExpr
+    : equalityExpr ((OR | AND) equalityExpr)*
+    ;
+equalityExpr
+    : relationalExpr ((EQ | NEQ) relationalExpr)*
+    ;
+relationalExpr
+    : additiveExpr ((LT | LE | GT | GE) additiveExpr)*
+    ;
+additiveExpr
+    : multiplicativeExpr ((ADD | SUB) multiplicativeExpr)*
+    ;
+multiplicativeExpr
+    : powerExpr ((MUL | DIV | MOD) powerExpr)*
+    ;
+powerExpr
+    : unaryExpr (POW unaryExpr)*
+    ;
+unaryExpr
+    : (SUB | NOT) unaryExpr    # unaryExpresion
+    | primaryExpr              # primaryExpresion
+    ;
+
+// ======================  PRIMARY EXPRESSIONS ======================
 primaryExpr
     : primaryExpr LBRACK expr RBRACK          # indexingExpr
-    | functionCall                            # functionCallExpr
-    | numkLibrary                             # numkLibraryExpr
-    | plotLibrary                             # plotLibraryExpr
-    | filesLibrary                            # filesLibraryExpr
-    | mathLibrary                             # mathLibraryExpr
-    | pourStmt                                # pourExpr
+    | mathLibrary                              # mathLibraryExpr
+    | functionCall                             # functionCallExpr
+    | numkLibrary                              # numkLibraryExpr
+    | plotLibrary                              # plotLibraryExpr
+    | filesLibrary                             # filesLibraryExpr
+    | pourStmt                                 # pourExpr
     | RANGE '(' expr (COMMA expr)? (COMMA expr)? ')' # rangeExpr
-    | INT_CAST   '(' expr ')'                 # intCastExpr
-    | FLOAT_CAST '(' expr ')'                 # floatCastExpr
-    | STR_CAST   '(' expr ')'                 # strCastExpr
-    | BOOL_CAST  '(' expr ')'                 # boolCastExpr
-    | lambdaExpr                              # lambdaExpresion
-    | literal                                 # literalExpr
-    | ID                                      # idExpr
-    | '(' expr ')'                            # parenExpr
+    | INT_CAST LPAREN expr RPAREN              # intCastExpr
+    | FLOAT_CAST LPAREN expr RPAREN            # floatCastExpr
+    | STR_CAST LPAREN expr RPAREN              # strCastExpr
+    | BOOL_CAST LPAREN expr RPAREN             # boolCastExpr
+    | lambdaExpr                               # lambdaExpresion
+    | literal                                  # literalExpr
+    | ID                                       # idExpr
+    | LPAREN expr RPAREN                       # parenExpr
     ;
 
-
-// ====================== TIPOS ======================
+// ======================  LITERALES ======================
 literal
     : INT         # intLiteral
     | FLOAT       # floatLiteral
@@ -113,9 +168,11 @@ literal
     | listLiteral # listLiteralExpr
     ;
 
-listLiteral : LBRACK (expr (COMMA expr)*)? RBRACK;
+listLiteral
+    : LBRACK (expr (COMMA expr)*)? RBRACK
+    ;
 
-
+// ======================  TIPOS ======================
 typeDecl
     : INT_TYPE
     | FLOAT_TYPE

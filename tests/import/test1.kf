@@ -1,4 +1,4 @@
-import math;
+import matematica;
 
 -- Debe imprimir primero un saludo y luego el cuadrado de 5
 show("¡Bienvenido a Kafe!");

@@ -11,7 +11,7 @@ from componentes_lenguaje.importar.funciones import importStmt
 from lib.KafeNUMK.funciones import numkadd, numksub, numkmul, numkinv, numktranspose, Numk
 from lib.KafePLOT.funciones import plotgraph, set_xlabel, set_ylabel, set_title, set_grid, set_color, set_point_color, set_point_size, plot_bar, set_bar_values, plot_pie, set_legend
 from lib.KafePLOT.Plot import Plot
-
+import lib.KafeMATH.funciones as math_funcs_module
 
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def __init__(self, input_file):
@@ -163,13 +163,29 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         return numktranspose(self, ctx, self.numk)
 
 
-    # ======================  FILES Library ======================
+     # ======================  FILES Library ======================
 
 
-    # ======================  MATH Library ======================
+     # ======================  MATH Library ======================
+
+    def visitMathFunctionCall(self, ctx):
+        name = ctx.ID().getText()
+        args = [self.visit(e) for e in ctx.expr()]
+        func = getattr(math_funcs_module, name, None)
+        if func is None:
+            raise Exception(f"Unknown math function: {name}")
+        return func(*args)
+
+    def visitMathConstant(self, ctx):
+        name = ctx.ID().getText()
+        const = getattr(math_funcs_module, name, None)
+        if const is None:
+            raise Exception(f"Unknown math constant: {name}")
+        return const
 
 
     # ======================  PLOT Library ======================
+
     def visitImportPLOT(self, ctx): self.plot = Plot()
 
     def visitGraph(self, ctx):
