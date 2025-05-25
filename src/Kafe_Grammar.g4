@@ -18,8 +18,6 @@ stmt
     | forLoop
     | returnStmt
     | showStmt
-    | pourStmt
-    | functionCall
     | expr
     ;
 

@@ -1,4 +1,4 @@
-from TypeUtils import nombre_tipos
+from TypeUtils import void_t
 from errores import raiseFunctionCantReturnVoid, raiseTypeMismatch
 from global_utils import esTipoCorrecto
 
@@ -8,7 +8,7 @@ class ReturnValue(Exception):
         self.value = value
 
 def check_value_type(value, declared_type):
-    if declared_type == nombre_tipos["void"]:
+    if declared_type == void_t:
         if value is not None:
             raiseFunctionCantReturnVoid()
         return

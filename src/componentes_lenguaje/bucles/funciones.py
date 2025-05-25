@@ -1,4 +1,4 @@
-from TypeUtils import nombre_tipos, obtener_tipo_dato, obtener_tipo_dentro_lista
+from TypeUtils import obtener_tipo_dato, obtener_tipo_dentro_lista, cadena_t
 from errores import (
     raiseConditionMustBeBoolean, raiseExceededIterationCount, raiseNonIterableVariable
 )
@@ -28,8 +28,8 @@ def forLoop(self, ctx):
 
     if type(iterable) == list:
         tipo_elemento = obtener_tipo_dentro_lista(iterable)
-    elif tipo_iterable == nombre_tipos[str]:
-        tipo_elemento = nombre_tipos[str]
+    elif tipo_iterable == cadena_t:
+        tipo_elemento = cadena_t
     else:
         raiseNonIterableVariable(iterable)
 

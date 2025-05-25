@@ -1,5 +1,6 @@
-from TypeUtils import nombre_tipos
 from Kafe_GrammarParser import Kafe_GrammarParser
+
+from TypeUtils import funcion_t, void_t
 from errores import (
     raiseFunctionAlreadyDefined, raiseVoidAsParameterType, raiseWrongNumberOfArgs, raiseFunctionNotDefined
 )
@@ -12,14 +13,14 @@ def functionDecl(self, ctx):
     # Verificación para evitar redefinición de funciones
     if name in self.variables:
         tipo_existente, _ = self.variables[name]
-        if tipo_existente == nombre_tipos["func"]:
+        if tipo_existente == funcion_t:
             raiseFunctionAlreadyDefined(name)
 
     retTyp = ctx.typeDecl().getText()
     params = [p for pl in ctx.paramList() for p in pl.paramDecl()]
     for p in params:
         if (not isinstance(p, Kafe_GrammarParser.FunctionParamContext)
-                and p.typeDecl().getText() == nombre_tipos["void"]):
+                and p.typeDecl().getText() == void_t):
             raiseVoidAsParameterType()
     body = ctx.block()
     outer = self
@@ -38,7 +39,7 @@ def functionDecl(self, ctx):
             saved = dict(outer.variables)
             for decl, val in zip(params, new_vals):
                 pid = decl.ID().getText()
-                ptype = (nombre_tipos["func"] if isinstance(decl, Kafe_GrammarParser.FunctionParamContext)
+                ptype = (funcion_t if isinstance(decl, Kafe_GrammarParser.FunctionParamContext)
                          else decl.typeDecl().getText())
                 asignar_variable(outer, pid, val, ptype)
             result = None
@@ -52,14 +53,14 @@ def functionDecl(self, ctx):
             return result
 
     # Si todo está bien, se guarda la función
-    self.variables[name] = (nombre_tipos["func"], KafeFunction())
+    self.variables[name] = (funcion_t, KafeFunction())
 
 
 def lambdaExpr(self, ctx):
     param = ctx.paramDecl()
     pid = param.ID().getText()
     ptype = param.typeDecl().getText()
-    if ptype == nombre_tipos["func"]:
+    if ptype == funcion_t:
         raiseVoidAsParameterType()
     body = ctx.expr()
     captured = dict(self.variables)

@@ -1,12 +1,13 @@
 from errores import (
-    raiseExpectedHomogeneousList, raiseNonIntegerIndex, raiseIndexOutOfBounds, raiseTypeMismatch, raiseVoidAsVariableType, raiseVariableAlreadyDefined, raiseVariableNotDefined, raiseFunctionIncorrectArgumentType
+     raiseVariableAlreadyDefined, raiseVariableNotDefined, raiseVoidAsVariableType,
+     raiseExpectedHomogeneousList, raiseNonIntegerIndex, raiseIndexOutOfBounds, raiseTypeMismatch
 )
-from TypeUtils import nombre_tipos, obtener_tipo_dato
-from global_utils import esTipoCorrecto, verificarHomogeneidad, asignar_variable
+from TypeUtils import  obtener_tipo_dato, entero_t, flotante_t, cadena_t, booleano_t, lista_t, void_t
+from global_utils import esTipoCorrecto, verificarHomogeneidad, asignar_variable, check_sig
 
 def varDecl(self, ctx):
     tipo = ctx.typeDecl().getText()
-    if tipo == nombre_tipos["void"]:
+    if tipo == void_t:
         raiseVoidAsVariableType()
 
     name = ctx.ID().getText()
@@ -19,15 +20,15 @@ def varDecl(self, ctx):
         raiseVariableAlreadyDefined(name)
 
     if val is None:
-        if tipo == nombre_tipos[int]:
+        if tipo == entero_t:
             val = 0
-        elif tipo == nombre_tipos[float]:
+        elif tipo == flotante_t:
             val = 0.0
-        elif tipo == nombre_tipos[str]:
+        elif tipo == cadena_t:
             val = ""
-        elif tipo == nombre_tipos[bool]:
+        elif tipo == booleano_t:
             val = False
-        elif tipo.startswith(nombre_tipos[list]):
+        elif tipo.startswith(lista_t):
             val = []
 
     asignar_variable(self, name, val, tipo)
@@ -190,30 +191,24 @@ def indexedAssignStmt(self, ctx):
     except IndexError:
         raiseIndexOutOfBounds(ultimo_indice, len(listaIndexada))
 
-def rangeExpr(self, ctx):
+@check_sig([1, 2, 3], [entero_t], [entero_t], [entero_t], func_nombre="range")
+def rangeExpr(*args):
     start = None
     stop = None
     step = None
 
-    stop = self.visit(ctx.expr(0))
-    if type(stop) != int:
-        raiseFunctionIncorrectArgumentType("range", stop, nombre_tipos[int])
+    stop = args[0]
 
-    if ctx.expr(1) is not None:
-        start = self.visit(ctx.expr(0))
-        stop = self.visit(ctx.expr(1))
+    if len(args) >= 2:
+        start = args[0]
+        stop = args[1]
 
-        if type(stop) != int:
-            raiseFunctionIncorrectArgumentType("range", stop, nombre_tipos[int])
+    if len(args) == 3:
+        step = args[2]
 
-    if ctx.expr(2) is not None:
-        step = self.visit(ctx.expr(2))
-        if type(step) != int:
-            raiseFunctionIncorrectArgumentType("range", step, nombre_tipos[int])
-
-    if ctx.expr(1) is None:
+    if len(args) == 1:
         return list(range(stop))
-    elif ctx.expr(2) is None:
+    elif len(args) == 2:
         return list(range(start, stop))
     else:
         return list(range(start, stop, step))

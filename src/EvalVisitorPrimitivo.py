@@ -54,7 +54,9 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
     def visitPourStmt(self, ctx): return pourStmt(self, ctx)
 
-    def visitRangeExpr(self, ctx): return rangeExpr(self, ctx)
+    def visitRangeExpr(self, ctx):
+        rango = [self.visit(expr) for expr in ctx.expr()]
+        return rangeExpr(*rango)
 
 
     # ======================  CONDICIONALES ======================
