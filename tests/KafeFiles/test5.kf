@@ -1,0 +1,7 @@
+import file;
+
+file.create("SereEliminado.txt");
+file.write("SereEliminado.txt","Me Voy");
+STR chao = file.read("SereEliminado.txt");
+show(chao);
+file.delete("SereEliminado.txt");

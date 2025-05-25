@@ -1,0 +1,5 @@
+import file;
+file.create("Mensaje.txt");
+file.write("Mensaje.txt","KAFE: como el café, despierta tu código y tus ideas.");
+STR mensaje = file.read("Mensaje.txt");
+show(mensaje);

@@ -70,6 +70,7 @@ STRING  : '"' .*? '"' | '\'' .*? '\'';
 // Librerías
 NUMK_LIB   : 'numk';
 PLOT_LIB   : 'plot';
+FILE_LIB   : 'file';
 
 // Identificadores
 ID      : [a-zA-Z_][a-zA-Z0-9_]*;

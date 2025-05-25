@@ -11,11 +11,14 @@ from componentes_lenguaje.importar.funciones import importStmt
 from lib.KafeNUMK.funciones import numkadd, numksub, numkmul, numkinv, numktranspose, Numk
 from lib.KafePLOT.funciones import plotgraph, set_xlabel, set_ylabel, set_title, set_grid, set_color, set_point_color, set_point_size, plot_bar, set_bar_values, plot_pie, set_legend
 from lib.KafePLOT.Plot import Plot
+from lib.KafeFILES.funciones import create,read,write,delete
 
 
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def __init__(self, input_file):
         self.ruta_programa = os.path.abspath(input_file)
+        self.current_dir = os.path.dirname(self.ruta_programa)
+
         self.plot = None
         self.numk = None
         self.variables    = {}
@@ -243,3 +246,21 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
             raiseLibraryNotImported("plot")
 
         return set_legend(self, ctx, self.plot)
+
+    def visitFileCreate(self, ctx):
+        filename = os.path.join(self.current_dir, ctx.STRING().getText().strip('"'))
+        create(filename)
+
+    def visitFileRead(self, ctx):
+        filename = os.path.join(self.current_dir, ctx.STRING().getText().strip('"'))
+        return read(filename)
+
+    def visitFileWrite(self, ctx):
+        filename = os.path.join(self.current_dir, ctx.STRING(0).getText().strip('"'))
+        contenido = ctx.STRING(1).getText().strip('"')
+        write(filename, contenido)
+
+    def visitFileDelete(self, ctx):
+        filename = os.path.join(self.current_dir, ctx.STRING().getText().strip('"'))
+        delete(filename)
+

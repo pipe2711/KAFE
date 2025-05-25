@@ -1,3 +1,8 @@
 grammar KafeFILES;
 
-filesLibrary : 'files.open' '(' expr ')' # open;
+filesLibrary
+    : 'file' '.' 'create' '(' STRING ')'                # FileCreate
+    | 'file' '.' 'read' '(' STRING ')'                  # FileRead
+    | 'file' '.' 'write' '(' STRING ',' STRING ')'      # FileWrite
+    | 'file' '.' 'delete' '(' STRING ')'                # FileDelete
+    ;

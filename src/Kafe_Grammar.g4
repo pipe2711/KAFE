@@ -6,6 +6,7 @@ program : (importStmt SEMI)* (stmt SEMI)*;
 importStmt
     : IMPORT NUMK_LIB # importNUMK
     | IMPORT PLOT_LIB # importPLOT
+    | IMPORT FILE_LIB # importFILE
     | IMPORT ID # simpleImport
     ;
 
