@@ -17,14 +17,14 @@ def whileLoop(self, ctx):
         try:
             self.visit(ctx.block())
         except ReturnValue as ret:
-            return ret.value  
+            raise ret
         contador += 1
         if contador > max_iteraciones:
             raiseExceededIterationCount()
         cond = self.visit(ctx.expr())
         if not isinstance(cond, bool):
             raiseConditionMustBeBoolean("while", cond)
-    
+
     return None
 
 
@@ -48,7 +48,7 @@ def forLoop(self, ctx):
         except ReturnValue as ret:
             if var_name in self.variables:
                 del self.variables[var_name]
-            return ret.value  
+            raise ret
 
     if var_name in self.variables:
         del self.variables[var_name]

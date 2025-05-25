@@ -1,9 +1,10 @@
 drip obtenerNumeros() => List[INT]:
     List[INT] numeros = [1, 2, 3, 4];
     for (n in numeros):
-        show(n);
+        if (n == 5):
+		return ([234, 4]);
+	;
     ;
-    return numeros;
 ;
 
 show(obtenerNumeros());
