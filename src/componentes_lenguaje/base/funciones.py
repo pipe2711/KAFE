@@ -1,6 +1,6 @@
 from ..errores import (
     raiseFunctionIncorrectArgumentType, raiseVariableAlreadyDefined, raiseVariableNotDefined, raiseVoidAsVariableType,
-    raiseExpectedHomogeneousList, raiseNonIntegerIndex, raiseIndexOutOfBounds, raiseTypeMismatch
+    raiseExpectedHomogeneousList, raiseNonIntegerIndex, raiseIndexOutOfBounds, raiseTypeMismatch,raiseWrongNumberOfArgs
 )
 from TypeUtils import nombre_tipos, obtener_tipo_dato
 from ..global_utils import esTipoCorrecto, verificarHomogeneidad, asignar_variable
@@ -47,7 +47,10 @@ def assignStmt(self, ctx):
 
 
 def showStmt(self, ctx):
-    print(self.visit(ctx.expr()))
+    val = self.visit(ctx.expr())
+    if hasattr(val, 'total') and hasattr(val, 'collected') and len(val.collected) < val.total:
+        raiseWrongNumberOfArgs(val.name, val.total, len(val.collected))
+    print(val)
 
 def pourStmt(self, ctx):
     return input(self.visit(ctx.expr()))

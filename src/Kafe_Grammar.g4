@@ -34,7 +34,7 @@ indexing: (LBRACK expr RBRACK) (LBRACK expr RBRACK)*;
 // ======================  FUNCIONES ======================
 // Función currificada:       drip id (params) (params)* : block ;
 functionDecl
-    : DRIP ID '(' paramList? ')' ('(' paramList ')')* ARROW typeDecl COLON block
+    : DRIP ID '(' paramList? ')' ARROW typeDecl COLON block
     ;
 paramList : paramDecl (COMMA paramDecl)*;
 paramDecl : ID COLON typeDecl   # simpleParam;

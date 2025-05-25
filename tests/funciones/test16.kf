@@ -1,0 +1,8 @@
+drip sumar(a: INT, b: INT) => VOID:
+    show(a+b);
+;
+
+sumar(10)(5);  -- 15
+sumar(10, 5);  -- 15
+
+FUNC(INT)=>INT sumarQuince = sumar(15);

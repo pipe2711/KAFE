@@ -1,4 +1,4 @@
-drip restar(a: INT)(b: INT)=>INT:
+drip restar(a: INT,b: INT)=>INT:
     return a - b;
 ;
 
