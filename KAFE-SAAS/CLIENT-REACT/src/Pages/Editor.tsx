@@ -93,6 +93,19 @@ export default function Editor() {
     }
   };
 
+  useEffect(() => {
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.ctrlKey && event.key.toLowerCase() === 'l') {
+      event.preventDefault(); // Evita el comportamiento por defecto (limpiar consola del navegador)
+      setOutput('$ ./main.kf\n'); // Limpia el contenido de la terminal
+    }
+  };
+
+  window.addEventListener('keydown', handleKeyDown);
+  return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+
   return (
     <div style={{ height: '100vh', display: 'flex' }}>
       {/* Barra lateral para crear, seleccionar, renombrar y eliminar archivos */}
