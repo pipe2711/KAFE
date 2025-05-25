@@ -43,9 +43,15 @@ functionParam: FUNC '(' paramList_typeDecl? ')' ARROW typeDecl;
 paramList_typeDecl : typeDecl (COMMA typeDecl)*;
 
 // Llamadas currificables:   f(args) (args)*
+
 functionCall
     : ID '(' argList? ')' ('(' argList? ')')*
+    | APPEND '(' expr ',' expr ')'
+    | REMOVE '(' expr ',' expr ')'
+    | LEN '(' expr ')'
     ;
+
+
 argList : arg (COMMA arg)*;
 arg
     : expr        # exprArgument
@@ -114,7 +120,6 @@ literal
     ;
 
 listLiteral : LBRACK (expr (COMMA expr)*)? RBRACK;
-
 
 typeDecl
     : INT_TYPE

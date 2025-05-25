@@ -18,6 +18,9 @@ MATCH      : 'match';
 FUNC       : 'FUNC';
 IMPORT     : 'import';
 RANGE      :  'range';
+LEN        : 'len';
+REMOVE     : 'remove';
+APPEND     : 'append';
 
 // Operadores
 ADD        : '+';

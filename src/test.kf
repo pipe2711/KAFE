@@ -1,0 +1,3 @@
+List[INT] datos = [1, 2, 3];
+append(datos, 4);
+show(datos);
