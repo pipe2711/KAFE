@@ -41,6 +41,7 @@ show(math.round(3.14159, 3));
 
 -- Sumatorio y producto en rango
 show(math.sum(1, 5));
+show(math.sum(range(6)));
 show(math.prod(1, 5));
 
 -- Conversión de ángulos

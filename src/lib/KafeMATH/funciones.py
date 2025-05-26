@@ -1,3 +1,7 @@
+from .errores import raiseDomainError, raiseNonEqualLength
+from TypeUtils import vector_numeros_t, numeros_t, entero_t
+from global_utils import check_sig
+
 # ===== Constantes =====
 
 pi = 3.141592653589793
@@ -11,6 +15,7 @@ nan = float('nan')
 
 # ===== Exponenciales y logaritmos =====
 
+@check_sig([1], numeros_t)
 def exp(x):
     term = 1.0
     sum_ = 1.0
@@ -19,11 +24,18 @@ def exp(x):
         sum_ += term
     return sum_
 
-def log(x, base=None):
+@check_sig([1, 2], numeros_t, numeros_t)
+def log(*args):
+    x = args[0]
+
+    base = None
+    if len(args) == 2:
+        base = args[1]
+
     if base is None and x == e:
         return 1.0
     if x <= 0:
-        raise ValueError("math domain error")
+        raiseDomainError('log')
     y = (x - 1) / (x + 1)
     y2 = y * y
     term = y
@@ -38,12 +50,14 @@ def log(x, base=None):
 
 # ===== Potencia y raíz cuadrada =====
 
+@check_sig([2], numeros_t, numeros_t)
 def pow_(x, y):
     return exp(y * log(x))
 
+@check_sig([1], numeros_t)
 def sqrt(x):
     if x < 0:
-        raise ValueError("math domain error")
+        raiseDomainError('sqrt')
     guess = x if x != 0 else 1.0
     for _ in range(30):
         guess = (guess + x / guess) / 2
@@ -51,14 +65,17 @@ def sqrt(x):
 
 # ===== Conversión de ángulos =====
 
+@check_sig([1], numeros_t)
 def degrees(x):
     return x * 180.0 / pi
 
+@check_sig([1], numeros_t)
 def radians(x):
     return x * pi / 180.0
 
 # ===== Funciones trigonométricas =====
 
+@check_sig([1], numeros_t)
 def sin(x):
     x = x % (2 * pi)
     term = x
@@ -70,6 +87,7 @@ def sin(x):
         sign *= -1
     return sum_
 
+@check_sig([1], numeros_t)
 def cos(x):
     x = x % (2 * pi)
     term = 1.0
@@ -81,21 +99,23 @@ def cos(x):
         sign *= -1
     return sum_
 
+@check_sig([1], numeros_t)
 def tan(x):
     c = cos(x)
     if c == 0:
-        raise ValueError("math domain error")
+        raiseDomainError('tan')
     return sin(x) / c
 
 # ===== Funciones inversas =====
 
+@check_sig([1], numeros_t)
 def asin(x):
     if x == 1:
         return pi / 2
     if x == -1:
         return -pi / 2
     if x < -1 or x > 1:
-        raise ValueError("math domain error")
+        raiseDomainError('asin')
     term = x
     sum_ = term
     for n in range(1, 200):
@@ -103,6 +123,7 @@ def asin(x):
         sum_ += term
     return sum_
 
+@check_sig([1], numeros_t)
 def acos(x):
     if x == 1:
         return 0.0
@@ -110,6 +131,7 @@ def acos(x):
         return pi
     return pi / 2 - asin(x)
 
+@check_sig([1], numeros_t)
 def atan(x):
     if x == 0:
         return 0.0
@@ -126,12 +148,15 @@ def atan(x):
 
 # ===== Funciones hiperbólicas =====
 
+@check_sig([1], numeros_t)
 def sinh(x):
     return (exp(x) - exp(-x)) / 2
 
+@check_sig([1], numeros_t)
 def cosh(x):
     return (exp(x) + exp(-x)) / 2
 
+@check_sig([1], numeros_t)
 def tanh(x):
     ex = exp(x)
     enx = exp(-x)
@@ -139,21 +164,24 @@ def tanh(x):
 
 # ===== Funciones de teoría de números =====
 
+@check_sig([1], [entero_t])
 def factorial(n):
     n = int(n)
     if n < 0:
-        raise ValueError("factorial() not defined for negative values")
+        raise ValueError("factorial: Function not defined for negative values")
     result = 1
     for i in range(2, n + 1):
         result *= i
     return result
 
+@check_sig([2], [entero_t], [entero_t])
 def comb(n, k):
     n, k = int(n), int(k)
     if k < 0 or k > n:
         return 0
     return factorial(n) // (factorial(k) * factorial(n - k))
 
+@check_sig([2], [entero_t], [entero_t])
 def perm(n, k):
     n, k = int(n), int(k)
     if k < 0 or k > n:
@@ -163,6 +191,7 @@ def perm(n, k):
         result *= i
     return result
 
+@check_sig([i for i in range(100)], *[[entero_t] for _ in range(100)])
 def gcd(*ints):
     result = abs(int(ints[0]))
     for x in ints[1:]:
@@ -172,6 +201,7 @@ def gcd(*ints):
         result = abs(a)
     return result
 
+@check_sig([i for i in range(100)], *[[entero_t] for _ in range(100)])
 def lcm(*ints):
     def _lcm(a, b):
         return abs(a * b) // gcd(a, b)
@@ -183,32 +213,45 @@ def lcm(*ints):
 
 # ===== Aritmética flotante =====
 
+@check_sig([1], numeros_t)
 def trunc(x):
     return int(x)
 
+@check_sig([2], numeros_t, numeros_t)
 def fmod(x, y):
     if y == 0:
-        raise ValueError("math domain error")
+        raiseDomainError('fmod')
     return x - y * trunc(x / y)
 
+@check_sig([2], numeros_t, numeros_t)
 def remainder(x, y):
     if y == 0:
-        raise ValueError("math domain error")
+        raiseDomainError('remainder')
     res = x - y * round(x / y)
     return round(res, 10)
 
+@check_sig([1], numeros_t)
 def math_abs(x):
     return x if x >= 0 else -x
 
+@check_sig([1], numeros_t)
 def floor(x):
     i = int(x)
     return i if x >= i else i - 1
 
+@check_sig([1], numeros_t)
 def ceil(x):
     i = int(x)
     return i if x <= i else i + 1
 
-def math_round(x, n=0):
+@check_sig([1, 2], numeros_t, [entero_t])
+def math_round(*args):
+    x = args[0]
+
+    n = 0
+    if len(args) == 2:
+        n = args[1]
+
     factor = 10 ** n
     t = x * factor
     f = floor(t)
@@ -216,53 +259,69 @@ def math_round(x, n=0):
         f += 1
     return f / factor
 
-
+@check_sig([2], numeros_t, numeros_t)
 def copysign(x, y):
     x, y = float(x), float(y)
     if y == 0.0 and y.hex().startswith('-'):
         return -abs(x)
     return abs(x) if y >= 0 else -abs(x)
 
-# -------- CORREGIDAS ----------
-def isclose(a, b, rel_tol=1e-9, abs_tol=0.0):
+@check_sig([2, 3, 4], *[numeros_t for _ in range(4)])
+def isclose(*args):
+    a = args[0]
+    b = args[1]
+
+    if len(args) >= 3:
+        rel_tol = args[2]
+    else:
+        rel_tol = 1e-9
+
+    if len(args) == 4:
+        abs_tol = args[3]
+    else:
+        abs_tol = 0.0
+
     if a == b:                       # atajos rápidos
         return True
     diff = abs(a - b)
     tol  = max(rel_tol * max(abs(a), abs(b)), abs_tol)
     return diff <= tol
 
-
-
+@check_sig([1], numeros_t)
 def isinf(x):
     return x == inf or x == -inf
 
+@check_sig([1], numeros_t)
 def isnan(x):
     return x != x
 
+@check_sig([1], numeros_t)
 def isfinite(x):
     return not isinf(x) and not isnan(x)
-# ------------------------------
 
+@check_sig([1], numeros_t)
 def ulp(x):
     if x == 0:
         return 2 ** -1074
     exp_val = floor(log(abs(x), 2))
     return 2 ** (exp_val - 52)
 
-# … (el resto del archivo permanece igual) …
-
 
 # ===== Potencia, exponencial y logarítmico =====
 
+@check_sig([1], numeros_t)
 def exp2(x):
     return float(2 ** x)
 
+@check_sig([1], numeros_t)
 def cbrt(x):
     return x ** (1/3)
 
+@check_sig([1], numeros_t)
 def expm1(x):
     return exp(x) - 1
 
+@check_sig([1], numeros_t)
 def log2(x):
     xi = float(x)
     if xi > 0 and int(xi) == xi:
@@ -275,6 +334,7 @@ def log2(x):
             return float(n)
     return log(x, 2)
 
+@check_sig([1], numeros_t)
 def log10(x):
     xi = float(x)
     if xi > 0 and int(xi) == xi:
@@ -287,9 +347,18 @@ def log10(x):
             return float(n)
     return log(x, 10)
 
+
 # ===== Sumatorias y productos =====
 
-def sum_range(a, b=None):
+@check_sig([1, 2], [entero_t] + vector_numeros_t, [entero_t])
+def sum_range(*args):
+    a = args[0]
+
+    if len(args) == 2:
+        b = args[1]
+    else:
+        b = None
+
     if b is None:
         total = 0
         for x in a:
@@ -300,7 +369,15 @@ def sum_range(a, b=None):
         total += i
     return total
 
-def prod_range(a, b=None):
+@check_sig([1, 2], [entero_t] + vector_numeros_t, [entero_t])
+def prod_range(*args):
+    a = args[0]
+
+    if len(args) == 2:
+        b = args[1]
+    else:
+        b = None
+
     if b is None:
         result = 1
         for x in a:
@@ -311,14 +388,16 @@ def prod_range(a, b=None):
         result *= i
     return result
 
+@check_sig([2], vector_numeros_t, vector_numeros_t)
 def dist(p, q):
     if len(p) != len(q):
-        raise ValueError("dist() requires equal-length sequences")
+        raiseNonEqualLength('dist')
     s = 0.0
     for a, b in zip(p, q):
         s += (a - b) ** 2
     return sqrt(s)
 
+@check_sig([1], vector_numeros_t)
 def fsum(iterable):
     total = 0.0
     c = 0.0
@@ -329,30 +408,41 @@ def fsum(iterable):
         total = t
     return total
 
+@check_sig([i for i in range(100)], *[numeros_t for _ in range(100)])
 def hypot(*coords):
     s = 0.0
     for x in coords:
         s += x * x
     return sqrt(s)
 
-def prod(iterable, start=1):
+@check_sig([1, 2], vector_numeros_t, entero_t)
+def prod(*args):
+    iterable = args[0]
+
+    if len(args) == 2:
+        start = args[1]
+    else:
+        start = 1
+
     result = start
     for x in iterable:
         result *= x
     return result
 
+@check_sig([2], vector_numeros_t, vector_numeros_t)
 def sumprod(p, q):
     if len(p) != len(q):
-        raise ValueError("sumprod() requires equal-length sequences")
+        raiseNonEqualLength('sumprod')
     total = 0
     for a, b in zip(p, q):
         total += a * b
     return total
 
+
 # ===== Funciones especiales =====
 
+@check_sig([1], numeros_t)
 def erf(x):
-    from lib.KafeMATH.funciones import factorial, pow_
     coef = 2 / pow_(pi, 0.5)
     term = x
     sum_ = term
@@ -361,15 +451,18 @@ def erf(x):
         sum_ += term / (2 * n + 1)
     return coef * sum_
 
+@check_sig([1], numeros_t)
 def erfc(x):
     return 1 - erf(x)
 
+@check_sig([1], numeros_t)
 def gamma(x):
     xi = float(x)
     if xi == int(xi) and xi > 0:
         return factorial(int(xi) - 1)
     raise ValueError("gamma(x) only implemented for positive integers")
 
+@check_sig([1], numeros_t)
 def lgamma(x):
     return log(gamma(x))
 

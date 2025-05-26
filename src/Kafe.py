@@ -1,9 +1,12 @@
 import sys
+import os
 import pathlib
 from antlr4 import InputStream, CommonTokenStream
 from Kafe_GrammarLexer import Kafe_GrammarLexer
 from Kafe_GrammarParser import Kafe_GrammarParser
 from EvalVisitorPrimitivo import EvalVisitorPrimitivo
+
+import globals
 
 def main():
     # Verificar argumento del archivo .kf
@@ -18,9 +21,12 @@ def main():
         print(f"Archivo '{filepath}' no encontrado")
         sys.exit(1)
 
+    globals.ruta_programa = os.path.abspath(input_file)
+    globals.current_dir = os.path.dirname(globals.ruta_programa)
+
     contenido = filepath.read_text(encoding='utf-8')
 
-    visitor = EvalVisitorPrimitivo(input_file)
+    visitor = EvalVisitorPrimitivo()
 
     visitor.current_dir = filepath.parent
 

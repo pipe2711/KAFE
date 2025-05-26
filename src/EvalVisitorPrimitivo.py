@@ -1,30 +1,27 @@
-import os
-
 from Kafe_GrammarVisitor import Kafe_GrammarVisitor
 
-from componentes_lenguaje.errores import raiseLibraryNotImported
+from componentes_lenguaje.librerias.funciones import libraryFunctionCall, libraryConstant
 from componentes_lenguaje.base.funciones import additiveExpr, assignStmt, equalityExpr, expr, idExpr, indexedAssignStmt, indexingExpr, logicExpr, multiplicativeExpr, powerExpr, relationalExpr, showStmt, unaryExpresion, varDecl, pourStmt, rangeExpr
 from componentes_lenguaje.bucles.funciones import forLoop, whileLoop
 from componentes_lenguaje.condicionales.funciones import ifElseExpr
 from componentes_lenguaje.funciones.funciones import functionCall, functionDecl, lambdaExpr, returnStmt
 from componentes_lenguaje.importar.funciones import importStmt
-from lib.KafeNUMK.funciones import numkadd, numksub, numkmul, numkinv, numktranspose, Numk
-from lib.KafePLOT.funciones import plotgraph, set_xlabel, set_ylabel, set_title, set_grid, set_color, set_point_color, set_point_size, plot_bar, set_bar_values, plot_pie, set_legend
-from lib.KafePLOT.Plot import Plot
+
+import lib.KafeNUMK.funciones as numk_funcs_module
 import lib.KafeMATH.funciones as math_funcs_module
-from lib.KafeFILES.funciones import create,read,write,delete
+import lib.KafeFILES.funciones as files_funcs_module
+import lib.KafePLOT.funciones as plot_funcs_module
 
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
-    def __init__(self, input_file):
-        self.ruta_programa = os.path.abspath(input_file)
-        self.current_dir = os.path.dirname(self.ruta_programa)
-
-        self.plot = None
-        self.numk = None
-        self.variables    = {}
-        self.imported     = set()
-        # Directorio actual de .kf para imports relativos
-        self.current_dir  = None
+    def __init__(self):
+        self.variables = {}
+        self.libraries = {
+            "numk": [numk_funcs_module, False],
+            "math": [math_funcs_module, False],
+            "files": [files_funcs_module, False],
+            "plot": [plot_funcs_module, False]
+        };
+        self.imported = set()
 
     # ====================== VARIABLES  ======================
 
@@ -131,152 +128,10 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitIntCastExpr(self, ctx): return int(self.visit(ctx.expr()))
 
 
-    # ======================  NUMK Library ======================
+    # ======================  LIBRARIES ======================
 
-    def visitImportNUMK(self, ctx): self.numk = Numk()
+    def visitLibraryFunctionCall(self, ctx):
+        return libraryFunctionCall(self, ctx)
 
-    def visitNumkadd(self, ctx):
-        if self.numk == None:
-            raiseLibraryNotImported("numk")
-
-        return numkadd(self, ctx, self.numk)
-
-    def visitNumksub(self, ctx):
-        if self.numk == None:
-            raiseLibraryNotImported("numk")
-
-        return numksub(self, ctx, self.numk)
-
-    def visitNumkmul(self, ctx):
-        if self.numk == None:
-            raiseLibraryNotImported("numk")
-
-        return numkmul(self, ctx, self.numk)
-
-    def visitNumkinv(self, ctx):
-        if self.numk == None:
-            raiseLibraryNotImported("numk")
-
-        return numkinv(self, ctx, self.numk)
-
-    def visitNumktranspose(self, ctx):
-        if self.numk == None:
-            raiseLibraryNotImported("numk")
-
-        return numktranspose(self, ctx, self.numk)
-
-
-     # ======================  FILES Library ======================
-
-
-     # ======================  MATH Library ======================
-
-    def visitMathFunctionCall(self, ctx):
-        name = ctx.ID().getText()
-        args = [self.visit(e) for e in ctx.expr()]
-        func = getattr(math_funcs_module, name, None)
-        if func is None:
-            raise Exception(f"Unknown math function: {name}")
-        return func(*args)
-
-    def visitMathConstant(self, ctx):
-        name = ctx.ID().getText()
-        const = getattr(math_funcs_module, name, None)
-        if const is None:
-            raise Exception(f"Unknown math constant: {name}")
-        return const
-
-
-    # ======================  PLOT Library ======================
-
-    def visitImportPLOT(self, ctx): self.plot = Plot()
-
-    def visitGraph(self, ctx):
-        if self.plot == None:
-            raiseLibraryNotImported("plot")
-
-        return plotgraph(self, ctx, self.plot, self.ruta_programa)
-
-    def visitXlabel(self, ctx):
-        if self.plot == None:
-            raiseLibraryNotImported("plot")
-
-        return set_xlabel(self, ctx, self.plot)
-
-    def visitYlabel(self, ctx):
-        if self.plot == None:
-            raiseLibraryNotImported("plot")
-
-        return set_ylabel(self, ctx, self.plot)
-
-    def visitTitle(self, ctx):
-        if self.plot == None:
-            raiseLibraryNotImported("plot")
-
-        return set_title(self, ctx, self.plot)
-
-    def visitGrid(self, ctx):
-        if self.plot == None:
-            raiseLibraryNotImported("plot")
-
-        return set_grid(self, ctx, self.plot)
-
-    def visitColor(self, ctx):
-        if self.plot == None:
-            raiseLibraryNotImported("plot")
-
-        return set_color(self, ctx, self.plot)
-
-    def visitPointColor(self, ctx):
-        if self.plot == None:
-            raiseLibraryNotImported("plot")
-
-        return set_point_color(self, ctx, self.plot)
-
-    def visitPointSize(self, ctx):
-        if self.plot == None:
-            raiseLibraryNotImported("plot")
-
-        return set_point_size(self, ctx, self.plot)
-
-    def visitBar(self, ctx):
-        if self.plot == None:
-            raiseLibraryNotImported("plot")
-
-        return plot_bar(self, ctx, self.plot, self.ruta_programa)
-
-    def visitBarValues(self, ctx):
-        if self.plot == None:
-            raiseLibraryNotImported("plot")
-
-        return set_bar_values(self, ctx, self.plot)
-
-    def visitPie(self, ctx):
-        if self.plot == None:
-            raiseLibraryNotImported("plot")
-
-        return plot_pie(self, ctx, self.plot, self.ruta_programa)
-
-    def visitLegend(self, ctx):
-        if self.plot == None:
-            raiseLibraryNotImported("plot")
-
-        return set_legend(self, ctx, self.plot)
-
-    def visitFileCreate(self, ctx):
-        filename = os.path.join(self.current_dir, ctx.STRING().getText().strip('"'))
-        create(filename)
-
-    def visitFileRead(self, ctx):
-        filename = os.path.join(self.current_dir, ctx.STRING().getText().strip('"'))
-        return read(filename)
-
-    def visitFileWrite(self, ctx):
-        filename = os.path.join(self.current_dir, ctx.STRING(0).getText().strip('"'))
-        contenido = ctx.STRING(1).getText().strip('"')
-        write(filename, contenido)
-
-    def visitFileDelete(self, ctx):
-        filename = os.path.join(self.current_dir, ctx.STRING().getText().strip('"'))
-        delete(filename)
-
+    def visitLibraryConstant(self, ctx):
+        return libraryConstant(self, ctx)

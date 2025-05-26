@@ -1,1 +1,0 @@
-TypeError: plot: Function pie expects argument of type List[STR], got type List[INT]

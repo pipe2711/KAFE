@@ -1,5 +1,5 @@
-import file;
-file.create("archivo_test4.txt");
-file.write("archivo_test4.txt","KAFE: como el café, despierta tu código y tus ideas.");
-STR mensaje = file.read("archivo_test4.txt");
+import files;
+files.create("archivo_test4.txt");
+files.write("archivo_test4.txt","KAFE: como el café, despierta tu código y tus ideas.");
+STR mensaje = files.read("archivo_test4.txt");
 show(mensaje);

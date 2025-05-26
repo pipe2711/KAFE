@@ -1,10 +1,10 @@
 from TypeUtils import nombre_tipos
-from ..errores import (
+from Kafe_GrammarParser import Kafe_GrammarParser
+from errores import (
     raiseFunctionAlreadyDefined, raiseVoidAsParameterType, raiseWrongNumberOfArgs, raiseFunctionNotDefined
 )
-from Kafe_GrammarParser import Kafe_GrammarParser
 from .utils import ReturnValue, check_value_type
-from ..global_utils import asignar_variable
+from global_utils import asignar_variable
 
 def functionDecl(self, ctx):
     name = ctx.ID().getText()

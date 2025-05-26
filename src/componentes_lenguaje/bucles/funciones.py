@@ -1,5 +1,5 @@
 from TypeUtils import nombre_tipos, obtener_tipo_dato, obtener_tipo_dentro_lista
-from ..errores import (
+from errores import (
     raiseConditionMustBeBoolean, raiseExceededIterationCount, raiseNonIterableVariable
 )
 

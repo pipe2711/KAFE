@@ -1,13 +1,13 @@
-from TypeUtils import nombre_tipos, obtener_tipo_dato
+from TypeUtils import obtener_tipo_dato, void_t
 
 def raiseVoidAsVariableType(origin=""):
-    message = f"{nombre_tipos['void']} cannot be used as variable type"
+    message = f"{void_t} cannot be used as variable type"
     if origin:
         message = origin + ": " + message
     raise TypeError(message)
 
 def raiseVoidAsParameterType(origin=""):
-    message = f"{nombre_tipos['void']} cannot be used as parameter type"
+    message = f"{void_t} cannot be used as parameter type"
     if origin:
         message = origin + ": " + message
     raise TypeError(message)
@@ -101,7 +101,15 @@ def raiseNonIterableVariable(variable, origin=""):
     raise TypeError(message)
 
 def raiseWrongNumberOfArgs(function_name, num_args, recv_args, origin=""):
-    message = f"'{function_name}' expects {num_args} args, got {recv_args}"
+    if type(num_args) == list:
+        num_args_str = ""
+        for i in range(len(num_args) - 1):
+            num_args_str += num_args[i] + " or "
+        num_args_str += str(num_args[len(num_args) - 1])
+    else:
+        num_args_str = num_args
+
+    message = f"'{function_name}' expects {num_args_str} args, got {recv_args}"
     if origin:
         message = origin + ": " + message
     raise Exception(message)
@@ -119,7 +127,7 @@ def raiseRuntimeError(place, exception, origin=""):
     raise RuntimeError(message)
 
 def raiseFunctionCantReturnVoid(origin=""):
-    message = f"Function declared {nombre_tipos['void']} must not return a value"
+    message = f"Function declared {void_t} must not return a value"
     if origin:
         message = origin + ": " + message
     raise TypeError(message)

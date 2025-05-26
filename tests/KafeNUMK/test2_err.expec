@@ -1,1 +1,1 @@
-TypeError: numk: Function add expects argument of type matrix, got type INT
+Exception: numk: Function add expects argument of type List[List[]], got type INT

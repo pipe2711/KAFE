@@ -1,3 +1,0 @@
-import plot;
-
-plot.graph([["a", "b"], ["c", "d"], ["f", "g", "h"], ["i"]]);

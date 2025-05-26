@@ -1,4 +1,4 @@
-from ..errores import raiseConditionMustBeBoolean
+from errores import raiseConditionMustBeBoolean
 
 def ifElseExpr(self, ctx):
     cond_principal = self.visit(ctx.expr())

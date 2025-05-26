@@ -1,6 +1,6 @@
 from TypeUtils import nombre_tipos
-from ..errores import raiseFunctionCantReturnVoid, raiseTypeMismatch
-from ..global_utils import esTipoCorrecto
+from errores import raiseFunctionCantReturnVoid, raiseTypeMismatch
+from global_utils import esTipoCorrecto
 
 class ReturnValue(Exception):
     def __init__(self, value):

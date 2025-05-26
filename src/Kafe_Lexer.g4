@@ -21,13 +21,6 @@ RANGE      :  'range';
 IMPORT      : 'import';
 
 
-//  Librerías
-NUMK_LIB    : 'numk';
-PLOT_LIB    : 'plot';
-MATH_LIB    : 'math';
-FILE_LIB   : 'file';
-
-
 //  Operadores
 ADD         : '+';
 SUB         : '-';

@@ -1,6 +1,0 @@
--- Error sumar listas que no son matrices
-import numk;
-
-List[List[List[INT]]] A = [[[1, 2]], [[3, 4]]];
-List[List[List[INT]]] B = [[[1, 2]], [[3, 4]]];
-show(numk.add(A, B));

@@ -1,1 +1,0 @@
-TypeError: plot: Function graph expects argument of type List[INT] or List[FLOAT], got type List[BOOL]

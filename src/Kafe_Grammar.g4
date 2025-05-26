@@ -1,26 +1,12 @@
 grammar Kafe_Grammar;
 
-options { tokenVocab=Kafe_Lexer; }
-
-import
-    Kafe_Lexer,
-    KafePLOT,
-    KafeNUMK,
-    KafeFILES,
-    KafeMATH
-  ;
+import Kafe_Lexer;
 
 program
-    : (importStmt SEMI)* (stmt SEMI)*
+    : (simpleImport SEMI)* (stmt SEMI)*
     ;
 
-importStmt
-     : IMPORT NUMK_LIB # importNUMK
-     | IMPORT PLOT_LIB # importPLOT
-     | IMPORT MATH_LIB # importMATH
-     | IMPORT FILE_LIB # importFILE
-     | IMPORT ID # simpleImport
-    ;
+simpleImport: IMPORT ID;
 
 stmt
     : varDecl
@@ -39,6 +25,12 @@ stmt
 
 block
     : (stmt SEMI)*
+    ;
+
+// ======================  LIBRERÍAS ======================
+library
+    : ID '.' ID LPAREN ( expr ( COMMA expr )* )? RPAREN    # libraryFunctionCall
+    | ID '.' ID                                            # libraryConstant
     ;
 
 // ======================  VARIABLES ======================
@@ -142,12 +134,9 @@ unaryExpr
 
 // ======================  PRIMARY EXPRESSIONS ======================
 primaryExpr
-    : primaryExpr LBRACK expr RBRACK          # indexingExpr
-    | mathLibrary                              # mathLibraryExpr
+    : primaryExpr LBRACK expr RBRACK           # indexingExpr
+    | library                                  # libraryExpr
     | functionCall                             # functionCallExpr
-    | numkLibrary                              # numkLibraryExpr
-    | plotLibrary                              # plotLibraryExpr
-    | filesLibrary                             # filesLibraryExpr
     | pourStmt                                 # pourExpr
     | RANGE '(' expr (COMMA expr)? (COMMA expr)? ')' # rangeExpr
     | INT_CAST LPAREN expr RPAREN              # intCastExpr

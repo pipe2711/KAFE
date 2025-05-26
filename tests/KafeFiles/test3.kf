@@ -1,3 +1,3 @@
-import file;
-STR contenido = file.read("test3");
+import files;
+STR contenido = files.read("test3");
 show(contenido);

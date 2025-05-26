@@ -1,7 +1,7 @@
-import file;
+import files;
 
-file.create("SereEliminado.txt");
-file.write("SereEliminado.txt","Me Voy");
-STR chao = file.read("SereEliminado.txt");
+files.create("SereEliminado.txt");
+files.write("SereEliminado.txt","Me Voy");
+STR chao = files.read("SereEliminado.txt");
 show(chao);
-file.delete("SereEliminado.txt");
+files.delete("SereEliminado.txt");

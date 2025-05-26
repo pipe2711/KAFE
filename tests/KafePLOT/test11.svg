@@ -1,11 +1,11 @@
 <svg width="600" height="600" xmlns="http://www.w3.org/2000/svg">
 <rect width="100%" height="100%" fill="white"/>
-<path d="M 240,300 L 64.31600172775063,298.7534512726491 A 180,180 0 0,1 240.00445270974564,119.9993623348285 Z" fill="#f4d03f" stroke="white" stroke-width="1"/>
-<text x="155.3144634930978" y="215.11112625065945" font-size="12" text-anchor="middle" dominant-baseline="middle">25.0%</text>
-<path d="M 240,300 L 240.00445270974564,119.9993623348285 A 180,180 0 0,1 385.6230594617436,194.19865456025312 Z" fill="#82e0aa" stroke="white" stroke-width="1"/>
-<text x="294.47894461890087" y="193.07920862389085" font-size="12" text-anchor="middle" dominant-baseline="middle">15.0%</text>
-<path d="M 240,300 L 385.6230594617436,194.19865456025312 A 180,180 0 0,1 240.00445270974572,480.0006376651715 Z" fill="#ec7063" stroke="white" stroke-width="1"/>
-<text x="346.920782920432" y="354.47885996950953" font-size="12" text-anchor="middle" dominant-baseline="middle">35.0%</text>
-<path d="M 240,300 L 240.00445270974572,480.0006376651715 A 180,180 0 0,1 64.31600172775063,301.2465487273509 Z" fill="#85c1e9" stroke="white" stroke-width="1"/>
-<text x="155.3144634930978" y="384.8888737493405" font-size="12" text-anchor="middle" dominant-baseline="middle">25.0%</text>
+<path d="M 240,300 L 60.0,300.00000000000006 A 180,180 0 0,1 240.0,120.00000000000003 Z" fill="#f4d03f" stroke="white" stroke-width="1"/>
+<text x="155.1471862576144" y="215.14718625761424" font-size="12" text-anchor="middle" dominant-baseline="middle">25.0%</text>
+<path d="M 240,300 L 240.0,120.00000000000003 A 180,180 0 0,1 385.62305898748997,194.19865458735484 Z" fill="#82e0aa" stroke="white" stroke-width="1"/>
+<text x="294.4788599687452" y="193.079217097396" font-size="12" text-anchor="middle" dominant-baseline="middle">15.0%</text>
+<path d="M 240,300 L 385.62305898748997,194.19865458735484 A 180,180 0 0,1 240.00000000000006,480.0 Z" fill="#ec7063" stroke="white" stroke-width="1"/>
+<text x="346.9207829026042" y="354.4788599687456" font-size="12" text-anchor="middle" dominant-baseline="middle">35.0%</text>
+<path d="M 240,300 L 240.00000000000006,480.0 A 180,180 0 0,1 60.0,300.00000000000006 Z" fill="#85c1e9" stroke="white" stroke-width="1"/>
+<text x="155.1471862576143" y="384.8528137423857" font-size="12" text-anchor="middle" dominant-baseline="middle">25.0%</text>
 </svg>

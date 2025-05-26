@@ -1,9 +1,8 @@
-from ..errores import (
-    raiseFunctionIncorrectArgumentType, raiseVariableAlreadyDefined, raiseVariableNotDefined, raiseVoidAsVariableType,
-    raiseExpectedHomogeneousList, raiseNonIntegerIndex, raiseIndexOutOfBounds, raiseTypeMismatch
+from errores import (
+    raiseExpectedHomogeneousList, raiseNonIntegerIndex, raiseIndexOutOfBounds, raiseTypeMismatch, raiseVoidAsVariableType, raiseVariableAlreadyDefined, raiseVariableNotDefined, raiseFunctionIncorrectArgumentType
 )
 from TypeUtils import nombre_tipos, obtener_tipo_dato
-from ..global_utils import esTipoCorrecto, verificarHomogeneidad, asignar_variable
+from global_utils import esTipoCorrecto, verificarHomogeneidad, asignar_variable
 
 def varDecl(self, ctx):
     tipo = ctx.typeDecl().getText()
