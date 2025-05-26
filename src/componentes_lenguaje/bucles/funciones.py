@@ -2,6 +2,8 @@ from TypeUtils import obtener_tipo_dato, obtener_tipo_dentro_lista, cadena_t
 from errores import (
     raiseConditionMustBeBoolean, raiseExceededIterationCount, raiseNonIterableVariable
 )
+from componentes_lenguaje.funciones.utils import ReturnValue
+
 
 def whileLoop(self, ctx):
     cond = self.visit(ctx.expr())
@@ -11,14 +13,19 @@ def whileLoop(self, ctx):
     max_iteraciones = 10000
     contador = 0
     while cond:
-        self.visit(ctx.block())
+        try:
+            self.visit(ctx.block())
+        except ReturnValue as ret:
+            raise ret
         contador += 1
         if contador > max_iteraciones:
             raiseExceededIterationCount()
         cond = self.visit(ctx.expr())
-
         if not isinstance(cond, bool):
             raiseConditionMustBeBoolean("while", cond)
+
+    return None
+
 
 def forLoop(self, ctx):
     var_name = ctx.ID().getText()
@@ -35,7 +42,14 @@ def forLoop(self, ctx):
 
     for item in iterable:
         self.variables[var_name] = (tipo_elemento, item)
-        self.visit(ctx.block())
+        try:
+            self.visit(ctx.block())
+        except ReturnValue as ret:
+            if var_name in self.variables:
+                del self.variables[var_name]
+            raise ret
 
     if var_name in self.variables:
         del self.variables[var_name]
+
+    return None

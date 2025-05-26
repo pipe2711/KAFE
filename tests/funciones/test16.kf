@@ -1,0 +1,10 @@
+drip mayor () => STR:
+INT x = 5;
+if (x > 10):
+    return("Mayor que 10");
+else:
+    return("Menor o igual que 10");
+;
+;
+show(mayor());
+

@@ -6,22 +6,28 @@ from errores import (
 )
 from .utils import ReturnValue, check_value_type
 from global_utils import asignar_variable, check_sig
+from componentes_lenguaje.funciones.utils import ReturnValue, check_value_type
 
 def functionDecl(self, ctx):
     name = ctx.ID().getText()
 
-    # Verificación para evitar redefinición de funciones
     if name in self.variables:
         tipo_existente, _ = self.variables[name]
         if tipo_existente == funcion_t:
             raiseFunctionAlreadyDefined(name)
 
-    retTyp = ctx.typeDecl().getText()
+    retTypCtx = ctx.typeDecl()
+    if retTypCtx is None:
+        retTyp = void_t
+    else:
+        retTyp = retTypCtx.getText()
+
     params = [p for pl in ctx.paramList() for p in pl.paramDecl()]
     for p in params:
         if (not isinstance(p, Kafe_GrammarParser.FunctionParamContext)
-                and p.typeDecl().getText() == void_t):
+                and p.typeDecl() is not None and p.typeDecl().getText() == void_t):
             raiseVoidAsParameterType()
+
     body = ctx.block()
     outer = self
 
@@ -54,7 +60,6 @@ def functionDecl(self, ctx):
 
     # Si todo está bien, se guarda la función
     self.variables[name] = (funcion_t, KafeFunction())
-
 
 def lambdaExpr(self, ctx):
     param = ctx.paramDecl()

@@ -1,0 +1,11 @@
+drip obtenerValor() => INT:
+    INT a = 10;
+    INT b = 20;
+    while (a < b && b > 0):
+        return(b);
+        a = a + 1;
+    ;
+    return -1;
+;
+
+show(obtenerValor());
