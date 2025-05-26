@@ -3,7 +3,7 @@ from errores import (
      raiseExpectedHomogeneousList, raiseNonIntegerIndex, raiseIndexOutOfBounds, raiseTypeMismatch
 )
 from TypeUtils import  obtener_tipo_dato, entero_t, flotante_t, cadena_t, booleano_t, lista_t, void_t
-from global_utils import esTipoCorrecto, verificarHomogeneidad, asignar_variable, check_sig
+from global_utils import esTipoCorrecto, verificarHomogeneidad, asignar_variable
 
 def varDecl(self, ctx):
     tipo = ctx.typeDecl().getText()
@@ -45,12 +45,6 @@ def assignStmt(self, ctx):
 
     asignar_variable(self, id_text, valor, tipo)
 
-
-def showStmt(self, ctx):
-    print(self.visit(ctx.expr()))
-
-def pourStmt(self, ctx):
-    return input(self.visit(ctx.expr()))
 
 def expr(self, ctx):
     resultado = self.visitChildren(ctx)
@@ -190,25 +184,3 @@ def indexedAssignStmt(self, ctx):
         listaIndexada[ultimo_indice] = nuevo_valor
     except IndexError:
         raiseIndexOutOfBounds(ultimo_indice, len(listaIndexada))
-
-@check_sig([1, 2, 3], [entero_t], [entero_t], [entero_t], func_nombre="range")
-def rangeExpr(*args):
-    start = None
-    stop = None
-    step = None
-
-    stop = args[0]
-
-    if len(args) >= 2:
-        start = args[0]
-        stop = args[1]
-
-    if len(args) == 3:
-        step = args[2]
-
-    if len(args) == 1:
-        return list(range(stop))
-    elif len(args) == 2:
-        return list(range(start, stop))
-    else:
-        return list(range(start, stop, step))

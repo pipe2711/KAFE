@@ -1,5 +1,5 @@
 from errores import raiseTypeMismatch, raiseFunctionIncorrectArgumentType, raiseWrongNumberOfArgs
-from TypeUtils import obtener_tipo_dato, entero_t, flotante_t, booleano_t, cadena_t, funcion_t, lista_t
+from TypeUtils import obtener_tipo_dato, entero_t, flotante_t, booleano_t, cadena_t, funcion_t, lista_t, lista_cualquiera_t
 
 def esTipoCorrecto(valor, tipo_definido):
     tipo_valor = obtener_tipo_dato(valor)
@@ -100,7 +100,12 @@ def check_sig(*args, **kwargs):
             for i, arg in enumerate(args):
                 tipos_definidos = arg_types[i]
                 coincidencias = [esTipoCorrecto(arg, tipo_definido) for tipo_definido in tipos_definidos]
+
                 if not any(coincidencias):
+                    if set(lista_cualquiera_t).issubset(tipos_definidos):
+                        tipos_definidos = list(set(tipos_definidos) - set(lista_cualquiera_t))
+                        tipos_definidos.append("lists")
+
                     raiseFunctionIncorrectArgumentType(nombre, arg, tipos_definidos)
 
 

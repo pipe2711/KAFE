@@ -1,10 +1,10 @@
 from Kafe_GrammarVisitor import Kafe_GrammarVisitor
 
 from componentes_lenguaje.librerias.funciones import libraryFunctionCall, libraryConstant
-from componentes_lenguaje.base.funciones import additiveExpr, assignStmt, equalityExpr, expr, idExpr, indexedAssignStmt, indexingExpr, logicExpr, multiplicativeExpr, powerExpr, relationalExpr, showStmt, unaryExpresion, varDecl, pourStmt, rangeExpr
+from componentes_lenguaje.base.funciones import additiveExpr, assignStmt, equalityExpr, expr, idExpr, indexedAssignStmt, indexingExpr, logicExpr, multiplicativeExpr, powerExpr, relationalExpr, unaryExpresion, varDecl
 from componentes_lenguaje.bucles.funciones import forLoop, whileLoop
 from componentes_lenguaje.condicionales.funciones import ifElseExpr
-from componentes_lenguaje.funciones.funciones import functionCall, functionDecl, lambdaExpr, returnStmt
+from componentes_lenguaje.funciones.funciones import  functionDecl, lambdaExpr, returnStmt, visitAppendCall,functionCall,visitRemoveCall,visitLenCall, rangeExpr, pourStmt, showStmt
 from componentes_lenguaje.importar.funciones import importStmt
 
 import lib.KafeNUMK.funciones as numk_funcs_module
@@ -42,7 +42,21 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
     def visitFunctionDecl(self, ctx): return functionDecl(self, ctx)
 
-    def visitFunctionCall(self, ctx): return functionCall(self, ctx)
+    def visitFunctionCall(self, ctx): return functionCall(self,ctx)
+
+    def visitAppendCall(self, ctx):
+        lista = self.visit(ctx.expr(0))
+        elem = self.visit(ctx.expr(1))
+        return visitAppendCall(lista, elem)
+
+    def visitRemoveCall(self, ctx):
+        lista = self.visit(ctx.expr(0))
+        elem = self.visit(ctx.expr(1))
+        return visitRemoveCall(lista, elem)
+
+    def visitLenCall(self, ctx):
+        lista = self.visit(ctx.expr())
+        return visitLenCall(lista)
 
     def visitLambdaExpr(self, ctx): return lambdaExpr(self, ctx)
 

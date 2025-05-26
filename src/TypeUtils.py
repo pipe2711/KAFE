@@ -51,3 +51,5 @@ cadena_t = nombre_tipos[str]
 lista_t = nombre_tipos[list]
 void_t = nombre_tipos['void']
 funcion_t = nombre_tipos["func"]
+lista_cualquiera_t = [construir_tipo_lista(i) for i in range(1, 100)]
+todos_t = numeros_t + [cadena_t, booleano_t] + lista_cualquiera_t

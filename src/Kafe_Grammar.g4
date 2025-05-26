@@ -61,12 +61,15 @@ paramDecl : ID COLON typeDecl   # simpleParam;
 functionParam: FUNC LPAREN paramList_typeDecl? RPAREN ARROW typeDecl;
 paramList_typeDecl : typeDecl (COMMA typeDecl)*;
 
+ // Llamadas currificables:   f(args) (args)*
 functionCall
     : ID LPAREN argList? RPAREN (LPAREN argList? RPAREN)*
     ;
+
 argList
     : arg (COMMA arg)*
     ;
+
 arg
     : expr        # exprArgument
     | lambdaExpr  # lambdaArgument
@@ -79,12 +82,17 @@ lambdaExpr
 returnStmt
     : RETURN expr
     ;
+
 showStmt
     : SHOW LPAREN expr RPAREN
     ;
 pourStmt
     : POUR LPAREN expr RPAREN
     ;
+appendCall: APPEND '(' expr ',' expr ')' ;
+removeCall: REMOVE '(' expr ',' expr ')' ;
+lenCall: LEN '(' expr ')' ;
+
 
 // ======================  CONDICIONALES ======================
 ifElseExpr
@@ -136,6 +144,9 @@ primaryExpr
     | library                                  # libraryExpr
     | functionCall                             # functionCallExpr
     | pourStmt                                 # pourExpr
+    | appendCall                               # appendCallExpr
+    | removeCall                               # removeCallExpr
+    | lenCall                                  # lenCallExpr
     | RANGE '(' expr (COMMA expr)? (COMMA expr)? ')' # rangeExpr
     | INT_CAST LPAREN expr RPAREN              # intCastExpr
     | FLOAT_CAST LPAREN expr RPAREN            # floatCastExpr

@@ -1,11 +1,11 @@
 from Kafe_GrammarParser import Kafe_GrammarParser
 
-from TypeUtils import funcion_t, void_t
+from TypeUtils import funcion_t, void_t, entero_t, todos_t, lista_cualquiera_t
 from errores import (
     raiseFunctionAlreadyDefined, raiseVoidAsParameterType, raiseWrongNumberOfArgs, raiseFunctionNotDefined
 )
 from .utils import ReturnValue, check_value_type
-from global_utils import asignar_variable
+from global_utils import asignar_variable, check_sig
 
 def functionDecl(self, ctx):
     name = ctx.ID().getText()
@@ -80,7 +80,6 @@ def lambdaExpr(self, ctx):
 
     return LambdaFn()
 
-
 def functionCall(self, ctx):
     name = ctx.ID().getText()
     if name not in self.variables:
@@ -102,6 +101,46 @@ def functionCall(self, ctx):
         raiseWrongNumberOfArgs(name, func.total, len(func.collected))
     return func
 
-
 def returnStmt(self, ctx):
     raise ReturnValue(self.visit(ctx.expr()))
+
+@check_sig([2], lista_cualquiera_t, todos_t, func_nombre="append")
+def visitAppendCall(lista, elem):
+    lista.append(elem)
+
+@check_sig([2], lista_cualquiera_t, todos_t, func_nombre="remove")
+def visitRemoveCall(lista, elem):
+    lista.remove(elem)
+    return None
+
+@check_sig([1], lista_cualquiera_t, func_nombre="len")
+def visitLenCall(lista):
+    return len(lista)
+
+@check_sig([1, 2, 3], [entero_t], [entero_t], [entero_t], func_nombre="range")
+def rangeExpr(*args):
+    start = None
+    stop = None
+    step = None
+
+    stop = args[0]
+
+    if len(args) >= 2:
+        start = args[0]
+        stop = args[1]
+
+    if len(args) == 3:
+        step = args[2]
+
+    if len(args) == 1:
+        return list(range(stop))
+    elif len(args) == 2:
+        return list(range(start, stop))
+    else:
+        return list(range(start, stop, step))
+
+def showStmt(self, ctx):
+    print(self.visit(ctx.expr()))
+
+def pourStmt(self, ctx):
+    return input(self.visit(ctx.expr()))
