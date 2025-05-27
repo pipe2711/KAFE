@@ -1,0 +1,10 @@
+drip factorial(n: INT) => INT:
+    if (n <= 1):
+        return 1;
+    ;
+    return n * factorial(n - 1);
+;
+
+INT result = factorial(5);
+show("Factorial de 5:");
+show(result);
