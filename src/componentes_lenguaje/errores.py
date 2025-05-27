@@ -1,3 +1,5 @@
+# src/errores.py
+
 from TypeUtils import nombre_tipos, obtener_tipo_dato
 
 def raiseVoidAsVariableType(origin=""):
@@ -80,7 +82,6 @@ def raiseFunctionIncorrectArgumentType(function_name, valor, tipo_definido, orig
 
 def raiseConditionMustBeBoolean(place, variable, origin=""):
     tipo = obtener_tipo_dato(variable)
-
     message = f"Condition in {place} must be boolean, got {tipo}"
     if origin:
         message = origin + ": " + message
@@ -94,7 +95,6 @@ def raiseExceededIterationCount(origin=""):
 
 def raiseNonIterableVariable(variable, origin=""):
     tipo = obtener_tipo_dato(variable)
-
     message = f"Variable in for must be iterable (list or string or range), got {tipo}"
     if origin:
         message = origin + ": " + message
@@ -129,3 +129,10 @@ def raiseLibraryNotImported(library, origin=""):
     if origin:
         message = origin + ": " + message
     raise Exception(message)
+
+
+def raiseSignatureMismatch(expected_signature, obtained_signature, origin=""):
+    message = f"Expected {expected_signature}, obtained {obtained_signature}"
+    if origin:
+        message = origin + ": " + message
+    raise TypeError(message)
