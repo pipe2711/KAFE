@@ -1,6 +1,6 @@
 from .errores import raiseDifferentDimension, raiseNonUniformMatrix
 from .utils import es_misma_dimension, es_uniforme
-from TypeUtils import matriz_cualquiera_t
+from TypeUtils import matriz_cualquiera_t, matriz_numeros_t
 from global_utils import check_sig
 
 def operar_matrices(matriz1, matriz2, operacion):
@@ -14,21 +14,21 @@ def operar_matrices(matriz1, matriz2, operacion):
 
     return resultado
 
-@check_sig([2], [matriz_cualquiera_t], [matriz_cualquiera_t])
+@check_sig([2], matriz_numeros_t, matriz_numeros_t)
 def add(matriz1, matriz2):
     if not es_misma_dimension(matriz1, matriz2):
         raiseDifferentDimension('add')
 
     return operar_matrices(matriz1, matriz2, lambda x, y: x + y)
 
-@check_sig([2], [matriz_cualquiera_t], [matriz_cualquiera_t])
+@check_sig([2], matriz_numeros_t, matriz_numeros_t)
 def sub(matriz1, matriz2):
     if not es_misma_dimension(matriz1, matriz2):
         raiseDifferentDimension('sub')
 
     return operar_matrices(matriz1, matriz2, lambda x, y: x - y)
 
-@check_sig([2], [matriz_cualquiera_t], [matriz_cualquiera_t])
+@check_sig([2], matriz_numeros_t, matriz_numeros_t)
 def mul(matriz1, matriz2):
     if not es_uniforme(matriz1) or not es_uniforme(matriz2):
         raiseNonUniformMatrix('mul')
@@ -50,7 +50,7 @@ def mul(matriz1, matriz2):
 
     return resultado
 
-@check_sig([1], [matriz_cualquiera_t])
+@check_sig([1], matriz_numeros_t)
 def inv(matriz):
     if not es_uniforme(matriz):
         raiseNonUniformMatrix('inv')
