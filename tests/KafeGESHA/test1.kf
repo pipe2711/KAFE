@@ -1,3 +1,4 @@
 import geshaDeep;
 
-geshaDeep.hola("hola");
+geshaDeep.perceptron_binary("and",[1,0],0.5,"sigmoide");
+
