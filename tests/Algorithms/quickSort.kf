@@ -1,4 +1,3 @@
-INT pivot;
 List[INT] less;
 List[INT] greater;
 List[INT] leftSorted;
@@ -11,7 +10,7 @@ drip quicksort(lst: List[INT]) => List[INT]:
     if (len(lst) <= 1):
         return lst;
     ;
-    pivot = lst[0];
+    INT pivot = lst[0];
     less = [];
     greater = [];
 

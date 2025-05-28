@@ -50,12 +50,15 @@ def functionDecl(self, ctx):
                 asignar_variable(outer, pid, val, ptype)
             result = None
             try:
+                outer.dentro_bloque = True
                 outer.visit(body)
             except ReturnValue as rv:
                 result = rv.value
             finally:
                 outer.variables = saved
             check_value_type(result, retTyp)
+
+            outer.dentro_bloque = False
             return result
 
     # Si todo está bien, se guarda la función
@@ -78,9 +81,12 @@ def lambdaExpr(self, ctx):
             outer.variables = local
             asignar_variable(outer, pid, val, ptype)
             try:
+                outer.dentro_bloque = True
                 res = outer.visit(body)
             finally:
                 outer.variables = saved
+
+            outer.dentro_bloque = False
             return res
 
     return LambdaFn()

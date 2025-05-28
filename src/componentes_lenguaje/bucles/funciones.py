@@ -14,10 +14,10 @@ def whileLoop(self, ctx):
     contador = 0
     while cond:
         try:
-            self.dentro_bucle = True
+            self.dentro_bloque = True
             self.visit(ctx.block())
         except ReturnValue as ret:
-            self.dentro_bucle = False
+            self.dentro_bloque = False
             raise ret
         contador += 1
         if contador > max_iteraciones:
@@ -26,7 +26,7 @@ def whileLoop(self, ctx):
         if not isinstance(cond, bool):
             raiseConditionMustBeBoolean("while", cond)
 
-    self.dentro_bucle = False
+    self.dentro_bloque = False
 
 
 def forLoop(self, ctx):
@@ -45,10 +45,10 @@ def forLoop(self, ctx):
     for item in iterable:
         self.variables[var_name] = (tipo_elemento, item)
         try:
-            self.dentro_bucle = True
+            self.dentro_bloque = True
             self.visit(ctx.block())
         except ReturnValue as ret:
-            self.dentro_bucle = False
+            self.dentro_bloque = False
             if var_name in self.variables:
                 del self.variables[var_name]
             raise ret
@@ -56,4 +56,4 @@ def forLoop(self, ctx):
     if var_name in self.variables:
         del self.variables[var_name]
 
-    self.dentro_bucle = False
+    self.dentro_bloque = False

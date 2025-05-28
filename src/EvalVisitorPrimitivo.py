@@ -16,7 +16,7 @@ import lib.KafeGESHA.funciones as gesha_funcs_module
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def __init__(self):
         self.variables = {}
-        self.dentro_bucle = False
+        self.dentro_bloque = False
         self.libraries = {
             "numk": [numk_funcs_module, False],
             "math": [math_funcs_module, False],
