@@ -1,1 +1,1 @@
-Exception: numkadd: Expected matrices as arguments
+Exception: numk: Function add expects argument of type List[List[INT]] or List[List[FLOAT]], got type INT

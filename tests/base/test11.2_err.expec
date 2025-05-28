@@ -1,1 +1,1 @@
-Exception: Index must be an integer, got float
+IndexError: Index must be an integer, got FLOAT

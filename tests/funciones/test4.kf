@@ -1,10 +1,8 @@
--- importar nada si todo está en el mismo archivo
-
-drip aplicar(f: FUNC(x: INT):INT, n: INT) => INT:
+drip aplicar(f: FUNC(INT) => INT, n: INT) => INT:
     return f(n);
 ;
 
-drip inc(x: INT)=>INT:
+drip inc(x: INT) => INT:
     return x + 1;
 ;
 

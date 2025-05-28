@@ -1,4 +1,4 @@
-drip aplicar(f: FUNC(a: INT): INT, x: INT) => INT:
+drip aplicar(f: FUNC(INT) => INT, x: INT) => INT:
     return f(x);
 ;
 

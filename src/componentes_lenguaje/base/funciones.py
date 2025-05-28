@@ -1,9 +1,14 @@
-from ..global_utils import verificarHomogeneidad, asignar_variable
+from errores import (
+     raiseVariableAlreadyDefined, raiseVariableNotDefined, raiseVoidAsVariableType,
+     raiseExpectedHomogeneousList, raiseNonIntegerIndex, raiseIndexOutOfBounds, raiseTypeMismatch
+)
+from TypeUtils import  obtener_tipo_dato, entero_t, flotante_t, cadena_t, booleano_t, lista_t, void_t
+from global_utils import esTipoCorrecto, verificarHomogeneidad, asignar_variable
 
 def varDecl(self, ctx):
     tipo = ctx.typeDecl().getText()
-    if tipo == "VOID":
-        raise TypeError("VOID cannot be used as variable type")
+    if tipo == void_t:
+        raiseVoidAsVariableType()
 
     name = ctx.ID().getText()
     val = None
@@ -12,22 +17,21 @@ def varDecl(self, ctx):
         val = self.visit(ctx.expr())
 
     if name in self.variables:
-        raise NameError(f"Variable '{name}' already defined")
+        raiseVariableAlreadyDefined(name)
 
     if val is None:
-        if tipo == "INT":
+        if tipo == entero_t:
             val = 0
-        elif tipo == "FLOAT":
+        elif tipo == flotante_t:
             val = 0.0
-        elif tipo == "STR":
+        elif tipo == cadena_t:
             val = ""
-        elif tipo == "BOOL":
+        elif tipo == booleano_t:
             val = False
-        else:
-            raise TypeError(f"Type '{tipo}' not recognized or missing default value")
+        elif tipo.startswith(lista_t):
+            val = []
 
-    if not asignar_variable(self, name, val, tipo):
-        raise TypeError(f"Could not assign value of type {type(val).__name__.upper()} to variable '{name}' of type '{tipo}'")
+    asignar_variable(self, name, val, tipo)
 
 
 def assignStmt(self, ctx):
@@ -35,34 +39,19 @@ def assignStmt(self, ctx):
     valor = self.visit(ctx.expr())
 
     if id_text not in self.variables:
-        raise NameError(f"Variable '{id_text}' not defined")
+        raiseVariableNotDefined(id_text)
 
     tipo = self.variables[id_text][0]
 
-    
-    if tipo.startswith("List"):
-        if isinstance(valor, list): 
-            raise TypeError(f"Cannot assign a list to a list variable '{id_text}' directly")
-  
-        return self.visit(ctx.indexingExpr())
-    variable_asignada = asignar_variable(self, id_text, valor, tipo)
+    asignar_variable(self, id_text, valor, tipo)
 
-    if not variable_asignada:
-        raise TypeError(f"Cannot assign value to variable '{id_text}' of type '{tipo}'")
-
-
-def showStmt(self, ctx):
-    print(self.visit(ctx.expr()))
-
-def pourStmt(self, ctx):
-    return input(self.visit(ctx.expr()))
 
 def expr(self, ctx):
     resultado = self.visitChildren(ctx)
 
     if (type(resultado) == list):
         if (verificarHomogeneidad(resultado) == False):
-            raise TypeError(f"Expected homogeneous list")
+            raiseExpectedHomogeneousList()
 
     return resultado
 
@@ -146,20 +135,13 @@ def indexingExpr(self, ctx):
     index = self.visit(ctx.expr())
 
     if type(index) != int:
-        raise Exception(f"Index must be an integer, got {type(index).__name__}")
+        raiseNonIntegerIndex(index)
 
-   
-    if isinstance(collection, list):
+    if type(collection) == str or type(collection) == list:
         try:
-            collection[index] = self.visit(ctx.expr()) 
-            return collection
+            return collection[index]
         except IndexError:
-            raise Exception(f"Index {index} out of bounds for collection of size {len(collection)}")
-    elif isinstance(collection, str):
-        raise TypeError("Cannot assign a value to a string index")  
-
-    raise Exception(f"Type {type(collection).__name__} is not indexable")
-
+            raiseIndexOutOfBounds(index, len(collection))
 
 def idExpr(self, ctx):
     id_text = ctx.ID().getText()
@@ -167,4 +149,38 @@ def idExpr(self, ctx):
     if id_text in self.variables:
         return self.variables[id_text][1]
 
-    raise NameError(f"Variable '{id_text}' not defined")
+    raiseVariableNotDefined(id_text)
+
+def indexedAssignStmt(self, ctx):
+    nombre_lista = ctx.ID().getText()
+    indexes = self.visit(ctx.indexing())
+
+    for index in indexes:
+        if type(index) != int:
+            raiseNonIntegerIndex(index)
+
+    if nombre_lista not in self.variables:
+        raiseVariableNotDefined(nombre_lista)
+
+    _, lista = self.variables[nombre_lista]
+
+    nuevo_valor = self.visit(ctx.expr())
+
+    listaIndexada = lista
+    for i in range(len(indexes) - 1):
+        try:
+            listaIndexada = listaIndexada[indexes[i]]
+        except IndexError:
+            raiseIndexOutOfBounds(indexes[i], len(listaIndexada))
+
+    ultimo_indice = indexes[len(indexes) - 1]
+    try:
+        anterior_valor = listaIndexada[ultimo_indice]
+        tipo_anterior_valor = obtener_tipo_dato(anterior_valor)
+
+        if not esTipoCorrecto(nuevo_valor, tipo_anterior_valor):
+            raiseTypeMismatch(nuevo_valor, tipo_anterior_valor)
+
+        listaIndexada[ultimo_indice] = nuevo_valor
+    except IndexError:
+        raiseIndexOutOfBounds(ultimo_indice, len(listaIndexada))

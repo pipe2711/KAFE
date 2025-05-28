@@ -1,120 +1,126 @@
 from Kafe_GrammarVisitor import Kafe_GrammarVisitor
-from Kafe_GrammarParser import Kafe_GrammarParser
-from componentes_lenguaje.base.funciones import additiveExpr, assignStmt, equalityExpr, expr, idExpr, indexingExpr, logicExpr, multiplicativeExpr, powerExpr, relationalExpr, showStmt, unaryExpresion, varDecl, pourStmt
+
+from componentes_lenguaje.librerias.funciones import libraryFunctionCall, libraryConstant
+from componentes_lenguaje.base.funciones import additiveExpr, assignStmt, equalityExpr, expr, idExpr, indexedAssignStmt, indexingExpr, logicExpr, multiplicativeExpr, powerExpr, relationalExpr, unaryExpresion, varDecl
 from componentes_lenguaje.bucles.funciones import forLoop, whileLoop
 from componentes_lenguaje.condicionales.funciones import ifElseExpr
-from componentes_lenguaje.funciones.funciones import functionCall, functionDecl, lambdaExpr, returnStmt
+from componentes_lenguaje.funciones.funciones import  functionDecl, lambdaExpr, returnStmt, visitAppendCall,functionCall,visitRemoveCall,visitLenCall, rangeExpr, pourStmt, showStmt
 from componentes_lenguaje.importar.funciones import importStmt
-from lib.KafeNUMK.funciones import numkadd, numksub, numkmul, numkinv, numktranspose, Numk
+
+import lib.KafeNUMK.funciones as numk_funcs_module
+import lib.KafeMATH.funciones as math_funcs_module
+import lib.KafeFILES.funciones as files_funcs_module
+import lib.KafePLOT.funciones as plot_funcs_module
+import lib.KafeGESHA.funciones as gesha_funcs_module
 
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def __init__(self):
-        self.numk = None
-        self.variables    = {}
-        self.type_mapping = {"INT": int, "FLOAT": float, "STR": str, "BOOL": bool}
-        self.nombre_tipos = { int:"INT", float:"FLOAT", str:"STR", bool:"BOOL" }
-        self.imported     = set()
-        # Directorio actual de .kf para imports relativos
-        self.current_dir  = None
+        self.variables = {}
+        self.libraries = {
+            "numk": [numk_funcs_module, False],
+            "math": [math_funcs_module, False],
+            "files": [files_funcs_module, False],
+            "plot": [plot_funcs_module, False],
+            "geshaDeep": [gesha_funcs_module, False]
+        };
+        self.imported = set()
 
-    def visitSimpleImport(self, ctx):
-        importStmt(self, ctx)
+    # ====================== VARIABLES  ======================
 
-    def visitVarDecl(self, ctx):
-        return varDecl(self, ctx)
+    def visitSimpleImport(self, ctx): importStmt(self, ctx)
 
-    def visitAssignStmt(self, ctx):
-        return assignStmt(self, ctx)
+    def visitVarDecl(self, ctx): varDecl(self, ctx)
+
+    def visitAssignStmt(self, ctx): assignStmt(self, ctx)
+
+    def visitIndexedAssignStmt(self, ctx): indexedAssignStmt(self, ctx)
+
+    def visitIndexing(self, ctx):
+        indexes = [self.visit(expr) for expr in ctx.expr()]
+        return indexes
 
 
     # ======================  FUNCIONES ======================
 
+    def visitFunctionDecl(self, ctx): return functionDecl(self, ctx)
 
-    def visitFunctionDecl(self, ctx):
-        return functionDecl(self, ctx)
+    def visitFunctionCall(self, ctx): return functionCall(self,ctx)
 
-    def visitFunctionCall(self, ctx):
-        return functionCall(self, ctx)
+    def visitAppendCall(self, ctx):
+        lista = self.visit(ctx.expr(0))
+        elem = self.visit(ctx.expr(1))
+        return visitAppendCall(lista, elem)
 
-    def visitLambdaExpr(self, ctx):
-        return lambdaExpr(self, ctx)
+    def visitRemoveCall(self, ctx):
+        lista = self.visit(ctx.expr(0))
+        elem = self.visit(ctx.expr(1))
+        return visitRemoveCall(lista, elem)
 
-    def visitLambdaExpresion(self, ctx):
-        return self.visit(ctx.lambdaExpr())
+    def visitLenCall(self, ctx):
+        lista = self.visit(ctx.expr())
+        return visitLenCall(lista)
 
-    def visitReturnStmt(self, ctx):
-        return returnStmt(self, ctx)
+    def visitLambdaExpr(self, ctx): return lambdaExpr(self, ctx)
 
-    def visitShowStmt(self, ctx):
-        showStmt(self, ctx)
+    def visitLambdaExpresion(self, ctx): return self.visit(ctx.lambdaExpr())
 
-    def visitPourStmt(self, ctx):
-        return pourStmt(self, ctx)
+    def visitReturnStmt(self, ctx): return returnStmt(self, ctx)
+
+    def visitShowStmt(self, ctx): showStmt(self, ctx)
+
+    def visitPourStmt(self, ctx): return pourStmt(self, ctx)
+
+    def visitRangeExpr(self, ctx):
+        rango = [self.visit(expr) for expr in ctx.expr()]
+        return rangeExpr(*rango)
 
 
     # ======================  CONDICIONALES ======================
 
 
-    def visitIfElseExpr(self, ctx):
-        return ifElseExpr(self, ctx)
+    def visitIfElseExpr(self, ctx): return ifElseExpr(self, ctx)
 
 
     # ======================  BUCLES ======================
 
 
-    def visitWhileLoop(self, ctx):
-        whileLoop(self, ctx)
+    def visitWhileLoop(self, ctx): whileLoop(self, ctx)
 
-    def visitForLoop(self, ctx):
-        forLoop(self, ctx)
+    def visitForLoop(self, ctx): forLoop(self, ctx)
 
 
     # ======================  EXPRESIONES ======================
 
-    def visitExpr(self, ctx):
-        return expr(self, ctx)
+    def visitExpr(self, ctx): return expr(self, ctx)
 
-    def visitIndexingExpr(self, ctx):
-        return indexingExpr(self, ctx)
+    def visitIndexingExpr(self, ctx): return indexingExpr(self, ctx)
 
-    def visitLogicExpr(self, ctx):
-        return logicExpr(self, ctx)
+    def visitLogicExpr(self, ctx): return logicExpr(self, ctx)
 
-    def visitEqualityExpr(self, ctx):
-        return equalityExpr(self, ctx)
+    def visitEqualityExpr(self, ctx): return equalityExpr(self, ctx)
 
-    def visitRelationalExpr(self, ctx):
-        return relationalExpr(self, ctx)
+    def visitRelationalExpr(self, ctx): return relationalExpr(self, ctx)
 
-    def visitAdditiveExpr(self, ctx):
-        return additiveExpr(self, ctx)
+    def visitAdditiveExpr(self, ctx): return additiveExpr(self, ctx)
 
-    def visitMultiplicativeExpr(self, ctx):
-        return multiplicativeExpr(self, ctx)
+    def visitMultiplicativeExpr(self, ctx): return multiplicativeExpr(self, ctx)
 
-    def visitPowerExpr(self, ctx):
-        return powerExpr(self, ctx)
+    def visitPowerExpr(self, ctx): return powerExpr(self, ctx)
 
-    def visitUnaryExpresion(self, ctx):
-        return unaryExpresion(self, ctx)
+    def visitUnaryExpresion(self, ctx): return unaryExpresion(self, ctx)
 
-    def visitParenExpr(self, ctx:Kafe_GrammarParser.ParenExprContext):
-        return self.visitChildren(ctx.expr())
+    def visitParenExpr(self, ctx): return self.visitChildren(ctx.expr())
 
-    def visitIdExpr(self, ctx):
-        return idExpr(self, ctx) 
+    def visitIdExpr(self, ctx): return idExpr(self, ctx)
 
 
     # ======================  TIPOS ======================
 
-    def visitIntLiteral(self, ctx):
-        return int(ctx.getText())
+    def visitIntLiteral(self, ctx): return int(ctx.getText())
 
-    def visitFloatLiteral(self, ctx):
-        return float(ctx.getText())
+    def visitFloatLiteral(self, ctx): return float(ctx.getText())
 
-    def visitStringLiteral(self, ctx):
-        return ctx.getText()[1:-1]
+    def visitStringLiteral(self, ctx): return ctx.getText()[1:-1]
 
     def visitBoolLiteral(self, ctx):
         if ctx.getText() == "False":
@@ -131,59 +137,19 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
         return lista
 
-    def visitStrCastExpr(self, ctx):
-        return str(self.visit(ctx.expr()))
+    def visitStrCastExpr(self, ctx): return str(self.visit(ctx.expr()))
 
-    def visitBoolCastExpr(self, ctx):
-        return bool(self.visit(ctx.expr()))
+    def visitBoolCastExpr(self, ctx): return bool(self.visit(ctx.expr()))
 
-    def visitFloatCastExpr(self, ctx):
-        return float(self.visit(ctx.expr()))
+    def visitFloatCastExpr(self, ctx): return float(self.visit(ctx.expr()))
 
-    def visitIntCastExpr(self, ctx):
-        return int(self.visit(ctx.expr()))
+    def visitIntCastExpr(self, ctx): return int(self.visit(ctx.expr()))
 
 
-    # ======================  NUMK Library ======================
+    # ======================  LIBRARIES ======================
 
-    def visitImportNUMK(self, ctx):
-        self.numk = Numk()
+    def visitLibraryFunctionCall(self, ctx):
+        return libraryFunctionCall(self, ctx)
 
-    def visitNumkadd(self, ctx):
-        if self.numk == None:
-            raise Exception("numk library not imported")
-
-        return numkadd(self, ctx, self.numk)
-
-    def visitNumksub(self, ctx):
-        if self.numk == None:
-            raise Exception("numk library not imported")
-
-        return numksub(self, ctx, self.numk)
-
-    def visitNumkmul(self, ctx):
-        if self.numk == None:
-            raise Exception("numk library not imported")
-
-        return numkmul(self, ctx, self.numk)
-
-    def visitNumkinv(self, ctx):
-        if self.numk == None:
-            raise Exception("numk library not imported")
-
-        return numkinv(self, ctx, self.numk)
-
-    def visitNumktranspose(self, ctx):
-        if self.numk == None:
-            raise Exception("numk library not imported")
-
-        return numktranspose(self, ctx, self.numk)
-
-
-    # ======================  FILES Library ======================
-
-
-    # ======================  MATH Library ======================
-
-
-    # ======================  PLOT Library ======================
+    def visitLibraryConstant(self, ctx):
+        return libraryConstant(self, ctx)

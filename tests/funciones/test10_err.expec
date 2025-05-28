@@ -1,1 +1,1 @@
-TypeError: Expected function, got int
+TypeError: Expected FUNC(INT)=>INT, obtained INT

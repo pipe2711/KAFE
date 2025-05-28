@@ -1,1 +1,1 @@
-TypeError: Condition in 'while' must be boolean, got int
+TypeError: Condition in while must be boolean, got INT

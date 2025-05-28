@@ -1,18 +1,17 @@
 -- 1. Orden superior con lambda en línea
-drip aplicar(f: FUNC(x: INT): INT, v: INT)=> INT:
+drip aplicar(f: FUNC(INT) => INT, v: INT) => INT:
     return f(v);
 ;
 
 show(aplicar((x: INT) => x * x, 5));   -- 25
 
-
 -- 2. Guardar una lambda en una variable
-FUNC(n: INT): INT inc = (n: INT) => n + 1;
+FUNC(INT) => INT inc = (n: INT) => n + 1;
 show(inc(9));                          -- 10
 
 
 -- 3. Lambda que devuelve otra lambda  (currificada)
-drip fold2(op: FUNC(a: INT): FUNC(b: INT): INT)(x: INT)(y: INT)=> INT:
+drip fold2(op: FUNC(INT) => FUNC(INT) => INT)(x: INT)(y: INT) => INT:
     return op(x)(y);
 ;
 

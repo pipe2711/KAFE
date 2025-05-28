@@ -1,76 +1,82 @@
 lexer grammar Kafe_Lexer;
 
-// Casting
-INT_CAST   : 'int';
-FLOAT_CAST : 'float';
-STR_CAST   : 'str';
-BOOL_CAST  : 'bool';
+//  Casting
+INT_CAST    : 'int';
+FLOAT_CAST  : 'float';
+STR_CAST    : 'str';
+BOOL_CAST   : 'bool';
 
-// Palabras clave y funciones
-DRIP       : 'drip';
-POUR       : 'pour';
-SHOW       : 'show';
-RETURN     : 'return';
-IF         : 'if';
-ELIF       : 'elif';
-ELSE       : 'else';
-MATCH      : 'match';
-FUNC       : 'FUNC';
-IMPORT     : 'import';
 
-// Operadores
-ADD        : '+';
-SUB        : '-';
-MUL        : '*';
-DIV        : '/';
-MOD        : '%';
-POW        : '^';
-AND        : '&&';
-OR         : '||';
-EQ         : '==';
-NEQ        : '!=';
-LT         : '<';
-GT         : '>';
-LE         : '<=';
-GE         : '>=';
-ARROW      : '=>';
-ASSIGN     : '=';
-NOT        : '!';
+//  Palabras clave y funciones
+DRIP        : 'drip';
+POUR        : 'pour';
+SHOW        : 'show';
+LEN        : 'len';
+REMOVE     : 'remove';
+APPEND     : 'append';
+RETURN      : 'return';
+IF          : 'if';
+ELIF        : 'elif';
+ELSE        : 'else';
+MATCH       : 'match';
+FUNC        : 'FUNC';
+RANGE      :  'range';
+IMPORT      : 'import';
 
-// Símbolos
-LPAREN     : '(';
-RPAREN     : ')';
-LBRACK     : '[';
-RBRACK     : ']';
-COLON      : ':';
-PIPE       : '|';
-SEMI       : ';';
-COMMA      : ',';
-UNDERSCORE : '_';
 
-// Tipos
-LIST: 'List';
-INT_TYPE   : 'INT';
-FLOAT_TYPE : 'FLOAT';
-BOOL_TYPE  : 'BOOL';
-VOID_TYPE  : 'VOID';
+//  Operadores
+ADD         : '+';
+SUB         : '-';
+MUL         : '*';
+DIV         : '/';
+MOD         : '%';
+POW         : '^';
+AND         : '&&';
+OR          : '||';
+EQ          : '==';
+NEQ         : '!=';
+LT          : '<';
+GT          : '>';
+LE          : '<=';
+GE          : '>=';
+ARROW       : '=>';
+ASSIGN      : '=';
+NOT         : '!';
+
+
+//  Símbolos de agrupación y separación
+LPAREN      : '(';
+RPAREN      : ')';
+LBRACK      : '[';
+RBRACK      : ']';
+COLON       : ':';
+PIPE        : '|';
+SEMI        : ';';
+COMMA       : ',';
+UNDERSCORE  : '_';
+
+
+//  Tipos básicos
+LIST        : 'List';
+INT_TYPE    : 'INT';
+FLOAT_TYPE  : 'FLOAT';
+BOOL_TYPE   : 'BOOL';
+VOID_TYPE   : 'VOID';
 STRING_TYPE : 'STR';
 
-// Comentarios
-LINE_COMMENT : '--' ~[\r\n]* -> skip;
-BLOCK_COMMENT : '->' .*? '<-' -> skip;
 
-// Literales
-INT     : [0-9]+;
-BOOL    : 'True' | 'False';
-FLOAT   : [0-9]+ '.' [0-9]+;
-STRING  : '"' .*? '"' | '\'' .*? '\'';
+//  Literales
+INT         : [0-9]+;
+BOOL        : 'True' | 'False';
+FLOAT       : [0-9]+ '.' [0-9]+;
+STRING      : '"' (~["\\])* '"' | '\'' (~['\\])* '\'';
 
-// Librerías
-NUMK_LIB   : 'numk';
 
-// Identificadores
-ID      : [a-zA-Z_][a-zA-Z0-9_]*;
+//  Identificadores
+ID          : [a-zA-Z_] [a-zA-Z0-9_]*;
 
-// Espacios
-WS      : [ \t\r\n]+ -> skip;
+
+//  Comentarios y espacios en blanco
+LINE_COMMENT  : '--' ~[\r\n]*        -> skip;
+BLOCK_COMMENT : '->' .*? '<-'        -> skip;
+WS            : [ \t\r\n]+           -> skip;

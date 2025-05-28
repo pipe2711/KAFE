@@ -1,4 +1,4 @@
 -- Variable ya definida en el módulo
-import math
+import matematica;
 
 INT a = 7;
