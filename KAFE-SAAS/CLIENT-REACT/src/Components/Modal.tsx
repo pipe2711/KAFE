@@ -25,11 +25,15 @@ export default function Modal({
     <div style={overlayStyle}>
       <div style={modalStyle}>
         <h3 style={{ marginBottom: '1rem' }}>{title}</h3>
-        {children}
+        <div style={contentWrapperStyle}>
+          {children}
+        </div>
         <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-          <button onClick={onCancel} style={buttonCancelStyle}>
-            {cancelText}
-          </button>
+          {cancelText && (
+            <button onClick={onCancel} style={buttonCancelStyle}>
+              {cancelText}
+            </button>
+          )}
           {onConfirm && (
             <button onClick={onConfirm} style={buttonConfirmStyle}>
               {confirmText}
@@ -41,7 +45,7 @@ export default function Modal({
   );
 }
 
-// Estilos inline básicos
+// ====== ESTILOS ======
 const overlayStyle: React.CSSProperties = {
   position: 'fixed',
   top: 0,
@@ -60,8 +64,20 @@ const modalStyle: React.CSSProperties = {
   color: '#fff',
   padding: '2rem',
   borderRadius: '10px',
-  minWidth: '300px',
+  maxWidth: '95vw',
+  maxHeight: '90vh',
+  overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
 };
+
+const contentWrapperStyle: React.CSSProperties = {
+  overflowY: 'auto',
+  overflowX: 'auto',
+  maxHeight: '75vh',
+  maxWidth: '100%',
+};
+
 
 const buttonCancelStyle: React.CSSProperties = {
   backgroundColor: '#555',
