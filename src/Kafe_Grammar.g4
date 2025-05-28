@@ -18,6 +18,8 @@ stmt
     | forLoop
     | returnStmt
     | showStmt
+    | appendCall
+    | removeCall
     | expr
     ;
 
@@ -144,8 +146,6 @@ primaryExpr
     | library                                  # libraryExpr
     | functionCall                             # functionCallExpr
     | pourStmt                                 # pourExpr
-    | appendCall                               # appendCallExpr
-    | removeCall                               # removeCallExpr
     | lenCall                                  # lenCallExpr
     | RANGE '(' expr (COMMA expr)? (COMMA expr)? ')' # rangeExpr
     | INT_CAST LPAREN expr RPAREN              # intCastExpr
