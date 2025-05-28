@@ -10,6 +10,7 @@ interface Props {
   onFileDelete: (filename: string) => void;
   onFileRename: (oldName: string, newName: string) => void;
   onFileImport?: (filename: string, content: string) => void;
+  archivosTxt?: string[];
 }
 
 export const EditorSideBar = ({
@@ -20,12 +21,13 @@ export const EditorSideBar = ({
   onFileDelete,
   onFileRename,
   onFileImport,
+  archivosTxt = [],
 }: Props) => {
   const [newFileName, setNewFileName] = useState('');
   const [renameTarget, setRenameTarget] = useState<string | null>(null);
   const [newName, setNewName] = useState('');
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
-  const [overwriteTarget, setOverwriteTarget] = useState<{ name: string, content: string } | null>(null);
+  const [overwriteTarget, setOverwriteTarget] = useState<{ name: string; content: string } | null>(null);
 
   const handleNewFile = () => {
     if (newFileName.trim() && !files[newFileName]) {
@@ -41,7 +43,6 @@ export const EditorSideBar = ({
     const content = await file.text();
 
     if (files[file.name]) {
-      // Mostrar modal de sobrescribir
       setOverwriteTarget({ name: file.name, content });
     } else {
       onFileImport?.(file.name, content);
@@ -141,6 +142,29 @@ export const EditorSideBar = ({
           </li>
         ))}
       </ul>
+
+      {archivosTxt.length > 0 && (
+        <ul className="file-list" style={{ marginTop: '1rem' }}>
+          <strong style={{ marginLeft: '0.5rem' }}>Archivos .txt</strong>
+          {archivosTxt.map((file) => (
+            <li
+              key={file}
+              className="file-item"
+              style={{ paddingLeft: '1rem', fontStyle: 'italic', cursor: 'pointer' }}
+              onClick={() => {
+                const programa = activeFile.replace('.kf', '');
+                const url = `http://149.130.179.251:5000/archivo_usuario/${programa}/${file}`;
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = file;
+                a.click();
+              }}
+            >
+              📄 {file}
+            </li>
+          ))}
+        </ul>
+      )}
 
       {/* Modal para renombrar */}
       <Modal
