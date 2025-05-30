@@ -16,6 +16,7 @@ export default function Editor() {
   const [overwriteTarget, setOverwriteTarget] = useState<{ name: string; content: string } | null>(null);
   const [svgUrl, setSvgUrl] = useState<string | null>(null);
   const [showGraphModal, setShowGraphModal] = useState(false);
+  const [archivosTxt, setArchivosTxt] = useState<string[]>([]); // Nuevo estado para los .txt
 
   const ejecutar = async () => {
     if (!activeFile || !files[activeFile]) return;
@@ -29,6 +30,10 @@ export default function Editor() {
 
       const data = await response.json();
       setOutput((prev) => prev + (data.output || ' No se generó salida.') + '\n');
+
+      if (data.archivos_txt) {
+        setArchivosTxt(data.archivos_txt); // Guardar archivos .txt
+      }
 
       if (data.svg_name && typeof data.svg_name === 'string') {
         setSvgUrl(`http://149.130.179.251:5000/static/${data.svg_name}`);
@@ -110,6 +115,7 @@ export default function Editor() {
         onFileDelete={deleteFile}
         onFileRename={renameFile}
         onFileImport={handleFileImport}
+        archivosTxt={archivosTxt} // Paso de archivos .txt
       />
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
