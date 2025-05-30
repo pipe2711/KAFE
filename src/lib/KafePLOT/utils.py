@@ -10,9 +10,11 @@ color_puntos = "red"
 tamaño_punto = 3
 mostrar_valores_barras = False
 leyenda_pastel = None
+ultimo_svg_generado = None  # nuevo
 
 def resetear_variables():
-    global eje_x_label, eje_y_label, titulo_grafico, mostrar_valores_barras, mostrar_grid, color_puntos, color_linea, tamaño_punto, leyenda_pastel
+    global eje_x_label, eje_y_label, titulo_grafico, mostrar_valores_barras
+    global mostrar_grid, color_puntos, color_linea, tamaño_punto, leyenda_pastel, ultimo_svg_generado
 
     eje_x_label = ""
     eje_y_label = ""
@@ -23,12 +25,15 @@ def resetear_variables():
     tamaño_punto = 3
     mostrar_valores_barras = False
     leyenda_pastel = None
+    ultimo_svg_generado = None
 
 def guardar_svg(contenido):
-    carpeta_destino = os.path.dirname(globals.ruta_programa)
-    nombre_base = os.path.splitext(os.path.basename(globals.ruta_programa))[0]
-    nombre_svg = f"grafico_{nombre_base}.svg"
-    ruta_svg = os.path.join(carpeta_destino, nombre_svg)
+    global ultimo_svg_generado
+    nombre_svg = os.path.splitext(os.path.basename(globals.ruta_programa))[0] + ".svg"
+    ruta_svg = os.path.join("/home/ubuntu/KAFE/KAFE-SAAS/SERVER-FLASK/static", nombre_svg)
 
     with open(ruta_svg, "w") as f:
         f.write(contenido)
+
+    ultimo_svg_generado = nombre_svg
+

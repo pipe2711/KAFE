@@ -3,27 +3,20 @@ import MonacoEditor from '@monaco-editor/react';
 import Terminal from '../Components/Terminal';
 import { EditorSideBar } from '../Components/EditorSideBar';
 import EditorLayout from '../Components/EditorLayout';
-import Modal from '../Components/Modal'; // Componente de modal reutilizable
+import Modal from '../Components/Modal';
 
 export default function Editor() {
-  // Estado que almacena los archivos abiertos en el editor
   const [files, setFiles] = useState<{ [key: string]: string }>({
     'main.kf': '// Código inicial',
   });
 
-  // Estado que indica qué archivo está activo en el editor
   const [activeFile, setActiveFile] = useState('main.kf');
-
-  // Estado para manejar el texto de salida de la terminal
   const [output, setOutput] = useState('$ ./main.kf\n');
-
-  // Estado del tema del editor (oscuro o claro)
   const [theme, setTheme] = useState<'vs-dark' | 'vs-light'>('vs-dark');
-
-  // Estado para mostrar el modal de confirmación al sobrescribir un archivo existente
   const [overwriteTarget, setOverwriteTarget] = useState<{ name: string; content: string } | null>(null);
+  const [svgUrl, setSvgUrl] = useState<string | null>(null);
+  const [showGraphModal, setShowGraphModal] = useState(false);
 
-  // Ejecutar el archivo actual enviando el código al backend
   const ejecutar = async () => {
     if (!activeFile || !files[activeFile]) return;
 
@@ -36,12 +29,21 @@ export default function Editor() {
 
       const data = await response.json();
       setOutput((prev) => prev + (data.output || ' No se generó salida.') + '\n');
+
+      if (data.svg_name && typeof data.svg_name === 'string') {
+        setSvgUrl(`http://149.130.179.251:5000/static/${data.svg_name}`);
+        setShowGraphModal(true);
+      } else {
+        setSvgUrl(null);
+        setShowGraphModal(false);
+      }
     } catch (error) {
       setOutput((prev) => prev + 'Error ejecutando el archivo.\n');
+      setSvgUrl(null);
+      setShowGraphModal(false);
     }
   };
 
-  // Detecta el tema del sistema (oscuro o claro) al cargar y cuando cambia
   useEffect(() => {
     const checkTheme = () => {
       setTheme(document.body.classList.contains('light-theme') ? 'vs-light' : 'vs-dark');
@@ -52,18 +54,15 @@ export default function Editor() {
     return () => observer.disconnect();
   }, []);
 
-  // Maneja los cambios de texto dentro del editor Monaco
   const handleCodeChange = (val: string | undefined) => {
     setFiles({ ...files, [activeFile]: val || '' });
   };
 
-  // Agrega un nuevo archivo vacío y lo activa
   const createFile = (filename: string) => {
     setFiles((prev) => ({ ...prev, [filename]: '' }));
     setActiveFile(filename);
   };
 
-  // Elimina un archivo del estado
   const deleteFile = (filename: string) => {
     const updated = { ...files };
     delete updated[filename];
@@ -72,7 +71,6 @@ export default function Editor() {
     setActiveFile(fallback);
   };
 
-  // Renombra un archivo manteniendo su contenido
   const renameFile = (oldName: string, newName: string) => {
     setFiles((prev) => {
       const { [oldName]: content, ...rest } = prev;
@@ -81,34 +79,29 @@ export default function Editor() {
     if (activeFile === oldName) setActiveFile(newName);
   };
 
-  // Lógica para importar un archivo externo al editor
   const handleFileImport = (filename: string, content: string) => {
     if (files[filename]) {
-      // Si el archivo ya existe, muestra modal para confirmar sobrescritura
       setOverwriteTarget({ name: filename, content });
     } else {
-      // Si no existe, se agrega directamente
       setFiles((prev) => ({ ...prev, [filename]: content }));
       setActiveFile(filename);
     }
   };
 
   useEffect(() => {
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.ctrlKey && event.key.toLowerCase() === 'l') {
-      event.preventDefault(); // Evita el comportamiento por defecto (limpiar consola del navegador)
-      setOutput('$ ./main.kf\n'); // Limpia el contenido de la terminal
-    }
-  };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key.toLowerCase() === 'l') {
+        event.preventDefault();
+        setOutput('$ ./main.kf\n');
+      }
+    };
 
-  window.addEventListener('keydown', handleKeyDown);
-  return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
-
 
   return (
     <div style={{ height: '100vh', display: 'flex' }}>
-      {/* Barra lateral para crear, seleccionar, renombrar y eliminar archivos */}
       <EditorSideBar
         files={files}
         activeFile={activeFile}
@@ -120,7 +113,6 @@ export default function Editor() {
       />
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {/* Barra superior con el botón "Ejecutar" */}
         <div
           style={{
             padding: '0.5rem',
@@ -144,7 +136,6 @@ export default function Editor() {
           </button>
         </div>
 
-        {/* Contenedor que muestra el editor de código y la terminal de salida */}
         <EditorLayout>
           <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
             <MonacoEditor
@@ -161,13 +152,11 @@ export default function Editor() {
             />
           </div>
 
-          <div style={{ height: '100%' }}>
-            <Terminal output={output} />
-          </div>
+          <Terminal output={output} />
         </EditorLayout>
       </div>
 
-      {/* Modal personalizado que aparece si se intenta sobrescribir un archivo ya existente */}
+      {/* Modal de confirmación para sobrescribir archivos */}
       {overwriteTarget && (
         <Modal
           isOpen={true}
@@ -187,6 +176,30 @@ export default function Editor() {
           <p style={{ color: '#ccc' }}>
             Este grano ya fue tostado. ¿Deseas reemplazar su aroma con uno nuevo?
           </p>
+        </Modal>
+      )}
+
+      {/* Modal para mostrar gráfico */}
+      {svgUrl && showGraphModal && (
+        <Modal
+          isOpen={true}
+          title="📈 Gráfico generado"
+          onCancel={() => setShowGraphModal(false)}
+          onConfirm={() => setShowGraphModal(false)}
+          confirmText="Cerrar"
+          cancelText=""
+        >
+          <img
+            src={svgUrl}
+            alt="Gráfico generado"
+            style={{
+              maxWidth: '100%',
+              maxHeight: '70vh',
+              border: '1px solid #444',
+              background: '#fff',
+              padding: '0.5rem',
+            }}
+          />
         </Modal>
       )}
     </div>
