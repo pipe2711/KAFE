@@ -16,7 +16,7 @@ def varDecl(self, ctx):
     if ctx.expr():
         val = self.visit(ctx.expr())
 
-    if name in self.variables:
+    if name in self.variables and not self.dentro_bloque:
         raiseVariableAlreadyDefined(name)
 
     if val is None:
