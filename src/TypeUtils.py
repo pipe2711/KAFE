@@ -1,5 +1,5 @@
-type_mapping = {"INT": int, "FLOAT": float, "STR": str, "BOOL": bool}
-nombre_tipos = { int:"INT", float:"FLOAT", str:"STR", bool:"BOOL", list:"List", "void": "VOID", "func": "FUNC"}
+from lib.KafeGESHA.Gesha import Gesha
+nombre_tipos = { int:"INT", float:"FLOAT", str:"STR", bool:"BOOL", list:"List", "void": "VOID", "func": "FUNC",  Gesha: "GESHA"}
 
 def obtener_tipo_dentro_lista(lista):
     tipo_lista = obtener_tipo_lista(lista)
@@ -36,6 +36,8 @@ def obtener_tipo_dato(dato):
         return obtener_tipo_lista(dato)
     elif callable(dato):
         return nombre_tipos["func"]
+    elif isinstance(dato, Gesha):
+        return nombre_tipos[Gesha]
     else:
         return nombre_tipos[type(dato)]
 
@@ -49,6 +51,7 @@ flotante_t = nombre_tipos[float]
 booleano_t = nombre_tipos[bool]
 cadena_t = nombre_tipos[str]
 lista_t = nombre_tipos[list]
+gesha_t = nombre_tipos[Gesha]
 void_t = nombre_tipos['void']
 funcion_t = nombre_tipos["func"]
 lista_cualquiera_t = [construir_tipo_lista(i) for i in range(1, 100)]

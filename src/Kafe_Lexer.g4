@@ -63,6 +63,7 @@ FLOAT_TYPE  : 'FLOAT';
 BOOL_TYPE   : 'BOOL';
 VOID_TYPE   : 'VOID';
 STRING_TYPE : 'STR';
+GESHA_TYPE  : 'GESHA';
 
 
 //  Literales

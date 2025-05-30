@@ -1,4 +1,5 @@
 import geshaDeep;
 
-geshaDeep.perceptron_binary("and",[1,0],0.5,"sigmoide");
-
+GESHA modelo = geshaDeep.perceptron();
+modelo.fit('asdf');
+show(modelo.a);
