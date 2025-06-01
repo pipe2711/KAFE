@@ -1,0 +1,15 @@
+import pandas;
+
+-- Leer un CSV de ejemplo (puede ser cualquiera, usamos test1.csv)
+PANDAS df = pandas.read_csv("test1.csv");
+
+-- Ahora obtenemos shape_info como DataFrame:
+PANDAS shape_info = df.shape();
+
+-- Mostrar shape_info (ahora es un DataFrame):
+show(shape_info);
+
+PANDAS  dims  = shape_info.col("dimension");
+PANDAS  valores = shape_info.col("value");
+show(dims);    -- debería imprimir ['Rows','Columns']
+show(valores); -- debería imprimir [5,4] (si eran 5 filas y 4 columnas)

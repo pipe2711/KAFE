@@ -1,0 +1,6 @@
+[['value'], [10], [20], ['foo'], [30.5], ['bar']]
+[5, 1]
+['10', '20', 'foo', '30.5', 'bar']
+[['value', 'STR']]
+[['Rows', '5'], ['Columns', '1'], ['Column_Names', 'value'], ['Dtypes', 'value:STR']]
+[['column', 'count', 'mean', 'std', 'min', 'max']]

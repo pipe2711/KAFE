@@ -1,0 +1,28 @@
+import pandas;
+
+-- Leer el CSV de solo cadenas
+PANDAS df = pandas.read_csv("test3.csv");
+
+-- Mostrar todo el DataFrame
+PANDAS all = df;
+show(all);   -- [['name','city'], ['Alice','Madrid'], ['Bob','Barcelona'], ['Carol','Valencia']]
+
+-- Shape (debe ser [3,2])
+PANDAS shp = df.shape();
+show(shp);   -- [3, 2]
+
+-- Valores de columna "city"
+PANDAS ciudades = df.col("city");
+show(ciudades);   -- ['Madrid', 'Barcelona', 'Valencia']
+
+-- Tipos inferidos (ambas STR)
+PANDAS dt = df.dtypes();
+show(dt);    -- [['name','STR'], ['city','STR']]
+
+-- Info general
+PANDAS inf = df.info();
+show(inf);   -- [['Rows','3'], ['Columns','2'], ['Column_Names','name,city'], ['Dtypes','name:STR,city:STR']]
+
+-- Describe (solo cabecera, sin filas adicionales)
+PANDAS desc = df.describe();
+show(desc);  -- [['column','count','mean','std','min','max']]

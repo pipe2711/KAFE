@@ -1,0 +1,41 @@
+import pandas;
+
+-- Leer el CSV que combina casos de duplicados, negativos, notación científica y vacíos
+PANDAS df = pandas.read_csv("test9.csv");
+
+-- Mostrar el DataFrame completo (los duplicados en header se conservan)
+PANDAS all = df;
+show(all);
+
+-- Verificar shape (debe ser [5,3])
+PANDAS shp = df.shape();
+show(shp);
+-- Esperado: [5, 3]
+
+-- Obtener la primera columna "valor" (indice 1 en header), como FLOAT
+PANDAS v1 = df.col("valor");
+show(v1);
+-- Esperado: [100.0, -50.0, 100.0, 0.35, nan]
+
+-- Si pedimos "valor" de nuevo, sigue devolviendo la **primera** aparición
+PANDAS v1_again = df.col("valor");
+show(v1_again);
+-- Igual que arriba: [100.0, -50.0, 100.0, 0.35, nan]
+
+-- Mostrar dtypes (se ignoran los nan)
+PANDAS dt = df.dtypes();
+show(dt);
+-- Esperado: [['id','INT'], ['valor','FLOAT'], ['valor','FLOAT']]
+
+-- Info general
+PANDAS inf = df.info();
+show(inf);
+
+-- Describe (solo calcula sobre las dos columnas “valor” y sobre “id”)
+PANDAS desc = df.describe();
+show(desc);
+
+-- Intentar acceder a columna inexistente (“z”) para ver el error
+PANDAS bad = df.col("z");
+show(bad);
+-- Esperado: Exception: df: Columna 'z' no existe

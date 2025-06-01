@@ -1,0 +1,29 @@
+import pandas;
+
+-- Leer el CSV con floats y celdas vacías
+PANDAS df = pandas.read_csv("test2.csv");
+
+-- Mostrar DataFrame completo (usa __repr__ para ver filas)
+PANDAS all = df;
+show(all);
+
+-- Shape (debe ser [4,2])
+PANDAS shp = df.shape();
+show(shp);
+
+-- Valores de "value" (debe ser [1.5,2.0,None,4.75])
+-- Obs. el valor faltante se convertirá a None en Python.
+PANDAS valores = df.col("value");
+show(valores);
+
+-- Tipos inferidos (id->INT, value->FLOAT)
+PANDAS dt = df.dtypes();
+show(dt);
+
+-- Info general (todo como cadenas)
+PANDAS inf = df.info();
+show(inf);
+
+-- Describe (solo filas numéricas: id y value; los conteos y estadísticas deben ignorar None)
+PANDAS desc = df.describe();
+show(desc);

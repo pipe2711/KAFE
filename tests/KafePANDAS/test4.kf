@@ -1,0 +1,30 @@
+import pandas;
+
+-- Leer el CSV con mezcla de tipos en "value"
+PANDAS df = pandas.read_csv("test4.csv");
+
+-- Mostrar DataFrame completo
+PANDAS all = df;
+show(all);
+-- [['value'], [10], [20], ['foo'], [30.5], ['bar']]
+
+-- Shape (debe ser [5,1])
+PANDAS shp = df.shape();
+show(shp);   -- [5, 1]
+
+-- Valores de “value”
+PANDAS contenido = df.col("value");
+show(contenido);
+-- ['10', '20', 'foo', '30.5', 'bar']
+
+-- Tipos inferidos (value -> STR)
+PANDAS dt = df.dtypes();
+show(dt);    -- [['value','STR']]
+
+-- Info general
+PANDAS inf = df.info();
+show(inf);   -- [['Rows','5'], ['Columns','1'], ['Column_Names','value'], ['Dtypes','value:STR']]
+
+-- Describe (solo la cabecera)
+PANDAS desc = df.describe();
+show(desc);  -- [['column','count','mean','std','min','max']]

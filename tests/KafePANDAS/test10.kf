@@ -1,0 +1,7 @@
+import pandas;
+
+PANDAS df = pandas.read_csv("test10.csv");
+
+-- Llamamos a col("z"), que sí existe y es puramente numérica (sin vacíos):
+PANDAS vz = df.col("z");
+show(vz);

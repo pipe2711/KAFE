@@ -1,0 +1,30 @@
+import pandas;
+
+-- Leer CSV con solo cabecera
+PANDAS df = pandas.read_csv("test6.csv");
+
+-- Mostrar DataFrame (solo cabecera)
+PANDAS all = df;
+show(all);   -- [['a','b','c']]
+
+-- Shape (debe ser [0,3])
+PANDAS shp = df.shape();
+show(shp);   -- [0, 3]
+
+-- dtypes (todas STR, ya que no hay filas numéricas)
+PANDAS dt = df.dtypes();
+show(dt);    -- [['a','STR'], ['b','STR'], ['c','STR']]
+
+-- Info general
+PANDAS inf = df.info();
+show(inf);
+-- [
+--   ['Rows','0'],
+--   ['Columns','3'],
+--   ['Column_Names','a,b,c'],
+--   ['Dtypes','a:STR,b:STR,c:STR']
+-- ]
+
+-- Describe (solo cabecera)
+PANDAS desc = df.describe();
+show(desc);  -- [['column','count','mean','std','min','max']]

@@ -1,0 +1,32 @@
+import pandas;
+
+-- Leer el CSV de prueba (estando en tests/KafePANDAS, “test1.csv” se encuentra)
+PANDAS df = pandas.read_csv("test1.csv");
+
+-- Mostrar primeras 3 filas (devuelve DataFrame → PANDAS)
+PANDAS first3 = df.head(3);
+show(first3);
+
+-- Mostrar últimas 2 filas (devuelve DataFrame → PANDAS)
+PANDAS last2 = df.tail(2);
+show(last2);
+
+-- Shape: ahora devuelves un DataFrame con filas “Rows” y “Columns”
+PANDAS shape_info = df.shape();
+show(shape_info);
+
+-- Columna "edad": lista de INT → List[INT]
+PANDAS edades = df.col("edad");
+show(edades);
+
+-- dtypes: devuelve lista de parejas [columna, tipo] → List[List[STR]]
+PANDAS dtypes_info = df.dtypes();
+show(dtypes_info);
+
+-- Info general: devuelve lista de pares (cadena, cadena) → List[List[STR]]
+PANDAS info_general = df.info();
+show(info_general);
+
+-- Describe: devuelve lista de filas homogéneas de cadenas → List[List[STR]]
+PANDAS descripcion = df.describe();
+show(descripcion);

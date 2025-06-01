@@ -1,0 +1,40 @@
+import pandas;
+
+-- Leer el CSV con fechas en formato AAAA-MM-DD
+PANDAS df = pandas.read_csv("test8.csv");
+
+-- Mostrar todo el DataFrame (repr muestra encabezado + filas)
+PANDAS all = df;
+show(all);
+
+
+-- Shape (debe ser [5,3])
+PANDAS shp = df.shape();
+show(shp);
+-- Esperado: [5, 3]
+
+-- Todos los valores de la columna "fecha" (strings)
+PANDAS fechas = df.col("fecha");
+show(fechas);
+
+-- Todos los valores de la columna "evento"
+PANDAS eventos = df.col("evento");
+show(eventos);
+
+-- Valores de la columna "id" (enteros)
+PANDAS ids = df.col("id");
+show(ids);
+
+-- Tipos inferidos: id→INT, fecha→STR, evento→STR
+PANDAS dt = df.dtypes();
+show(dt);
+
+-- Info general (todas cadenas)
+PANDAS inf = df.info();
+show(inf);
+
+
+-- Describe (solo calculará sobre “id”)
+PANDAS desc = df.describe();
+show(desc);
+
