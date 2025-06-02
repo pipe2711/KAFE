@@ -1,0 +1,98 @@
+-- Test de clustering con 3 grupos (soft k-means) en Kafé (.kf)
+-- Esta versión NO usa “set_lr” y se entrena con parámetros por defecto.
+
+import geshaDeep;
+
+-- ========================================
+-- 1) Definir dataset de clustering con 3 grupos (sin etiquetas)
+--    Normalizamos dividiendo por 10 para evitar escalas muy grandes
+-- ========================================
+List[List[FLOAT]] x_train_norm = [
+    -- Grupo A alrededor de (1,1)
+    [1.0/10, 1.0/10],
+    [1.2/10, 0.8/10],
+    [0.8/10, 1.1/10],
+
+    -- Grupo B alrededor de (5,5)
+    [5.0/10, 5.0/10],
+    [5.1/10, 4.8/10],
+    [4.9/10, 5.2/10],
+
+    -- Grupo C alrededor de (9,1)
+    [9.0/10, 1.0/10],
+    [9.2/10, 1.1/10],
+    [8.8/10, 0.9/10]
+];
+List[List[FLOAT]] y_train = [];  -- ignorado en clustering
+
+-- Conjunto de prueba normalizado
+List[List[FLOAT]] x_test_norm = [
+    [1.1/10, 0.9/10],   -- A
+    [5.2/10, 5.1/10],   -- B
+    [8.9/10, 1.2/10],   -- C
+    [0.9/10, 1.2/10],   -- A
+    [4.8/10, 5.0/10],   -- B
+    [9.1/10, 0.8/10]    -- C
+];
+List[List[FLOAT]] y_test = [];
+
+
+-- ========================================
+-- 2) Crear modelo de clustering y agregar capas ANTES de compile
+-- ========================================
+GESHA model = geshaDeep.clustering();
+
+-- Capa oculta 1: 16 unidades, ReLU, input_shape = [2]
+GESHA layer1 = geshaDeep.create_dense(16, "relu", [2], 0.0);
+model.add(layer1);
+
+-- Capa oculta 2: 12 unidades, ReLU
+GESHA layer2 = geshaDeep.create_dense(12, "relu", [], 0.0);
+model.add(layer2);
+
+-- Capa oculta 3: 8 unidades, ReLU
+GESHA layer3 = geshaDeep.create_dense(8, "relu", [], 0.0);
+model.add(layer3);
+
+
+-- ========================================
+-- 3) Compilar:
+--    – Optimizador: “adam”  (lr por defecto = 0.001)
+--    – Pérdida: “mse”  (que internamente usamos para “soft k-means”)
+-- ========================================
+model.compile("adam", "mse", []);
+
+
+-- ========================================
+-- 4) Agregar capa de salida para 3 clusters: 3 unidades, Softmax
+-- ========================================
+GESHA layer_out = geshaDeep.create_dense(3, "softmax", [], 0.0);
+model.add(layer_out);
+
+
+-- ========================================
+-- 5) Entrenar (clustering no supervisado) con batch_size = 6
+--    epochs = 100, batch_size = 6 (más de 3 para romper simetría)
+-- ========================================
+model.fit(x_train_norm, y_train, 100, 6);
+
+
+-- ========================================
+-- 6) Mostrar resumen de la arquitectura
+-- ========================================
+model.summary();
+
+
+-- ========================================
+-- 7) Mostrar predicciones Softmax para cada punto de x_test_norm
+-- ========================================
+for(p in x_test_norm):
+    List[FLOAT] probs = model.predict(p);
+    show(probs);
+;
+
+
+-- ========================================
+-- 8) Llamar a evaluate() para disparar la advertencia final
+-- ========================================
+model.evaluate(x_test_norm, y_test);

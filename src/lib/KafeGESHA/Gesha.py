@@ -1,6 +1,6 @@
-from abc import ABC, abstractmethod
-from losses import get_loss
-from optimizers import get_optimizer
+# lib/KafeGESHA/Gesha.py
+
+from abc import ABC
 
 class Gesha(ABC):
     def __init__(self):
@@ -16,55 +16,38 @@ class Gesha(ABC):
             layer.input_shape = (prev_output,)
         self.layers.append(layer)
 
-    @abstractmethod
     def compile(self, optimizer=None, loss=None, metrics=[]):
-        self.loss = get_loss(loss)
-        self.loss_name = loss
-        self.optimizer = get_optimizer(optimizer)
-        self.metrics = metrics
+        """
+        (Quedó vacío aquí; la lógica concreta la maneja GeshaDeep.)
+        """
+        pass
 
-    @abstractmethod
     def predict(self, x):
+        """
+        (Recorrido hacia adelante; GeshaDeep lo sobreescribe si lo necesita.)
+        """
         for layer in self.layers:
             x = layer.forward(x)
         return x
 
-    @abstractmethod
     def fit(self, x_train, y_train, epochs=1, batch_size=1):
-        for epoch in range(epochs):
-            total_loss = 0
-            for x, y in zip(x_train, y_train):
-                output = x
-                for layer in self.layers:
-                    output = layer.forward(output)
+        """
+        (Queda vacío; lo implementa GeshaDeep.)
+        """
+        pass
 
-                total_loss += self.loss.compute([y], [output])
-                error = self.loss.derivative([y], [output])[0]
-
-                for layer in reversed(self.layers):
-                    error = layer.backward(error, learning_rate=self.optimizer.lr)
-
-            print(f"Epoch {epoch+1}/{epochs}, Loss: {total_loss / len(x_train)}")
-
-    @abstractmethod
     def summary(self):
+        """
+        (Imprime un resumen genérico; GeshaDeep lo sobreescribe/expande.)
+        """
         print("Model Summary:")
         for i, layer in enumerate(self.layers):
-            print(f"Layer {i+1}: {layer.__class__.__name__}, Input: {getattr(layer, 'input_shape', None)}, Output: {getattr(layer, 'units', None)}")
+            print(f"Layer {i+1}: {layer.__class__.__name__}, "
+                  f"Input: {getattr(layer, 'input_shape', None)}, "
+                  f"Output: {getattr(layer, 'units', None)}")
 
-    @abstractmethod
     def evaluate(self, x_test, y_test):
-        correct = 0
-        total = len(x_test)
-
-        for x, y in zip(x_test, y_test):
-            output = self.predict(x)
-            pred = output.index(max(output)) if isinstance(output, list) else round(output)
-            true = y.index(max(y)) if isinstance(y, list) else y
-
-            if pred == true:
-                correct += 1
-
-        accuracy = correct / total
-        print(f"Accuracy: {accuracy * 100:.2f}%")
-        return accuracy
+        """
+        (Queda vacío; lo maneja GeshaDeep según tipo de modelo.)
+        """
+        pass

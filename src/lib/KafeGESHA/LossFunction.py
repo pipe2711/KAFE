@@ -1,8 +1,10 @@
+# lib/KafeGESHA/LossFunction.py
+
 from abc import ABC, abstractmethod
-from lib.KafeMATH.funciones import exp, pow_, log, math_abs
+from lib.KafeMATH.funciones import log, math_abs
 
 
-class LossFunction:
+class LossFunction(ABC):
     @abstractmethod
     def compute(self, y_true, y_pred):
         """Cálculo del valor de la función de pérdida"""
@@ -16,23 +18,27 @@ class LossFunction:
 
 class MeanSquaredError(LossFunction):
     def compute(self, y_true, y_pred):
-        errors = [pow_(yt - yp, 2) for yt, yp in zip(y_true, y_pred)]
+        # En lugar de pow_, usar multiplicación directa
+        errors = [ (yt - yp) * (yt - yp) for yt, yp in zip(y_true, y_pred) ]
         return sum(errors) / len(errors)
 
     def derivative(self, y_true, y_pred):
         n = len(y_true)
-        return [2 * (yp - yt) / n for yt, yp in zip(y_true, y_pred)]
+        # d/dyp ( (yt - yp)^2 ) = 2*(yp - yt)
+        return [ 2 * (yp - yt) / n for yt, yp in zip(y_true, y_pred) ]
 
 
 class MeanAbsoluteError(LossFunction):
     def compute(self, y_true, y_pred):
-        errors = [math_abs(yt - yp) for yt, yp in zip(y_true, y_pred)]
+        errors = [ math_abs(yt - yp) for yt, yp in zip(y_true, y_pred) ]
         return sum(errors) / len(errors)
 
     def derivative(self, y_true, y_pred):
         n = len(y_true)
-        return [((yp - yt) / math_abs(yp - yt)) / n if yp != yt else 0
-                for yt, yp in zip(y_true, y_pred)]
+        return [
+            ((yp - yt) / math_abs(yp - yt)) / n if yp != yt else 0
+            for yt, yp in zip(y_true, y_pred)
+        ]
 
 
 class BinaryCrossEntropy(LossFunction):
@@ -76,7 +82,7 @@ class SparseCategoricalCrossEntropy(LossFunction):
         self.epsilon = epsilon
 
     def compute(self, y_true, y_pred):
-        loss = [-log(yp[int(yt)] + self.epsilon) for yt, yp in zip(y_true, y_pred)]
+        loss = [ -log(yp[int(yt)] + self.epsilon) for yt, yp in zip(y_true, y_pred) ]
         return sum(loss) / len(loss)
 
     def derivative(self, y_true, y_pred):
