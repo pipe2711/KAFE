@@ -2,10 +2,7 @@
 
 import geshaDeep;
 
--- ========================================
--- 1) Definir dataset de regresión
---    Queremos aprender la función y = 2 * x.
--- ========================================
+
 
 -- (a) Conjunto de entrenamiento: 6 muestras
 List[List[INT]] x_train = [
@@ -34,35 +31,14 @@ List[List[INT]] x_test = [
 List[FLOAT] y_test = [18.0, 20.0];
 
 
--- ========================================
--- 2) Crear modelo de regresión
--- ========================================
 GESHA reg_model = geshaDeep.regression();
 GESHA r_layer = geshaDeep.create_dense(1, "linear", [1], 0.0);
 reg_model.add(r_layer);
 
-
--- ========================================
--- 3) Compilar el modelo
--- ========================================
--- Optimizador: "sgd", Pérdida: "mse" (error cuadrático medio)
 reg_model.compile("sgd", "mse", []);
 
-
--- ========================================
--- 4) Entrenar con validación
---    Pasamos x_val y y_val por separado
--- ========================================
 reg_model.fit(x_train, y_train, 50, 1, x_val, y_val);
 
-
--- ========================================
--- 5) Resumen de la arquitectura
--- ========================================
 reg_model.summary();
 
-
--- ========================================
--- 6) Evaluar sobre datos de prueba
--- ========================================
 reg_model.evaluate(x_test, y_test);

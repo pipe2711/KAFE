@@ -1,0 +1,26 @@
+import geshaDeep;
+
+# Codificación one-hot para 2 palabras: "perro" = [1,0], "gato" = [0,1]
+List[List[INT]] x_train = [
+  [1,0, 1,0, 1,0, 1,0, 1,0],  # 5 veces "perro" concatenado
+  [1,0, 1,0, 0,1, 1,0, 1,0],  # patrón ruido
+  ...
+];
+List[List[INT]] y_train = [
+  [0,1],  # "gato" esperado después de 5 "perro"
+  [1,0],  # "perro" esperado en otro contexto
+  ...
+];
+
+GESHA model = geshaDeep.categorical();
+GESHA layer1 = geshaDeep.create_dense(4, "relu", [10], 0.1);  # capa oculta con 4 neuronas
+GESHA layer2 = geshaDeep.create_dense(2, "softmax", [4], 0.0);  # salida softmax para 2 clases
+model.add(layer1);
+model.add(layer2);
+
+model.compile("adam", "categorical_crossentropy", ["accuracy"]);
+
+model.fit(x_train, y_train, 100, 2, x_val, y_val);
+
+model.summary();
+model.evaluate(x_test, y_test);

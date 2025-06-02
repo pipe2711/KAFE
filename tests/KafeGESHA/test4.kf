@@ -2,10 +2,7 @@
 
 import geshaDeep;
 
--- ========================================
--- 1) Dataset con etiquetas (0 o 1) para clasificación binaria
--- ========================================
--- Las mismas 6 muestras de “clustering” pero ahora con y_train explícito
+
 List[List[INT]] x_train = [
     [1, 2],
     [1, 3],
@@ -14,7 +11,7 @@ List[List[INT]] x_train = [
     [9, 8],
     [8, 8]
 ];
--- Etiquetas: 0 para los tres primeros puntos “pequeños”, 1 para los tres últimos “grandes”
+
 List[INT] y_train = [
     0,   -- [1,2]
     0,   -- [1,3]
@@ -50,44 +47,17 @@ List[INT] y_test = [
     1
 ];
 
-
--- ========================================
--- 2) Crear modelo de clasificación
--- ========================================
 GESHA model = geshaDeep.categorical();
 
--- Capa oculta: 8 unidades, ReLU, input_shape=[2], sin regularización
+
 GESHA layer1 = geshaDeep.create_dense(8, "relu", [2], 0.0);
 model.add(layer1);
 
--- Capa de salida: 2 unidades (para clase 0/1), Softmax
+
 GESHA layer2 = geshaDeep.create_dense(2, "softmax", [], 0.0);
+
 model.add(layer2);
-
-
--- ========================================
--- 3) Compilar
---   – Optimizador: “sgd”
---   – Pérdida: “categorical_crossentropy”
---   – Métrica: “accuracy”
--- ========================================
 model.compile("sgd", "categorical_crossentropy", ["accuracy"]);
-
-
--- ========================================
--- 4) Entrenar con validación
---   epochs = 20, batch_size = 2
--- ========================================
 model.fit(x_train, y_train, 20, 2, x_val, y_val);
-
-
--- ========================================
--- 5) Mostrar resumen de la arquitectura
--- ========================================
 model.summary();
-
-
--- ========================================
--- 6) Evaluar sobre datos de prueba
--- ========================================
 model.evaluate(x_test, y_test);

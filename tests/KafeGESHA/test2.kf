@@ -1,8 +1,6 @@
 import geshaDeep;
 
--- ========================================
--- 1) Definir datos (con tipos explícitos)
--- ========================================
+
 List[List[INT]] x_train = [
     [0, 0, 0, 0],
     [1, 1, 1, 1],
@@ -43,7 +41,6 @@ model.add(layer2);
 
 model.compile("sgd", "categorical_crossentropy", ["accuracy"]);
 
--- ITERAR PASANDO x_val y y_val POR SEPARADO:
 model.fit(x_train, y_train, 20, 2, x_val, y_val);
 
 model.summary();
