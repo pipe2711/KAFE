@@ -1,4 +1,4 @@
-drip sumar(a: INT)(b: INT) => VOID:
+drip sumar(a: INT,b: INT) => VOID:
     return 5;
 ;
 

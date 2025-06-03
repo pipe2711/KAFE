@@ -1,10 +1,6 @@
-drip obtenerPrimerPar() => INT:
-    List[INT] numeros = [1, 3, 5, 6, 7];
-    for (n in numeros):
-        if (n % 2 == 0):
-            return (n);
-        ;
-    ;
+drip sumar(a: INT, b: INT) => VOID:
+    show( "hola");
 ;
 
-show(obtenerPrimerPar());
+sumar(10)(5);  -- 15
+sumar(10, 5);  -- 15

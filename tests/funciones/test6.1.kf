@@ -1,4 +1,4 @@
-drip multiplicar(a: INT)(b: INT) => INT:
+drip multiplicar(a: INT,b: INT) => INT:
     return a * b;
 ;
 

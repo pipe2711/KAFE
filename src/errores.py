@@ -150,3 +150,9 @@ def raiseFileNotFound(nombre, ruta, origin=""):
         message = origin + ": " + message
     raise FileNotFoundError(message)
 
+def raiseSignatureMismatch(expected_signature, obtained_signature, origin=""):
+    message = f"Expected {expected_signature}, obtained {obtained_signature}"
+    if origin:
+        message = origin + ": " + message
+    raise TypeError(message)
+

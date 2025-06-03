@@ -33,7 +33,6 @@ def varDecl(self, ctx):
 
     asignar_variable(self, name, val, tipo)
 
-
 def assignStmt(self, ctx):
     id_text = ctx.ID().getText()
     valor = self.visit(ctx.expr())
