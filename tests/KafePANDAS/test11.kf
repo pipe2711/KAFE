@@ -1,0 +1,33 @@
+import pandas;
+
+-- Leer el CSV delimitado por punto y coma
+PANDAS df = pandas.read_csv("test11.csv");
+
+-- Mostrar todo el DataFrame
+PANDAS all = df;
+show(all);
+
+-- Shape (debe ser [5,3])
+show(df.shape());
+-- Esperado: [5, 3]
+
+-- Columna "nombre" (todas cadenas)
+List[STR] nombres = df.col("nombre");
+show(nombres);
+-- Esperado: ['Ana','Luis','María','Pedro','Lucía']
+
+-- Columna "puntaje" (todos enteros)
+List[INT]  puntajes = df.col("puntaje");
+show(puntajes);
+-- Esperado: [85,90,78,92,88]
+
+-- Tipos inferidos: id→INT, nombre→STR, puntaje→INT
+show(df.dtypes());
+-- Esperado: [['id','INT'], ['nombre','STR'], ['puntaje','INT']]
+
+-- Info general
+show(df.info());
+
+-- Describe (solo calcula sobre “id” y “puntaje”)
+PANDAS desc = df.describe();
+show(desc);

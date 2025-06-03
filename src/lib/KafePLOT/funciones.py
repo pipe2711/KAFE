@@ -1,5 +1,5 @@
 from global_utils import check_sig
-from TypeUtils import cadena_t, booleano_t, construir_tipo_lista, entero_t, obtener_tipo_dato, vector_numeros_t, matriz_numeros_t
+from TypeUtils import cadena_t, booleano_t, entero_t, obtener_tipo_dato, vector_numeros_t, matriz_numeros_t, lista_cadenas_t
 from errores import raiseFunctionIncorrectArgumentType
 from lib.KafeMATH.funciones import radians, sin, cos
 import lib.KafePLOT.utils as utils
@@ -148,7 +148,7 @@ def graph(*args):
     utils.guardar_svg(contenido)
     utils.resetear_variables()
 
-@check_sig([2], [construir_tipo_lista(1, str)], vector_numeros_t)
+@check_sig([2], [lista_cadenas_t], vector_numeros_t)
 def bar(etiquetas, valores):
     if len(etiquetas) != len(valores):
         raise Exception("bar: labels and values must have the same length")
@@ -195,7 +195,7 @@ def bar(etiquetas, valores):
     utils.guardar_svg(svg)
     utils.resetear_variables()
 
-@check_sig([2], [construir_tipo_lista(1, str)], vector_numeros_t)
+@check_sig([2], [lista_cadenas_t], vector_numeros_t)
 def pie(etiquetas, valores):
     if len(etiquetas) != len(valores):
         raise Exception("pie: labels and values must have the same length")

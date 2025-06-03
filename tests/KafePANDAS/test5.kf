@@ -1,0 +1,21 @@
+import pandas;
+
+-- Intentar leer un CSV vacío
+PANDAS df = pandas.read_csv("test5.csv");
+
+-- Mostrar DataFrame resultante (sin columnas ni filas)
+PANDAS all = df;
+show(all);
+
+-- Shape (debe ser [0,0])
+show(df.shape());
+
+-- dtypes (lista vacía)
+show(df.dtypes());
+
+-- Info general
+show(df.info());
+
+-- Describe (solo cabecera)
+PANDAS desc = df.describe();
+show(desc);

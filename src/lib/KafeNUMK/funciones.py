@@ -1,18 +1,7 @@
 from .errores import raiseDifferentDimension, raiseNonUniformMatrix
-from .utils import es_misma_dimension, es_uniforme
-from TypeUtils import matriz_cualquiera_t, matriz_numeros_t, vector_numeros_t, numeros_t, entero_t
+from .utils import es_misma_dimension, es_uniforme, operar_matrices
+from TypeUtils import matriz_cualquiera_t, matriz_numeros_t, vector_numeros_t, entero_t
 from global_utils import check_sig
-
-def operar_matrices(matriz1, matriz2, operacion):
-    # Sumar las matrices
-    resultado = []
-    for i in range(len(matriz1)):
-        fila = []
-        for j in range(len(matriz1[i])):
-            fila.append(operacion(matriz1[i][j], matriz2[i][j]))
-        resultado.append(fila)
-
-    return resultado
 
 @check_sig([2], matriz_numeros_t, matriz_numeros_t)
 def add(matriz1, matriz2):

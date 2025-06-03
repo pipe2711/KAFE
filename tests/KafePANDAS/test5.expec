@@ -1,0 +1,5 @@
+'cols: [], rows: []'
+[0, 0]
+[]
+[['Rows', 0], ['Columns', 0], ['Column_Names', ''], ['Dtypes', '']]
+"cols: ['column', 'count', 'mean', 'std', 'min', 'max'], rows: []"
