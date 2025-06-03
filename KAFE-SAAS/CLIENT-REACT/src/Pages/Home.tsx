@@ -196,29 +196,20 @@ const Home: React.FC = () => {
             fontSize: '0.9rem',
             lineHeight: 1.5,
           }}>
-{`// Modelo de clasificación de imágenes simple en KAFE
-modelo ImagenClasificador {
-  entrada: Imagen(224, 224, 3)
-  salida: Categoria(10)
-  
-  arquitectura {
-    conv2d(32, 3, 3) -> relu -> maxpool(2, 2)
-    conv2d(64, 3, 3) -> relu -> maxpool(2, 2)
-    aplanar()
-    denso(128) -> relu
-    denso(10) -> softmax
-  }
-  
-  entrenamiento {
-    datos: ImagenesDataset
-    optimizador: Adam(0.001)
-    epocas: 10
-    metricas: [precision, recall]
-  }
-}
-// Ejecutar y evaluar el modelo
-resultado = ImagenClasificador.entrenar()
-print("Precisión del modelo: " + resultado.precision)`}
+{`import geshaDeep;
+
+GESHA model = geshaDeep.categorical();
+GESHA layer1 = geshaDeep.create_dense(16, "relu", [4], 0.0, 42);
+model.add(layer1);
+GESHA layer2 = geshaDeep.create_dense(2, "softmax", [], 0.0, 42);
+model.add(layer2);
+
+model.compile("sgd", "categorical_crossentropy", ["accuracy"]);
+
+model.fit(x_train, y_train, 20, 2, x_val, y_val);
+
+model.summary();
+model.evaluate(x_test, y_test);`}
           </pre>
         </div>
         
