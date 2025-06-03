@@ -52,7 +52,16 @@ def log(*args):
 
 @check_sig([2], numeros_t, numeros_t)
 def pow_(x, y):
+    if x < 0:
+        if float(y).is_integer():
+            n = int(y)
+            abs_x = -x  # valor absoluto de la base
+            result = exp(y * log(abs_x))
+            return -result if (n % 2 != 0) else result
+        else:
+            raiseDomainError('pow')
     return exp(y * log(x))
+
 
 @check_sig([1], numeros_t)
 def sqrt(x):

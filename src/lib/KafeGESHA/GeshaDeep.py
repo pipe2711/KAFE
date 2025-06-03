@@ -1,334 +1,239 @@
-# lib/KafeGESHA/GeshaDeep.py
-
+# src/lib/KafeGESHA/GeshaDeep.py
+# ------------------------------------------------------------
+#  GeshaDeep  – ajuste: gradiente seguro para BCE y otras pérdidas
+# ------------------------------------------------------------
 import warnings
-import math
-import random
 from lib.KafeGESHA.Gesha import Gesha
 from lib.KafeGESHA.LossFunction import (
     MeanSquaredError, MeanAbsoluteError,
-    BinaryCrossEntropy, CategoricalCrossEntropy
+    BinaryCrossEntropy, CategoricalCrossEntropy,
+    SparseCategoricalCrossEntropy,
 )
 from lib.KafeGESHA.Optimizer import SGD, RMSprop, Adam, AdamW
-from lib.KafeGESHA.utils import check_regularization
+from lib.KafeMATH.funciones import log
 
 
 class GeshaDeep(Gesha):
-    def __init__(self, model_type="classification", global_regularization=0.0):
+    # ----------------------------------------------------- 0) ctor
+    def __init__(self, model_type: str = "classification"):
         super().__init__()
-        if model_type not in ("classification", "clustering", "regression"):
-            raise ValueError(
-                f"model_type debe ser 'classification', 'clustering' o 'regression'. Se recibió: {model_type}"
-            )
-        self.model_type = model_type
-        self.global_regularization = check_regularization(global_regularization)
-
+        self._model_type = model_type
         self._loss_fn = None
-        self.loss_name = None
         self._optimizer_obj = None
-        self.metrics = []
+        self._metrics = []
 
-        # Para clustering “soft k-means”
-        self._centroids = None
+    # ----------------------------------------------------- 1) add
+    def add(self, layer):
+        if self.layers and hasattr(layer, "input_shape") and not layer.input_shape:
+            layer.input_shape = (self.layers[-1].units,)
+        self.layers.append(layer)
 
-    def compile(self, optimizer="sgd", loss=None, metrics=None):
-        if loss is None:
-            if self.model_type == "classification":
-                loss_name = "categorical_crossentropy"
-            else:
-                loss_name = "mse"
+    # ----------------------------------------------------- 2) compile
+    def compile(self, optimizer=None, loss=None, metrics=None):
+        if loss == "mse":
+            self._loss_fn = MeanSquaredError()
+        elif loss == "mae":
+            self._loss_fn = MeanAbsoluteError()
+        elif loss == "binary_crossentropy":
+            self._loss_fn = BinaryCrossEntropy()
+        elif loss == "categorical_crossentropy":
+            self._loss_fn = CategoricalCrossEntropy()
+        elif loss == "sparse_categorical_crossentropy":
+            self._loss_fn = SparseCategoricalCrossEntropy()
         else:
-            loss_name = loss
+            raise ValueError(f"Loss '{loss}' no reconocido.")
 
-        loss_map = {
-            "mse": MeanSquaredError(),
-            "mean_squared_error": MeanSquaredError(),
-            "mae": MeanAbsoluteError(),
-            "mean_absolute_error": MeanAbsoluteError(),
-            "binary_crossentropy": BinaryCrossEntropy(),
-            "categorical_crossentropy": CategoricalCrossEntropy()
-        }
-        key = loss_name.lower()
-        if key not in loss_map:
-            raise ValueError(
-                f"Función de pérdida '{loss_name}' no reconocida. Usa uno de {list(loss_map.keys())}."
-            )
-        self._loss_fn = loss_map[key]
-        self.loss_name = key
-
-        optimizer_map = {
-            "sgd": SGD(),
-            "rmsprop": RMSprop(),
-            "adam": Adam(),
-            "adamw": AdamW()
-        }
-        if optimizer is None:
-            self._optimizer_obj = SGD()
+        if optimizer == "sgd":
+            self._optimizer_obj = SGD(lr=0.01)
+        elif optimizer == "rmsprop":
+            self._optimizer_obj = RMSprop(lr=0.001)
+        elif optimizer == "adam":
+            self._optimizer_obj = Adam(lr=0.001)
+        elif optimizer == "adamw":
+            self._optimizer_obj = AdamW(lr=0.001)
         else:
-            opt_key = optimizer.lower()
-            if opt_key not in optimizer_map:
-                raise ValueError(
-                    f"Optimizador '{optimizer}' no válido. Usa uno de {list(optimizer_map.keys())}."
-                )
-            self._optimizer_obj = optimizer_map[opt_key]
+            raise ValueError(f"Optimizer '{optimizer}' no reconocido.")
 
-        self.metrics = metrics if metrics else []
-
-        if self.model_type == "clustering":
+        self._metrics = metrics or []
+        if self._model_type == "clustering" and len(self.layers) < 2:
             warnings.warn(
-                "Advertencia: un modelo de clustering con menos de 2 capas puede no tener suficiente capacidad.",
-                stacklevel=2
+                "Advertencia: un modelo de clustering con menos de 2 capas puede no tener suficiente capacidad."
             )
 
+    # ----------------------------------------------------- 3) set_lr
+    def set_lr(self, new_lr: float):
+        if not self._optimizer_obj:
+            raise AttributeError("compile() debe llamarse antes de set_lr().")
+        self._optimizer_obj.lr = new_lr
+
+    # ----------------------------------------------------- 4) predict “crudo”
     def predict(self, x):
         out = x
         for layer in self.layers:
             out = layer.forward(out)
         return out
 
+    # ----------------------------------------------------- 5) fit
     def fit(self, x_train, y_train=None, epochs=1, batch_size=1, x_val=None, y_val=None):
-        """
-        Entrena el modelo.
-        - classification/regression: necesita y_train para cálculo de pérdida y backprop.
-        - clustering: ignora y_train y utiliza “soft k-means” para actualizar pesos.
-        """
-
-        # Validaciones iniciales
-        if self.model_type in ("classification", "regression"):
-            if y_train is None:
-                raise ValueError(f"Para modelo {self.model_type} debes pasar x_train e y_train.")
-            if len(x_train) != len(y_train):
-                raise ValueError("x_train e y_train deben tener la misma longitud.")
-        else:  # clustering
-            if y_train is not None:
-                warnings.warn("Modelo de clustering: y_train será ignorado.", stacklevel=2)
-
-        if (x_val is None) ^ (y_val is None):
-            raise ValueError("Si vas a pasar validación, debes pasar tanto x_val como y_val.")
-
         n_samples = len(x_train)
+        has_val = x_val is not None and y_val is not None and len(x_val) > 0
 
-        for epoch in range(epochs):
-            total_loss = 0.0
-            count = 0
+        def _forward(xi):
+            out = xi
+            for layer in self.layers:
+                out = layer.forward(out)
+            return out
 
-            for start in range(0, n_samples, batch_size):
-                end = min(start + batch_size, n_samples)
-                x_batch = x_train[start:end]
-                B = len(x_batch)
-                if B == 0:
-                    continue
+        def _backward(err):
+            # asegura lista de errores para capas Dense
+            if not isinstance(err, list):
+                err = [err]
+            for layer in reversed(self.layers):
+                err = layer.backward(err, learning_rate=self._optimizer_obj.lr)
 
-                if self.model_type == "clustering":
-                    # → SOFT K-MEANS NO SUPERVISADO ←
+        # ---------- clustering ----------
+        if self._model_type == "clustering":
+            for epoch in range(1, epochs + 1):
+                total = 0.0
+                for i in range(0, n_samples, batch_size):
+                    for xi in x_train[i:min(i + batch_size, n_samples)]:
+                        z = _forward(xi)
+                        k_hat = z.index(max(z))
+                        total += -log(z[k_hat] + 1e-8)
+                        delta = [z[j] - (1.0 if j == k_hat else 0.0) for j in range(len(z))]
+                        _backward(delta)
+                print(f"Epoch {epoch}/{epochs} — Loss (soft k-means): {total / n_samples:.6f}")
+            return
 
-                    # 1) Inicializar centroides la primera vez
-                    if self._centroids is None:
-                        # Tomamos la primera muestra para inferir dimensión de h(x)
-                        dummy = x_batch[0]
-                        h_dummy = dummy
-                        for layer in self.layers[:-1]:
-                            h_dummy = layer.forward(h_dummy)
-                        dim_h = len(h_dummy)
+        # ---------- clasificación múlticlase / binaria con abordagem “categorical” ----------
+        if self._model_type == "classification":
+            for epoch in range(1, epochs + 1):
+                total = 0.0
+                for i in range(0, n_samples, batch_size):
+                    bx = x_train[i:min(i + batch_size, n_samples)]
+                    by = y_train[i:min(i + batch_size, n_samples)]
+                    for xi, yi in zip(bx, by):
+                        out = _forward(xi)
+                        total += self._loss_fn.compute([yi], [out])
+                        dg = self._loss_fn.derivative([yi], [out])  # lista de grads por sample
+                        grad_out = dg[0] if isinstance(dg[0], list) else dg  # lista para Dense
+                        _backward(grad_out)
+                msg = f"Epoch {epoch}/{epochs} — Loss {total / n_samples:.6f}"
+                if has_val:
+                    correct = sum(
+                        1 for xv, yv in zip(x_val, y_val)
+                        if _forward(xv).index(max(_forward(xv))) ==
+                           (yv.index(max(yv)) if isinstance(yv, list) else yv)
+                    )
+                    msg += f" — val_accuracy {correct/len(x_val):.4f}"
+                print(msg)
+            return
 
-                        # Inicializar 2 centroides aleatorios de dimensión dim_h
-                        self._centroids = [
-                            [random.random() for _ in range(dim_h)] for _ in range(2)
-                        ]
+        # ---------- binaria ----------
+        if self._model_type == "binary":
+            for epoch in range(1, epochs + 1):
+                total = 0.0
+                for i in range(0, n_samples, batch_size):
+                    bx = x_train[i:min(i + batch_size, n_samples)]
+                    by = y_train[i:min(i + batch_size, n_samples)]
+                    for xi, yi in zip(bx, by):
+                        p = _forward(xi)[0]
+                        total += self._loss_fn.compute([yi], [p])
+                        grad = self._loss_fn.derivative([yi], [p])  # lista [grad]
+                        _backward(grad)
+                msg = f"Epoch {epoch}/{epochs} — Loss {total / n_samples:.6f}"
+                if has_val:
+                    correct = sum(
+                        1 for xv, yv in zip(x_val, y_val)
+                        if (1 if _forward(xv)[0] >= 0.5 else 0) == yv
+                    )
+                    msg += f" — val_accuracy {correct/len(x_val):.4f}"
+                print(msg)
+            return
 
-                    # 2) Forward pass: obtener H = [h(x_i)] y P = [p_i = softmax(z_i)]
-                    H = []
-                    P = []
-                    for x in x_batch:
-                        # Pasar hasta penúltima capa para obtener h
-                        h = x
-                        for layer in self.layers[:-1]:
-                            h = layer.forward(h)
-                        H.append(h)
+        # ---------- regresión ----------
+        if self._model_type == "regression":
+            for epoch in range(1, epochs + 1):
+                total = 0.0
+                for i in range(0, n_samples, batch_size):
+                    bx = x_train[i:min(i + batch_size, n_samples)]
+                    by = y_train[i:min(i + batch_size, n_samples)]
+                    for xi, yi in zip(bx, by):
+                        p = _forward(xi)[0]
+                        total += self._loss_fn.compute([yi], [p])
+                        grad = self._loss_fn.derivative([yi], [p])  # lista [grad]
+                        _backward(grad)
+                msg = f"Epoch {epoch}/{epochs} — Loss {total / n_samples:.6f}"
+                if has_val:
+                    val_loss = sum(
+                        self._loss_fn.compute([yv], [_forward(xv)[0]])
+                        for xv, yv in zip(x_val, y_val)
+                    )
+                    msg += f" — val_mse {val_loss/len(x_val):.6f}"
+                print(msg)
+            return
 
-                        # Capa final: Softmax
-                        out = h
-                        out = self.layers[-1].forward(out)
-                        if not isinstance(out, list):
-                            out = [out]
-                        P.append(out)
+        raise ValueError("Tipo de modelo no soportado en fit().")
 
-                    # 3) Recalcular centroides “suaves”
-                    K = 2
-                    numerators = [[0.0] * len(H[0]) for _ in range(K)]
-                    denominators = [0.0] * K
-                    for i in range(B):
-                        for k in range(K):
-                            pk = P[i][k]
-                            denominators[k] += pk
-                            for d in range(len(H[i])):
-                                numerators[k][d] += pk * H[i][d]
-                    for k in range(K):
-                        if denominators[k] > 0:
-                            for d in range(len(self._centroids[k])):
-                                self._centroids[k][d] = numerators[k][d] / denominators[k]
-
-                    # 4) Calcular pérdida “soft k-means”
-                    loss_batch = 0.0
-                    for i in range(B):
-                        for k in range(K):
-                            sq = 0.0
-                            for d in range(len(H[i])):
-                                diff = H[i][d] - self._centroids[k][d]
-                                sq += diff * diff
-                            loss_batch += P[i][k] * sq
-                    loss_batch /= B
-                    total_loss += loss_batch
-                    count += 1
-
-                    # 5) Gradiente ∂L/∂H[i]
-                    dLdH = []
-                    for i in range(B):
-                        grad_h = [0.0] * len(H[i])
-                        for k in range(K):
-                            coeff = 2.0 * P[i][k]
-                            for d in range(len(H[i])):
-                                grad_h[d] += coeff * (H[i][d] - self._centroids[k][d])
-                        # Normalizar por B
-                        dLdH.append([gh / B for gh in grad_h])
-
-                    # 6) Backprop en capas ocultas (sin tocar última capa Softmax)
-                    for i_in_batch, x in enumerate(x_batch):
-                        error = dLdH[i_in_batch]
-                        for layer in reversed(self.layers[:-1]):
-                            reg_lambda = getattr(layer, "regularization_lambda", self.global_regularization)
-                            error = layer.backward(
-                                error,
-                                learning_rate=self._optimizer_obj.lr,
-                                regularization_lambda=reg_lambda
-                            )
-
-                else:
-                    # → SUPERVISADO: CLASSIFICATION O REGRESSION ←
-                    for idx in range(len(x_batch)):
-                        x = x_batch[idx]
-                        y = y_train[start + idx]
-
-                        # Forward completo
-                        output = x
-                        for layer in self.layers:
-                            output = layer.forward(output)
-                        if not isinstance(output, list):
-                            output = [output]
-
-                        if self.model_type == "classification":
-                            # Etiqueta a one-hot si es int
-                            if isinstance(y, int):
-                                y_onehot = [0.0] * len(output)
-                                if 0 <= y < len(output):
-                                    y_onehot[y] = 1.0
-                                else:
-                                    raise ValueError(
-                                        f"Etiqueta {y} fuera de rango [0, {len(output)-1}]."
-                                    )
-                            elif isinstance(y, list):
-                                y_onehot = y
-                            else:
-                                raise ValueError(
-                                    f"En clasificación, y debe ser INT o LIST. Se recibió: {type(y)}"
-                                )
-                            y_vec = y_onehot
-
-                            # Pérdida y gradiente
-                            loss_val = self._loss_fn.compute([y_vec], [output])
-                            total_loss += loss_val
-                            count += 1
-
-                            grad_list = self._loss_fn.derivative([y_vec], [output])
-                            grad = grad_list[0]
-
-                            # Backprop
-                            error = grad
-                            for layer in reversed(self.layers):
-                                reg_lambda = getattr(layer, "regularization_lambda", self.global_regularization)
-                                error = layer.backward(
-                                    error,
-                                    learning_rate=self._optimizer_obj.lr,
-                                    regularization_lambda=reg_lambda
-                                )
-
-                        else:
-                            # → REGRESSION ←
-                            if isinstance(y, (int, float)):
-                                y_scalar = float(y)
-                            elif isinstance(y, list):
-                                y_scalar = float(y[0])
-                            else:
-                                raise ValueError(
-                                    f"En regresión, y debe ser numérico o lista. Se recibió: {type(y)}"
-                                )
-
-                            out_scalar = output[0]
-                            loss_val = self._loss_fn.compute([y_scalar], [out_scalar])
-                            total_loss += loss_val
-                            count += 1
-
-                            deriv_list = self._loss_fn.derivative([y_scalar], [out_scalar])
-                            grad = deriv_list[0]
-
-                            error = [grad]
-                            for layer in reversed(self.layers):
-                                reg_lambda = getattr(layer, "regularization_lambda", self.global_regularization)
-                                error = layer.backward(
-                                    error,
-                                    learning_rate=self._optimizer_obj.lr,
-                                    regularization_lambda=reg_lambda
-                                )
-
-            # Fin de cada epoch: imprimir pérdida promedio
-            if self.model_type in ("classification", "regression"):
-                avg_loss = total_loss / count if count > 0 else 0.0
-                print(f"Epoch {epoch+1}/{epochs} — Loss promedio: {avg_loss:.6f}")
-            else:
-                avg_loss = total_loss / count if count > 0 else 0.0
-                print(f"Epoch {epoch+1}/{epochs} — Loss (soft k-means): {avg_loss:.6f}")
-
+    # ----------------------------------------------------- 6) summary
     def summary(self):
-        print(f"*** Resumen del modelo (tipo: {self.model_type}) ***")
-        for i, layer in enumerate(self.layers):
-            print(f" Capa {i+1}: {layer.__class__.__name__}", end=" — ")
-            if hasattr(layer, "summary"):
-                layer.summary()
-            else:
-                print(f"unidades={getattr(layer, 'units', None)}")
+        print(f"*** Resumen (tipo: {self._model_type}) ***")
+        for i, layer in enumerate(self.layers, 1):
+            act = layer.activation_name or "linear"
+            reg = (
+                f"L2={layer.regularization_lambda}"
+                if hasattr(layer, "regularization_lambda")
+                else "sin regularización"
+            )
+            print(f" Capa {i}: Dense(units={layer.units}, activation={act}, {reg})")
 
-    def evaluate(self, x_test, y_test=None):
-        if self.model_type == "classification":
-            if y_test is None:
-                raise ValueError("Para clasificación debes pasar x_test e y_test.")
-            correct = 0
-            total = len(x_test)
-            for x, y in zip(x_test, y_test):
-                out = self.predict(x)
-                if not isinstance(out, list):
-                    out = [out]
-                pred = out.index(max(out))
-                true = y if isinstance(y, int) else y.index(max(y))
-                if pred == true:
-                    correct += 1
-            accuracy = correct / total
-            print(f"Accuracy: {accuracy*100:.2f}%")
-            return accuracy
+    # ----------------------------------------------------- 7) evaluate
+    def evaluate(self, x_test, y_test):
+        if self._model_type == "clustering":
+            avg = sum(
+                -log(self.predict(xi)[self.predict(xi).index(max(self.predict(xi)))] + 1e-8)
+                for xi in x_test
+            ) / len(x_test)
+            print(f"Soft k-means loss (eval): {avg:.6f}")
+            return avg
 
-        elif self.model_type == "regression":
-            if y_test is None:
-                raise ValueError("Para regresión debes pasar x_test e y_test.")
-            mse_total = 0.0
-            n = len(x_test)
-            for x, y in zip(x_test, y_test):
-                pred = self.predict(x)
-                if not isinstance(pred, list):
-                    pred = [pred]
-                true_val = y if not isinstance(y, list) else y[0]
-                mse_total += (pred[0] - true_val) ** 2
-            mse = mse_total / n
-            print(f"MSE: {mse:.6f}")
+        if self._model_type == "binary":
+            acc = sum(
+                1 for xi, yi in zip(x_test, y_test)
+                if (1 if self.predict(xi)[0] >= 0.5 else 0) == yi
+            ) / len(x_test)
+            print(f"Accuracy: {acc*100:.2f}%")
+            return acc
+
+        if self._model_type == "classification":
+            acc = sum(
+                1 for xi, yi in zip(x_test, y_test)
+                if self.predict(xi).index(max(self.predict(xi))) ==
+                   (yi.index(max(yi)) if isinstance(yi, list) else yi)
+            ) / len(x_test)
+            print(f"Accuracy: {acc*100:.2f}%")
+            return acc
+
+        if self._model_type == "regression":
+            mse = sum(
+                self._loss_fn.compute([yi], [self.predict(xi)[0]])
+                for xi, yi in zip(x_test, y_test)
+            ) / len(x_test)
+            print(f"MSE promedio: {mse:.6f}")
             return mse
 
-        else:  # clustering
-            warnings.warn("evaluate() no está implementado para clustering.", stacklevel=2)
-            return None
+        raise ValueError("Tipo de modelo no soportado en evaluate().")
+
+    # ----------------------------------------------------- 8) utilidades de predicción
+    def predict_proba(self, x):
+        out = self.predict(x)
+        if self._model_type in ("binary", "regression"):
+            return out[0] if isinstance(out, list) else out
+        return out
+
+    def predict_label(self, x):
+        if self._model_type == "regression":
+            raise ValueError("predict_label() no aplica a modelos de regresión.")
+        if self._model_type == "binary":
+            return 1 if self.predict_proba(x) >= 0.5 else 0
+        return self.predict_proba(x).index(max(self.predict_proba(x)))

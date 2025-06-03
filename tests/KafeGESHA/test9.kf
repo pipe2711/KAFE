@@ -1,20 +1,45 @@
 import geshaDeep;
 
-# Codificación one-hot para 2 palabras: "perro" = [1,0], "gato" = [0,1]
+-- Entradas de 10 elementos one-hot (perro=1,0 / gato=0,1 repetidos)
 List[List[INT]] x_train = [
-  [1,0, 1,0, 1,0, 1,0, 1,0],  # 5 veces "perro" concatenado
-  [1,0, 1,0, 0,1, 1,0, 1,0],  # patrón ruido
-  ...
+  [1,0, 1,0, 1,0, 1,0, 1,0],   -- cinco “perro”
+  [1,0, 0,1, 1,0, 0,1, 1,0],   -- mezcla perro/gato
+  [0,1, 0,1, 0,1, 0,1, 0,1],   -- cinco “gato”
+  [0,1, 1,0, 0,1, 1,0, 0,1]    -- mezcla gato/perro
 ];
+
+-- Salidas one-hot para dos clases:  [1,0]=“perro”, [0,1]=“gato”
 List[List[INT]] y_train = [
-  [0,1],  # "gato" esperado después de 5 "perro"
-  [1,0],  # "perro" esperado en otro contexto
-  ...
+  [0,1],   -- esperamos “gato”
+  [1,0],   -- esperamos “perro”
+  [1,0],   -- perro
+  [0,1]    -- gato
+];
+
+-- Validación (pequeña – mismo formato)
+List[List[INT]] x_val = [
+  [1,0, 1,0, 1,0, 1,0, 1,0],
+  [0,1, 0,1, 0,1, 0,1, 0,1]
+];
+List[List[INT]] y_val = [
+  [0,1],
+  [1,0]
+];
+
+-- Conjunto de prueba
+List[List[INT]] x_test = [
+  [1,0, 0,1, 1,0, 0,1, 1,0],
+  [0,1, 1,0, 0,1, 1,0, 0,1]
+];
+List[List[INT]] y_test = [
+  [1,0],
+  [0,1]
 ];
 
 GESHA model = geshaDeep.categorical();
-GESHA layer1 = geshaDeep.create_dense(4, "relu", [10], 0.1);  # capa oculta con 4 neuronas
-GESHA layer2 = geshaDeep.create_dense(2, "softmax", [4], 0.0);  # salida softmax para 2 clases
+
+GESHA layer1 = geshaDeep.create_dense(4, "relu", [10], 0.1, 42);
+GESHA layer2 = geshaDeep.create_dense(2, "softmax", [4], 0.0, 42);
 model.add(layer1);
 model.add(layer2);
 

@@ -22,11 +22,11 @@ List[INT] y_test = [1, 0];
 
 GESHA model = geshaDeep.categorical();
 
-GESHA hidden_layer = geshaDeep.create_dense(2, "relu", [2], 0.0);
+GESHA hidden_layer = geshaDeep.create_dense(2, "relu", [2], 0.0, 42);
 model.add(hidden_layer);
 
 
-GESHA output_layer = geshaDeep.create_dense(1, "sigmoide", [2], 0.0);
+GESHA output_layer = geshaDeep.create_dense(1, "sigmoide", [2], 0.0, 42);
 model.add(output_layer);
 
 model.compile("sgd", "binary_crossentropy", ["accuracy"]);

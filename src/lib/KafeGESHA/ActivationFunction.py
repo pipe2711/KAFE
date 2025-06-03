@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 from abc import ABC, abstractmethod
 from lib.KafeMATH.funciones import exp

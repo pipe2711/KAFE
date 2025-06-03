@@ -1,0 +1,50 @@
+import geshaDeep;
+
+-- =======================
+-- 1) Datos de juguete
+-- =======================
+List[List[INT]] x_sample = [
+   [1, 0]
+];
+
+-- =======================
+-- 2) Modelo A (seed = 42)
+-- =======================
+GESHA modelA = geshaDeep.categorical();
+GESHA a_h = geshaDeep.create_dense(3, "relu",   [2], 0.0, 43);   -- 5.º arg = seed
+GESHA a_o = geshaDeep.create_dense(2, "softmax",[3], 0.0, 43);
+modelA.add(a_h); modelA.add(a_o);
+modelA.compile("sgd", "categorical_crossentropy", []);
+
+-- =======================
+-- 3) Modelo B (mismo seed 42)
+-- =======================
+GESHA modelB = geshaDeep.categorical();
+GESHA b_h = geshaDeep.create_dense(3, "relu",   [2], 0.0, 42);
+GESHA b_o = geshaDeep.create_dense(2, "softmax",[3], 0.0, 42);
+modelB.add(b_h); modelB.add(b_o);
+modelB.compile("sgd", "categorical_crossentropy", []);
+
+-- =======================
+-- 4) Modelo C (seed diferente 99)
+-- =======================
+GESHA modelC = geshaDeep.categorical();
+GESHA c_h = geshaDeep.create_dense(3, "relu",   [2], 0.0, 99);
+GESHA c_o = geshaDeep.create_dense(2, "softmax",[3], 0.0, 99);
+modelC.add(c_h); modelC.add(c_o);
+modelC.compile("sgd", "categorical_crossentropy", []);
+
+-- =======================
+-- 5) Predicciones
+-- =======================
+List[FLOAT] pA = modelA.predict(x_sample[0]);
+List[FLOAT] pB = modelB.predict(x_sample[0]);
+List[FLOAT] pC = modelC.predict(x_sample[0]);
+
+show("Predicción modelA: " + str(pA));
+show("Predicción modelB (mismo seed): " + str(pB));
+show("Predicción modelC (seed distinto): " + str(pC));
+
+--  Verifica manualmente:
+--   pA == pB  (idénticos)
+--   pA != pC  (distintos)

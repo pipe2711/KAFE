@@ -34,9 +34,9 @@ List[List[INT]] y_test = [
 
 
 GESHA model = geshaDeep.categorical();
-GESHA layer1 = geshaDeep.create_dense(16, "relu", [4], 0.0,42);
+GESHA layer1 = geshaDeep.create_dense(16, "relu", [4], 0.0, 42);
 model.add(layer1);
-GESHA layer2 = geshaDeep.create_dense(2, "softmax", [], 0.0,42);
+GESHA layer2 = geshaDeep.create_dense(2, "softmax", [], 0.0, 42);
 model.add(layer2);
 
 model.compile("sgd", "categorical_crossentropy", ["accuracy"]);

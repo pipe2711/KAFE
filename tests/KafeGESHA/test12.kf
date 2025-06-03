@@ -32,7 +32,7 @@ List[List[FLOAT]] y_test = [];
 
 -- 3) Crear modelo de clustering y capas
 GESHA model = geshaDeep.clustering();
-GESHA l1 = geshaDeep.create_dense(16, "relu", [2], 0.0,42);
+GESHA l1 = geshaDeep.create_dense(16, "relu", [2], 0.0, 42);
 model.add(l1);
 GESHA l2 = geshaDeep.create_dense(12, "relu", [], 0.0, 42);
 model.add(l2);

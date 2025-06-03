@@ -1,5 +1,4 @@
 from errores import raiseVariableIsNotObject, raiseFunctionNotDefined, raiseVariableNotDefined
-
 def esObjeto(var):
     if isinstance(var, (str, int, float, bool, type(None))):
         return False

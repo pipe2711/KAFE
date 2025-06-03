@@ -32,7 +32,7 @@ List[FLOAT] y_test = [18.0, 20.0];
 
 
 GESHA reg_model = geshaDeep.regression();
-GESHA r_layer = geshaDeep.create_dense(1, "linear", [1], 0.0);
+GESHA r_layer = geshaDeep.create_dense(1, "linear", [1], 0.0, 42);
 reg_model.add(r_layer);
 
 reg_model.compile("sgd", "mse", []);

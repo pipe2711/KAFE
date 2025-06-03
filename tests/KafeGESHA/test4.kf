@@ -50,14 +50,28 @@ List[INT] y_test = [
 GESHA model = geshaDeep.categorical();
 
 
-GESHA layer1 = geshaDeep.create_dense(8, "relu", [2], 0.0);
+GESHA layer1 = geshaDeep.create_dense(8, "relu", [2], 0.0 , 42);
 model.add(layer1);
 
 
-GESHA layer2 = geshaDeep.create_dense(2, "softmax", [], 0.0);
+GESHA layer2 = geshaDeep.create_dense(2, "softmax", [], 0.0, 42);
 
 model.add(layer2);
-model.compile("sgd", "categorical_crossentropy", ["accuracy"]);
+
+
+-- ========================================
+-- 3) Compilar
+--   – Optimizador: “sgd”
+--   – Pérdida: “categorical_crossentropy”
+--   – Métrica: “accuracy”
+-- ========================================
+model.compile("sgd", "sparse_categorical_crossentropy", ["accuracy"]);
+
+
+-- ========================================
+-- 4) Entrenar con validación
+--   epochs = 20, batch_size = 2
+-- ========================================
 model.fit(x_train, y_train, 20, 2, x_val, y_val);
 model.summary();
 model.evaluate(x_test, y_test);
