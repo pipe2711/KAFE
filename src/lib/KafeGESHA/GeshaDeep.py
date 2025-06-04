@@ -92,19 +92,29 @@ class GeshaDeep(Gesha):
                 err = layer.backward(err, learning_rate=self._optimizer_obj.lr)
 
         # ---------- clustering ----------
-        if self._model_type == "clustering":
-            for epoch in range(1, epochs + 1):
-                total = 0.0
-                for i in range(0, n_samples, batch_size):
-                    for xi in x_train[i:min(i + batch_size, n_samples)]:
-                        z = _forward(xi)
-                        k_hat = z.index(max(z))
-                        total += -log(z[k_hat] + 1e-8)
-                        delta = [z[j] - (1.0 if j == k_hat else 0.0) for j in range(len(z))]
-                        _backward(delta)
-                print(f"Epoch {epoch}/{epochs} — Loss (soft k-means): {total / n_samples:.6f}")
-            return
+        alpha = 0.5
 
+        for epoch in range(1, epochs + 1):
+            total = 0.0
+            for i in range(0, n_samples, batch_size):
+                for xi in x_train[i : min(i + batch_size, n_samples)]:
+                    # 1) Forward
+                    z = _forward(xi)             # z = [z0, z1]
+                    k_hat = z.index(max(z))      # argmax actual
+
+                    total += -log(z[k_hat] + 1e-8)
+
+                    # 2) Target suave: [0.7, 0.3] o [0.3, 0.7]
+                    k = len(z)   # aquí k = 2
+                    target = [ (1.0 - alpha) / (k - 1) ] * k  # → [0.3, 0.3] inicial
+                    target[k_hat] = alpha                   # → [0.7, 0.3] si k_hat=0, o [0.3, 0.7] si k_hat=1
+
+                    # 3) Gradiente: z - target
+                    delta = [ z[j] - target[j] for j in range(k) ]
+                    _backward(delta)
+
+            print(f"Epoch {epoch}/{epochs} — Loss (soft k-means): {total / n_samples:.6f}")
+        return
         # ---------- clasificación múlticlase / binaria con abordagem “categorical” ----------
         if self._model_type == "classification":
             for epoch in range(1, epochs + 1):
