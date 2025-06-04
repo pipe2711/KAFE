@@ -1,0 +1,61 @@
+<svg width="700" height="350" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="700" height="350" fill="white"/>
+  <line x1="60" y1="290" x2="440" y2="290" stroke="#ddd" stroke-width="1"/>
+  <line x1="60" y1="245" x2="440" y2="245" stroke="#ddd" stroke-width="1"/>
+  <line x1="60" y1="199" x2="440" y2="199" stroke="#ddd" stroke-width="1"/>
+  <line x1="60" y1="153" x2="440" y2="153" stroke="#ddd" stroke-width="1"/>
+  <line x1="60" y1="107" x2="440" y2="107" stroke="#ddd" stroke-width="1"/>
+  <line x1="60" y1="61" x2="440" y2="61" stroke="#ddd" stroke-width="1"/>
+  <line x1="60" y1="60" x2="60" y2="290" stroke="#ddd" stroke-width="1"/>
+  <line x1="154" y1="60" x2="154" y2="290" stroke="#ddd" stroke-width="1"/>
+  <line x1="249" y1="60" x2="249" y2="290" stroke="#ddd" stroke-width="1"/>
+  <line x1="344" y1="60" x2="344" y2="290" stroke="#ddd" stroke-width="1"/>
+  <line x1="439" y1="60" x2="439" y2="290" stroke="#ddd" stroke-width="1"/>
+  <line x1="60" y1="233" x2="154" y2="176" stroke="red" stroke-width="2" />
+  <line x1="154" y1="176" x2="249" y2="290" stroke="red" stroke-width="2" />
+  <line x1="249" y1="290" x2="344" y2="61" stroke="red" stroke-width="2" />
+  <line x1="344" y1="61" x2="439" y2="118" stroke="red" stroke-width="2" />
+  <circle cx="60" cy="233" r="4" fill="red"/>
+  <circle cx="154" cy="176" r="4" fill="red"/>
+  <circle cx="249" cy="290" r="4" fill="red"/>
+  <circle cx="344" cy="61" r="4" fill="red"/>
+  <circle cx="439" cy="118" r="4" fill="red"/>
+  <line x1="60" y1="61" x2="154" y2="118" stroke="blue" stroke-width="2" />
+  <line x1="154" y1="118" x2="249" y2="176" stroke="blue" stroke-width="2" />
+  <line x1="249" y1="176" x2="344" y2="233" stroke="blue" stroke-width="2" />
+  <line x1="344" y1="233" x2="439" y2="290" stroke="blue" stroke-width="2" />
+  <circle cx="60" cy="61" r="4" fill="blue"/>
+  <circle cx="154" cy="118" r="4" fill="blue"/>
+  <circle cx="249" cy="176" r="4" fill="blue"/>
+  <circle cx="344" cy="233" r="4" fill="blue"/>
+  <circle cx="439" cy="290" r="4" fill="blue"/>
+  <line x1="60" y1="118" x2="249" y2="233" stroke="black" stroke-width="2" />
+  <line x1="249" y1="233" x2="439" y2="61" stroke="black" stroke-width="2" />
+  <circle cx="60" cy="118" r="4" fill="green"/>
+  <circle cx="249" cy="233" r="4" fill="green"/>
+  <circle cx="439" cy="61" r="4" fill="green"/>
+  <line x1="60" y1="290" x2="440" y2="290" stroke="black" stroke-width="1" />
+  <line x1="60" y1="60" x2="60" y2="290" stroke="black" stroke-width="1" />
+  <text x="50" y="294" font-size="10" text-anchor="end">1.0</text>
+  <text x="50" y="249" font-size="10" text-anchor="end">1.8</text>
+  <text x="50" y="203" font-size="10" text-anchor="end">2.6</text>
+  <text x="50" y="157" font-size="10" text-anchor="end">3.4</text>
+  <text x="50" y="111" font-size="10" text-anchor="end">4.2</text>
+  <text x="50" y="65" font-size="10" text-anchor="end">5.0</text>
+  <text x="60" y="305" font-size="10" text-anchor="middle">1</text>
+  <text x="154" y="305" font-size="10" text-anchor="middle">2</text>
+  <text x="249" y="305" font-size="10" text-anchor="middle">3</text>
+  <text x="344" y="305" font-size="10" text-anchor="middle">4</text>
+  <text x="439" y="305" font-size="10" text-anchor="middle">5</text>
+  <text x="350" y="20" font-size="14" text-anchor="middle" font-weight="bold">Multiseries de puntos</text>
+  <text x="250" y="345" font-size="12" text-anchor="middle">Eje X</text>
+  <g transform="translate(20,175) rotate(-90)"><text font-size="12" text-anchor="middle">Eje Y</text></g>
+  <rect x="510" y="5" width="160" height="100" fill="white" stroke="#ccc" rx="5"/>
+  <text x="520" y="30" font-size="12" font-weight="bold">Leyenda</text>
+  <rect x="520" y="40" width="10" height="10" fill="red"/>
+  <text x="535" y="50" font-size="10">S1</text>
+  <rect x="520" y="60" width="10" height="10" fill="blue"/>
+  <text x="535" y="70" font-size="10">S2</text>
+  <rect x="520" y="80" width="10" height="10" fill="black"/>
+  <text x="535" y="90" font-size="10">S3</text>
+</svg>

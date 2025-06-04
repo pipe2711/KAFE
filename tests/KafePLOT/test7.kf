@@ -1,5 +1,6 @@
 import plot;
 
+plot.figure();
 plot.title("Lanzamiento de proyectil");
 plot.xlabel("Tiempo");
 plot.ylabel("Altura");
@@ -11,3 +12,4 @@ List[INT] t = [0, 1, 2, 3, 4];
 List[INT] h = [0, 10, 40, 90, 160];
 
 plot.graph(t, h);
+plot.render();
