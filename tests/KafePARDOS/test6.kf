@@ -1,10 +1,10 @@
-import pandas;
+import pardos;
 
 -- Leer CSV con solo cabecera
-PANDAS df = pandas.read_csv("test6.csv");
+PARDOS df = pardos.read_csv("test6.csv");
 
 -- Mostrar DataFrame (solo cabecera)
-PANDAS all = df;
+PARDOS all = df;
 show(all);
 
 -- Shape (debe ser [0,3])
@@ -17,5 +17,5 @@ show(df.dtypes());
 show(df.info());
 
 -- Describe (solo cabecera)
-PANDAS desc = df.describe();
+PARDOS desc = df.describe();
 show(desc);

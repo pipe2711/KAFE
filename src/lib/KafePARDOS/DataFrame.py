@@ -1,9 +1,9 @@
 import lib.KafeMATH.funciones as math
 from global_utils import check_sig
-from TypeUtils import pandas_t, lista_cadenas_t, matriz_cualquiera_t, entero_t, cadena_t, flotante_t
+from TypeUtils import pardos_t, lista_cadenas_t, matriz_cualquiera_t, entero_t, cadena_t, flotante_t
 
 class DataFrame:
-    @check_sig([3], [pandas_t], [lista_cadenas_t], [matriz_cualquiera_t])
+    @check_sig([3], [pardos_t], [lista_cadenas_t], [matriz_cualquiera_t])
     def __init__(self, columns, data):
         for row in data:
             if len(row) != len(columns):
@@ -16,7 +16,7 @@ class DataFrame:
         contenido = f"cols: {self.columns}, rows: {self.data}"
         return repr(contenido)
 
-    @check_sig([1, 2], [pandas_t], [entero_t])
+    @check_sig([1, 2], [pardos_t], [entero_t])
     def head(self, *args):
         n = 5
         if len(args) == 1:
@@ -24,7 +24,7 @@ class DataFrame:
 
         return DataFrame(self.columns, self.data[:n])
 
-    @check_sig([1, 2], [pandas_t], [entero_t])
+    @check_sig([1, 2], [pardos_t], [entero_t])
     def tail(self, *args):
         n = 5
         if len(args) == 1:
@@ -35,13 +35,13 @@ class DataFrame:
         else:
             return DataFrame(self.columns, self.data[:])
 
-    @check_sig([1], [pandas_t])
+    @check_sig([1], [pardos_t])
     def shape(self):
         n_filas = len(self.data)
         n_cols  = len(self.columns)
         return [n_filas, n_cols]
 
-    @check_sig([2], [pandas_t], [cadena_t])
+    @check_sig([2], [pardos_t], [cadena_t])
     def col(self, column_name):
         if column_name not in self.columns:
             raise Exception(f"Column '{column_name}' doesn't exist")
@@ -86,7 +86,7 @@ class DataFrame:
 
         return result_rows
 
-    @check_sig([1], [pandas_t])
+    @check_sig([1], [pardos_t])
     def dtypes(self):
         filas = []
         for j, col_name in enumerate(self.columns):
@@ -104,7 +104,7 @@ class DataFrame:
 
         return filas
 
-    @check_sig([1], [pandas_t])
+    @check_sig([1], [pardos_t])
     def info(self):
         n_filas = len(self.data)
         n_cols  = len(self.columns)
@@ -121,7 +121,7 @@ class DataFrame:
         ]
         return f"{filas}"
 
-    @check_sig([1], [pandas_t])
+    @check_sig([1], [pardos_t])
     def describe(self):
         cols = ["column", "count", "mean", "std", "min", "max"]
         filas = []

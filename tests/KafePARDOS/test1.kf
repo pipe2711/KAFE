@@ -1,14 +1,14 @@
-import pandas;
+import pardos;
 
--- Leer el CSV de prueba (estando en tests/KafePANDAS, “test1.csv” se encuentra)
-PANDAS df = pandas.read_csv("test1.csv");
+-- Leer el CSV de prueba (estando en tests/Kafepardos, “test1.csv” se encuentra)
+PARDOS df = pardos.read_csv("test1.csv");
 
 -- Mostrar primeras 3 filas
-PANDAS first3 = df.head(3);
+PARDOS first3 = df.head(3);
 show(df.head(3));
 
 -- Mostrar últimas 2 filas
-PANDAS last2 = df.tail(2);
+PARDOS last2 = df.tail(2);
 show(last2);
 
 -- Shape: ahora devuelves un DataFrame con filas “Rows” y “Columns”
@@ -22,5 +22,5 @@ show(df.dtypes());
 
 show(df.info());
 
-PANDAS descripcion = df.describe();
+PARDOS descripcion = df.describe();
 show(descripcion);

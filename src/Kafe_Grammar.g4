@@ -179,7 +179,7 @@ typeDecl
     | VOID_TYPE
     | STRING_TYPE
     | GESHA_TYPE
-    | PANDAS_TYPE
+    | PARDOS_TYPE
     | LIST LBRACK typeDecl RBRACK
     | functionParam
     ;

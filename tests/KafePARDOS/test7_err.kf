@@ -1,7 +1,7 @@
-import pandas;
+import pardos;
 
 -- Leer un CSV simple
-PANDAS df = pandas.read_csv("test6.csv");
+PARDOS df = pardos.read_csv("test6.csv");
 
 -- Intentar obtener una columna que NO existe (debe lanzar excepción)
 -- Ejemplo: col("z") no está en ["x","y"].

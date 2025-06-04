@@ -1,10 +1,10 @@
-import pandas;
+import pardos;
 
 -- Leer el CSV delimitado por punto y coma
-PANDAS df = pandas.read_csv("test11.csv");
+PARDOS df = pardos.read_csv("test11.csv");
 
 -- Mostrar todo el DataFrame
-PANDAS all = df;
+PARDOS all = df;
 show(all);
 
 -- Shape (debe ser [5,3])
@@ -29,5 +29,5 @@ show(df.dtypes());
 show(df.info());
 
 -- Describe (solo calcula sobre “id” y “puntaje”)
-PANDAS desc = df.describe();
+PARDOS desc = df.describe();
 show(desc);

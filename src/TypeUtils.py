@@ -1,4 +1,4 @@
-nombre_tipos = { int:"INT", float:"FLOAT", str:"STR", bool:"BOOL", list:"List", "void": "VOID", "func": "FUNC",  "gesha": "GESHA", "pandas": "PANDAS" }
+nombre_tipos = { int:"INT", float:"FLOAT", str:"STR", bool:"BOOL", list:"List", "void": "VOID", "func": "FUNC",  "gesha": "GESHA", "pardos": "PARDOS" }
 
 def obtener_tipo_dentro_lista(lista):
     tipo_lista = obtener_tipo_lista(lista)
@@ -24,7 +24,7 @@ def obtener_tipo_lista(lista):
     return tipo
 
 def obtener_tipo_dato(dato):
-    from lib.KafePANDAS.DataFrame import DataFrame
+    from lib.KafePARDOS.DataFrame import DataFrame
     from lib.KafeGESHA.Gesha import Gesha
     if type(dato) is list:
         return obtener_tipo_lista(dato)
@@ -33,7 +33,7 @@ def obtener_tipo_dato(dato):
     elif isinstance(dato, Gesha):
         return nombre_tipos["gesha"]
     elif isinstance(dato, DataFrame):
-        return nombre_tipos["pandas"]
+        return nombre_tipos["pardos"]
     else:
         return nombre_tipos[type(dato)]
 
@@ -48,7 +48,7 @@ booleano_t            = nombre_tipos[bool]
 cadena_t              = nombre_tipos[str]
 lista_t               = nombre_tipos[list]
 gesha_t               = nombre_tipos["gesha"]
-pandas_t              = nombre_tipos["pandas"]
+pardos_t              = nombre_tipos["pardos"]
 void_t                = nombre_tipos['void']
 funcion_t             = nombre_tipos["func"]
 lista_cualquiera_t    = [construir_tipo_lista(i) for i in range(1, 100)]

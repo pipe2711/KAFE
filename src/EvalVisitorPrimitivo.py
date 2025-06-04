@@ -15,7 +15,7 @@ import lib.KafeMATH.funciones as math_funcs_module
 import lib.KafeFILES.funciones as files_funcs_module
 import lib.KafePLOT.funciones as plot_funcs_module
 import lib.KafeGESHA.funciones as gesha_funcs_module
-import lib.KafePANDAS.funciones as pandas_funcs_module
+import lib.KafePARDOS.funciones as pardos_funcs_module
 
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def __init__(self):
@@ -27,7 +27,7 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
             "files": [files_funcs_module, False],
             "plot": [plot_funcs_module, False],
             "geshaDeep": [gesha_funcs_module, False],
-            "pandas": [pandas_funcs_module, False]
+            "pardos": [pardos_funcs_module, False]
         }
         self.imported = set()
 

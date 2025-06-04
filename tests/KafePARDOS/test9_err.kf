@@ -1,10 +1,10 @@
-import pandas;
+import pardos;
 
 -- Leer el CSV que combina casos de duplicados, negativos, notación científica y vacíos
-PANDAS df = pandas.read_csv("test9.csv");
+PARDOS df = pardos.read_csv("test9.csv");
 
 -- Mostrar el DataFrame completo (los duplicados en header se conservan)
-PANDAS all = df;
+PARDOS all = df;
 show(all);
 
 -- Verificar shape (debe ser [5,3])

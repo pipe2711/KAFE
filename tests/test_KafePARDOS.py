@@ -2,7 +2,7 @@ import subprocess
 import pytest
 from utils import obtener_parametros, get_programs, get_invalid_programs
 
-@pytest.mark.parametrize("programa, entrada, salida_esperada", list(obtener_parametros(get_programs("../tests/KafePANDAS"))))
+@pytest.mark.parametrize("programa, entrada, salida_esperada", list(obtener_parametros(get_programs("../tests/KafePARDOS"))))
 def test_valid_programs(programa, entrada, salida_esperada):
     result = subprocess.run(["python", "Kafe.py", programa],
                             capture_output=True, text=True, input=entrada)
@@ -11,7 +11,7 @@ def test_valid_programs(programa, entrada, salida_esperada):
     assert result.stdout == salida_esperada, f"Incorrect output for {programa}"
 
 
-@pytest.mark.parametrize("programa, entrada, salida_esperada", list(obtener_parametros(get_invalid_programs("../tests/KafePANDAS"))))
+@pytest.mark.parametrize("programa, entrada, salida_esperada", list(obtener_parametros(get_invalid_programs("../tests/KafePARDOS"))))
 def test_invalid_programs(programa, entrada, salida_esperada):
     result = subprocess.run(["python", "Kafe.py", programa],
                             capture_output=True, text=True, input=entrada)

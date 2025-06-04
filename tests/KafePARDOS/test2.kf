@@ -1,10 +1,10 @@
-import pandas;
+import pardos;
 
 -- Leer el CSV con floats y celdas vacías
-PANDAS df = pandas.read_csv("test2.csv");
+PARDOS df = pardos.read_csv("test2.csv");
 
 -- Mostrar DataFrame completo (usa __repr__ para ver filas)
-PANDAS all = df;
+PARDOS all = df;
 show(all);
 
 -- Shape
@@ -20,5 +20,5 @@ show(df.dtypes());
 show(df.info());
 
 -- Describe
-PANDAS desc = df.describe();
+PARDOS desc = df.describe();
 show(desc);
