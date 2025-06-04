@@ -1,0 +1,36 @@
+import pardos;
+
+-- Leer el CSV que combina casos de duplicados, negativos, notación científica y vacíos
+PARDOS df = pardos.read_csv("test9.csv");
+
+-- Mostrar el DataFrame completo (los duplicados en header se conservan)
+PARDOS all = df;
+show(all);
+
+-- Verificar shape (debe ser [5,3])
+show(df.shape());
+-- Esperado: [5, 3]
+
+-- Obtener la primera columna "valor" (indice 1 en header), como FLOAT
+List[FLOAT] v1 = df.col("valor");
+show(v1);
+-- Esperado: [100.0, -50.0, 100.0, 0.35, nan]
+
+-- Si pedimos "valor" de nuevo, sigue devolviendo la **primera** aparición
+List[FLOAT] v1_again = df.col("valor");
+show(v1_again);
+-- Igual que arriba: [100.0, -50.0, 100.0, 0.35, nan]
+
+-- Mostrar dtypes (se ignoran los nan)
+show(df.dtypes());
+-- Esperado: [['id','INT'], ['valor','FLOAT'], ['valor','FLOAT']]
+
+-- Info general
+show(df.info());
+
+-- Describe (solo calcula sobre las dos columnas “valor” y sobre “id”)
+show(df.describe());
+
+-- Intentar acceder a columna inexistente (“z”) para ver el error
+show(df.col("z"));
+-- Esperado: Exception: df: Columna 'z' no existe

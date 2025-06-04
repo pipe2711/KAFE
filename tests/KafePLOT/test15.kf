@@ -1,0 +1,35 @@
+import plot;
+
+-- Datos de entrenamiento
+List[FLOAT] X = [0.0, 1.0, 2.0, 3.0, 4.0];
+List[FLOAT] Y = [1.0, 2.3, 3.1, 3.9, 5.2];
+
+-- Coeficientes obtenidos (m, b)
+FLOAT m = 0.95;
+FLOAT b = 0.2;
+
+-- 1) Dibujo de puntos de entrenamiento
+plot.figure();
+plot.title("Regresión lineal (puntos vs. recta)");
+plot.xlabel("X");
+plot.ylabel("Y");
+plot.pointColor("blue");
+plot.grid(True);
+plot.pointSize(5);
+plot.graph(X, Y, "point");  -- dibuja solo puntos en azul
+
+-- 2) Armo un “vector X” para la línea y “vector Y” con y = m·x + b
+List[FLOAT] X_line = [0.0, 4.0];                           -- basta con dos extremos
+List[FLOAT] Y_line = [m * 0.0 + b, m * 4.0 + b];           
+
+-- 3) Pinto la recta
+plot.color("red");
+plot.pointColor("red");          -- los puntos de la línea también en rojo
+plot.pointSize(3);
+plot.graph(X_line, Y_line, "line");  -- dibuja solo línea
+
+-- 4) Leyenda
+plot.legend("blue: puntos de entrenamiento ; red: recta estimada");
+
+-- 5) Render final
+plot.render();

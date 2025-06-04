@@ -1,0 +1,6 @@
+"cols: ['name', 'city'], rows: [['Alice', 'Madrid'], ['Bob', 'Barcelona'], ['Carol', 'Valencia']]"
+[3, 2]
+['Madrid', 'Barcelona', 'Valencia']
+[['name', 'STR'], ['city', 'STR']]
+[['Rows', 3], ['Columns', 2], ['Column_Names', 'name, city'], ['Dtypes', 'name:STR, city:STR']]
+"cols: ['column', 'count', 'mean', 'std', 'min', 'max'], rows: []"

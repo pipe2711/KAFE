@@ -1,8 +1,9 @@
+from lib.KafeGESHA.Gesha import Gesha
 from errores import (
      raiseVariableAlreadyDefined, raiseVariableNotDefined, raiseVoidAsVariableType,
      raiseExpectedHomogeneousList, raiseNonIntegerIndex, raiseIndexOutOfBounds, raiseTypeMismatch
 )
-from TypeUtils import  obtener_tipo_dato, entero_t, flotante_t, cadena_t, booleano_t, lista_t, void_t
+from TypeUtils import  obtener_tipo_dato, entero_t, flotante_t, cadena_t, booleano_t, lista_t, void_t, gesha_t
 from global_utils import esTipoCorrecto, verificarHomogeneidad, asignar_variable
 
 def varDecl(self, ctx):
@@ -28,6 +29,8 @@ def varDecl(self, ctx):
             val = ""
         elif tipo == booleano_t:
             val = False
+        elif tipo == gesha_t:
+            val = Gesha()
         elif tipo.startswith(lista_t):
             val = []
 

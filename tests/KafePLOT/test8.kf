@@ -1,5 +1,6 @@
 import plot;
 
+plot.figure();
 plot.title("Altura máxima alcanzada");
 plot.xlabel("Tiempo");
 plot.ylabel("Altura");
@@ -12,3 +13,4 @@ List[FLOAT] t = [0.0, 2.0, 4.0, 6.0, 8.0];
 List[INT] h = [0, 20, 40, 20, 0];
 
 plot.graph(t, h);
+plot.render();

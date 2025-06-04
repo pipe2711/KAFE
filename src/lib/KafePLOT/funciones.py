@@ -1,8 +1,17 @@
 from global_utils import check_sig
-from TypeUtils import cadena_t, booleano_t, construir_tipo_lista, entero_t, obtener_tipo_dato, vector_numeros_t, matriz_numeros_t
+from TypeUtils import (
+    cadena_t, booleano_t, construir_tipo_lista,
+    entero_t, obtener_tipo_dato, vector_numeros_t
+)
 from errores import raiseFunctionIncorrectArgumentType
 from lib.KafeMATH.funciones import radians, sin, cos
 import lib.KafePLOT.utils as utils
+
+@check_sig([0], [])
+def figure():
+
+    utils.resetear_variables()
+    utils._figura_activa = True
 
 @check_sig([1], [cadena_t])
 def legend(valor):
@@ -40,113 +49,335 @@ def pointColor(valor):
 def pointSize(valor):
     utils.tamaño_punto = valor
 
-@check_sig([1, 2], vector_numeros_t + matriz_numeros_t, vector_numeros_t)
+
 def graph(*args):
-    datos = args[0]
-    tipo_datos = obtener_tipo_dato(datos)
+    
+    
+    n = len(args)
+    if n < 1 or n > 3:
+        raise Exception(
+            "graph: se permiten 1, 2 o 3 argumentos:\n"
+            "  • graph(ys)\n"
+            "  • graph(xs, ys)\n"
+            "  • graph(xs, ys, style)\n"
+            "  • graph(lista_de_pares)\n"
+        )
 
-    if len(args) == 2:
-        xs = datos
 
-        if tipo_datos not in vector_numeros_t:
-            raiseFunctionIncorrectArgumentType('graph', datos, tipo_datos)
+    if n == 1:
+        dato = args[0]
 
-        ys = args[1]
+        
+        tipo_dato = obtener_tipo_dato(dato)
+        if tipo_dato in vector_numeros_t:
+            ys = dato
+            xs = list(range(len(ys)))
+            style = "both"
 
-        if len(xs) != len(ys):
-            raise Exception("graph: Lists x and y must have the same length")
-    else:
-        if tipo_datos in vector_numeros_t:
-            xs = list(range(len(datos)))
-            ys = datos
+       
+        elif (isinstance(dato, list)
+              and len(dato) > 0
+              and all(isinstance(par, list) and len(par) == 2 for par in dato)):
+            
+            xs, ys = [], []
+            for par in dato:
+                x_val, y_val = par
+                
+                tipo_x = obtener_tipo_dato(x_val)
+                tipo_y = obtener_tipo_dato(y_val)
+                if tipo_x not in vector_numeros_t and not isinstance(x_val, (int, float)):
+                    raiseFunctionIncorrectArgumentType('graph', x_val, tipo_x)
+                if tipo_y not in vector_numeros_t and not isinstance(y_val, (int, float)):
+                    raiseFunctionIncorrectArgumentType('graph', y_val, tipo_y)
+                xs.append(x_val)
+                ys.append(y_val)
+            style = "both"
+
         else:
-            if all(len(v) == 2 for v in datos):
-                xs = [v[0] for v in datos]
-                ys = [v[1] for v in datos]
+            
+            raiseFunctionIncorrectArgumentType('graph', dato, obtener_tipo_dato(dato))
+
+    
+    elif n == 2:
+        primero, segundo = args
+
+        
+        if isinstance(segundo, str):
+            dato = primero
+            estilo_raw = segundo
+
+            
+            if (isinstance(dato, list)
+                and len(dato) > 0
+                and all(isinstance(par, list) and len(par) == 2 for par in dato)):
+                xs, ys = [], []
+                for par in dato:
+                    x_val, y_val = par[0], par[1]
+                    
+                    tipo_x = obtener_tipo_dato(x_val)
+                    tipo_y = obtener_tipo_dato(y_val)
+                    if tipo_x not in vector_numeros_t and not isinstance(x_val, (int, float)):
+                        raiseFunctionIncorrectArgumentType('graph', x_val, tipo_x)
+                    if tipo_y not in vector_numeros_t and not isinstance(y_val, (int, float)):
+                        raiseFunctionIncorrectArgumentType('graph', y_val, tipo_y)
+                    xs.append(x_val)
+                    ys.append(y_val)
+                
+                style = estilo_raw.lower()
+                if style not in ("line", "point", "both"):
+                    raise Exception("graph: style debe ser 'line', 'point' o 'both'.")
             else:
-                raise Exception("graph: Expected pairs of numbers [x, y]")
+                raise Exception(
+                    "graph: si se pasan dos argumentos, el primero debe ser una lista de pares [[x,y],…] "
+                    "y el segundo un string con el estilo ('line','point' o 'both')."
+                )
+
+        
+        else:
+            xs, ys = primero, segundo
+            tipo_xs = obtener_tipo_dato(xs)
+            tipo_ys = obtener_tipo_dato(ys)
+            if tipo_xs not in vector_numeros_t:
+                raiseFunctionIncorrectArgumentType('graph', xs, tipo_xs)
+            if tipo_ys not in vector_numeros_t:
+                raiseFunctionIncorrectArgumentType('graph', ys, tipo_ys)
+            if len(xs) != len(ys):
+                raise Exception("graph: Listas x e y deben tener el mismo largo.")
+            style = "both"
 
 
-    # ========== ESCALADO Y PUNTOS ==========
-    width = 500
-    height = 300
+    
+    else:  
+        xs, ys, estilo_raw = args
 
-    max_x, min_x = max(xs), min(xs)
-    max_y, min_y = max(ys), min(ys)
+        
+        tipo_xs = obtener_tipo_dato(xs)
+        tipo_ys = obtener_tipo_dato(ys)
+        if tipo_xs not in vector_numeros_t:
+            raiseFunctionIncorrectArgumentType('graph', xs, tipo_xs)
+        if tipo_ys not in vector_numeros_t:
+            raiseFunctionIncorrectArgumentType('graph', ys, tipo_ys)
+        if len(xs) != len(ys):
+            raise Exception("graph: Listas x e y deben tener el mismo largo.")
 
+        
+        if not isinstance(estilo_raw, str):
+            raise Exception("graph: style debe ser una cadena literal.")
+        style = estilo_raw.lower()
+        if style not in ("line", "point", "both"):
+            raise Exception("graph: style debe ser 'line', 'point' o 'both'.")
+
+    
+    auto_show = False
+    if not utils._figura_activa:
+        utils.resetear_variables()
+        utils._figura_activa = True
+        auto_show = True
+
+    
+    serie_info = {
+        "xs": xs[:],               
+        "ys": ys[:],
+        "color_linea": utils.color_linea,
+        "color_puntos": utils.color_puntos,
+        "tamaño_punto": utils.tamaño_punto,
+        "draw_line":  (style in ("line", "both")),
+        "draw_point": (style in ("point", "both"))
+    }
+    utils._series_acumuladas.append(serie_info)
+
+    
+    if auto_show:
+        render()
+
+
+
+@check_sig([0], [])
+def render():
+
+    if not utils._figura_activa or len(utils._series_acumuladas) == 0:
+        raise Exception("render: No hay ninguna figura activa o no se llamó a graph() antes.")
+
+    
+    total_width    = 700           
+    total_height   = 350           
+    legend_space   = 200           
+    plot_width     = total_width - legend_space  
+    height         = total_height   
+
+    
+    todas_x = [x for serie in utils._series_acumuladas for x in serie["xs"]]
+    todas_y = [y for serie in utils._series_acumuladas for y in serie["ys"]]
+    max_x, min_x = max(todas_x), min(todas_x)
+    max_y, min_y = max(todas_y), min(todas_y)
+    rango_x = max_x - min_x + 1e-5
+    rango_y = max_y - min_y + 1e-5
+
+    
     etiquetas_y_numeros = [round(min_y + i * (max_y - min_y) / 5, 1) for i in range(6)]
     numero_mas_largo = max(len(str(num)) for num in etiquetas_y_numeros)
-    padding = int(10 + (numero_mas_largo + 2) * 6 + 20)  # dinámico sin escalar ylabel
+    padding = int(10 + (numero_mas_largo + 2) * 6 + 20)
 
+   
     def escalar_x(x):
-        return padding + int((x - min_x) / (max_x - min_x + 1e-5) * (width - 2 * padding))
-
+        return padding + int((x - min_x) / rango_x * (plot_width - 2 * padding))
     def escalar_y(y):
-        return height - padding - int((y - min_y) / (max_y - min_y + 1e-5) * (height - 2 * padding))
+        return height - padding - int((y - min_y) / rango_y * (height - 2 * padding))
 
-    puntos = [(escalar_x(x), escalar_y(y)) for x, y in zip(xs, ys)]
+    
+    contenido  = f'<svg width="{total_width}" height="{total_height}" xmlns="http://www.w3.org/2000/svg">\n'
+    contenido += f'  <rect x="0" y="0" width="{total_width}" height="{total_height}" fill="white"/>\n'
 
-    # ========== SVG: REJILLA ==========
-    rejilla = ""
+    
     if utils.mostrar_grid:
+        
         for i in range(6):
-            y = escalar_y(min_y + i * (max_y - min_y) / 5)
-            rejilla += f'<line x1="{padding}" y1="{y}" x2="{width - padding}" y2="{y}" stroke="#ddd" stroke-width="1"/>\n'
-        for xval in xs:
-            x = escalar_x(xval)
-            rejilla += f'<line x1="{x}" y1="{padding}" x2="{x}" y2="{height - padding}" stroke="#ddd" stroke-width="1"/>\n'
+            valor_y = min_y + i * (max_y - min_y) / 5
+            y = escalar_y(valor_y)
+            contenido += (
+                f'  <line x1="{padding}" y1="{y}" '
+                f'x2="{plot_width - padding}" y2="{y}" '
+                f'stroke="#ddd" stroke-width="1"/>\n'
+            )
+        
+        for xval in sorted(set(todas_x)):
+            x_svg = escalar_x(xval)
+            contenido += (
+                f'  <line x1="{x_svg}" y1="{padding}" '
+                f'x2="{x_svg}" y2="{height - padding}" '
+                f'stroke="#ddd" stroke-width="1"/>\n'
+            )
 
-    # ========== SVG: LÍNEAS ==========
-    lineas = ""
-    for i in range(len(puntos) - 1):
-        x1, y1 = puntos[i]
-        x2, y2 = puntos[i + 1]
-        lineas += f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{utils.color_linea}" stroke-width="2" />\n'
+    
+    for serie in utils._series_acumuladas:
+        xs = serie["xs"]
+        ys = serie["ys"]
+        clr_linea = serie["color_linea"]
+        clr_puntos = serie["color_puntos"]
+        tam = serie["tamaño_punto"]
+        draw_line = serie["draw_line"]
+        draw_point = serie["draw_point"]
 
-    # ========== SVG: PUNTOS ==========
-    puntos_svg = "".join([f'<circle cx="{x}" cy="{y}" r="{utils.tamaño_punto}" fill="{utils.color_puntos}"/>\n' for x, y in puntos])
+        
+        if draw_line:
+            for i in range(len(xs) - 1):
+                x1, y1 = escalar_x(xs[i]), escalar_y(ys[i])
+                x2, y2 = escalar_x(xs[i+1]), escalar_y(ys[i+1])
+                contenido += (
+                    f'  <line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" '
+                    f'stroke="{clr_linea}" stroke-width="2" />\n'
+                )
 
-    # ========== SVG: EJES ==========
-    eje_x = f'<line x1="{padding}" y1="{height - padding}" x2="{width - padding}" y2="{height - padding}" stroke="black" stroke-width="1" />'
-    eje_y = f'<line x1="{padding}" y1="{padding}" x2="{padding}" y2="{height - padding}" stroke="black" stroke-width="1" />'
+       
+        if draw_point:
+            for xv, yv in zip(xs, ys):
+                x_svg, y_svg = escalar_x(xv), escalar_y(yv)
+                contenido += (
+                    f'  <circle cx="{x_svg}" cy="{y_svg}" r="{tam}" fill="{clr_puntos}"/>\n'
+                )
 
-    # ========== SVG: ETIQUETAS Y ==========
-    etiquetas_y = ""
+   
+    contenido += (
+        f'  <line x1="{padding}" y1="{height - padding}" '
+        f'x2="{plot_width - padding}" y2="{height - padding}" '
+        f'stroke="black" stroke-width="1" />\n'
+    )
+    
+    contenido += (
+        f'  <line x1="{padding}" y1="{padding}" '
+        f'x2="{padding}" y2="{height - padding}" '
+        f'stroke="black" stroke-width="1" />\n'
+    )
+
+    
     for i in range(6):
-        valor = min_y + i * (max_y - min_y) / 5
-        y_pos = escalar_y(valor)
-        etiquetas_y += f'<text x="{padding - 10}" y="{y_pos + 4}" font-size="10" text-anchor="end">{round(valor, 1)}</text>\n'
+        valor_y = min_y + i * (max_y - min_y) / 5
+        y_pos = escalar_y(valor_y)
+        contenido += (
+            f'  <text x="{padding - 10}" y="{y_pos + 4}" '
+            f'font-size="10" text-anchor="end">{round(valor_y, 1)}</text>\n'
+        )
 
-    # ========== SVG: ETIQUETAS X ==========
-    etiquetas_x = ""
-    for i, xval in enumerate(xs):
-        x = escalar_x(xval)
-        etiquetas_x += f'<text x="{x}" y="{height - padding + 15}" font-size="10" text-anchor="middle">{round(xval, 1)}</text>\n'
+    
+    for xval in sorted(set(todas_x)):
+        x_pos = escalar_x(xval)
+        contenido += (
+            f'  <text x="{x_pos}" y="{height - padding + 15}" '
+            f'font-size="10" text-anchor="middle">{round(xval, 1)}</text>\n'
+        )
 
-    # ========== SVG: ETIQUETAS DE LOS EJES ==========
-    etiqueta_eje_x = f'<text x="{width // 2}" y="{height - 5}" font-size="12" text-anchor="middle">{utils.eje_x_label}</text>' if utils.eje_x_label else ''
-    etiqueta_eje_y = f'<g transform="translate(20,{height // 2}) rotate(-90)"><text font-size="12" text-anchor="middle">{utils.eje_y_label}</text></g>' if utils.eje_y_label else ''
-    etiqueta_titulo = f'<text x="{width // 2}" y="20" font-size="14" text-anchor="middle" font-weight="bold">{utils.titulo_grafico}</text>' if utils.titulo_grafico else ''
+    
+    if utils.titulo_grafico:
+        contenido += (
+            f'  <text x="{total_width // 2}" y="20" '
+            f'font-size="14" text-anchor="middle" font-weight="bold">'
+            f'{utils.titulo_grafico}</text>\n'
+        )
+    
+    if utils.eje_x_label:
+        x_center_plot = padding + (plot_width - 2 * padding) // 2
+        contenido += (
+            f'  <text x="{x_center_plot}" y="{height - 5}" '
+            f'font-size="12" text-anchor="middle">{utils.eje_x_label}</text>\n'
+        )
+    
+    if utils.eje_y_label:
+        contenido += (
+            f'  <g transform="translate(20,{height // 2}) rotate(-90)">'
+            f'<text font-size="12" text-anchor="middle">{utils.eje_y_label}</text></g>\n'
+        )
 
-    # ========== SVG COMPLETO ==========
-    contenido = f'''
-<svg width="{width}" height="{height}" xmlns="http://www.w3.org/2000/svg">
-  <rect x="0" y="0" width="{width}" height="{height}" fill="white"/>
-  {rejilla}
-  {eje_x}
-  {eje_y}
-  {etiquetas_y}
-  {etiquetas_x}
-  {lineas}
-  {puntos_svg}
-  {etiqueta_eje_x}
-  {etiqueta_eje_y}
-  {etiqueta_titulo}
-</svg>
-'''
+    
+    if utils.leyenda_pastel:
+        
+        leyenda_x = plot_width + 20
+        leyenda_y = 30
+        lineas = [linea.strip() for linea in utils.leyenda_pastel.split(";") if linea.strip() != ""]
+        alto_recuadro = 20 * len(lineas) + 40
+        ancho_recuadro = legend_space - 40  
 
+        
+        contenido += (
+            f'  <rect x="{leyenda_x - 10}" y="{leyenda_y - 25}" '
+            f'width="{ancho_recuadro}" height="{alto_recuadro}" '
+            f'fill="white" stroke="#ccc" rx="5"/>\n'
+        )
+        
+        contenido += (
+            f'  <text x="{leyenda_x}" y="{leyenda_y}" '
+            f'font-size="12" font-weight="bold">Leyenda</text>\n'
+        )
+
+        
+        y_offset = leyenda_y + 20
+        for linea in lineas:
+            
+            if ":" in linea:
+                color_str, texto = linea.split(":", 1)
+                color_str = color_str.strip()
+                texto = texto.strip()
+                contenido += (
+                    f'  <rect x="{leyenda_x}" y="{y_offset - 10}" '
+                    f'width="10" height="10" fill="{color_str}"/>\n'
+                )
+                contenido += (
+                    f'  <text x="{leyenda_x + 15}" y="{y_offset}" '
+                    f'font-size="10">{texto}</text>\n'
+                )
+            else:
+                
+                contenido += (
+                    f'  <text x="{leyenda_x}" y="{y_offset}" '
+                    f'font-size="10">{linea}</text>\n'
+                )
+            y_offset += 20
+
+    contenido += '</svg>\n'
+
+    
     utils.guardar_svg(contenido)
     utils.resetear_variables()
+
 
 @check_sig([2], [construir_tipo_lista(1, str)], vector_numeros_t)
 def bar(etiquetas, valores):
@@ -163,14 +394,14 @@ def bar(etiquetas, valores):
     svg = f'<svg width="{width}" height="{height}" xmlns="http://www.w3.org/2000/svg">\n'
     svg += f'<rect width="100%" height="100%" fill="white"/>\n'
 
-    # Eje Y
+    
     for i in range(6):
         val = round(max_val * i / 5)
         y = height - padding - int((val / max_val) * (height - 2 * padding))
         svg += f'<line x1="{padding}" y1="{y}" x2="{width - padding}" y2="{y}" stroke="#ccc" />\n'
         svg += f'<text x="{padding - 10}" y="{y + 4}" font-size="10" text-anchor="end">{val}</text>\n'
 
-    # Barras
+    
     for i, (etq, val) in enumerate(zip(etiquetas, valores)):
         x = padding + i * bar_width
         h = int((val / max_val) * (height - 2 * padding))
@@ -180,20 +411,20 @@ def bar(etiquetas, valores):
         if utils.mostrar_valores_barras:
             svg += f'<text x="{x + bar_width // 2}" y="{y - 5}" font-size="10" text-anchor="middle">{val}</text>\n'
 
-    # Ejes y etiquetas opcionales
+    
     if utils.titulo_grafico:
         svg += f'<text x="{width // 2}" y="20" font-size="14" font-weight="bold" text-anchor="middle">{utils.titulo_grafico}</text>\n'
     if utils.eje_y_label:
         svg += f'<g transform="translate(20,{height // 2}) rotate(-90)"><text font-size="12" text-anchor="middle">{utils.eje_y_label}</text></g>\n'
 
-    # Ejes X y Y visibles
-    svg += f'<line x1="{padding}" y1="{height - padding}" x2="{width - padding}" y2="{height - padding}" stroke="black" stroke-width="1" />'
+    
+    svg += f'<line x1="{padding}" y1="{height - padding}" x2="{width - padding}" y2="{height - padding}" stroke="black" stroke-width="1" />\n'
     svg += f'<line x1="{padding}" y1="{padding}" x2="{padding}" y2="{height - padding}" stroke="black" stroke-width="1"/>\n'
 
     svg += '</svg>'
-
     utils.guardar_svg(svg)
     utils.resetear_variables()
+
 
 @check_sig([2], [construir_tipo_lista(1, str)], vector_numeros_t)
 def pie(etiquetas, valores):
@@ -202,7 +433,7 @@ def pie(etiquetas, valores):
 
     total = sum(valores)
     if total == 0:
-        raise Exception("plot.pie: Total must be greater than zero")
+        raise Exception("plot.pie: Total must be mayor que cero")
 
     width = height = 600
     cx = int(width * 0.40)  # desplazamos el centro hacia la izquierda
@@ -210,8 +441,8 @@ def pie(etiquetas, valores):
     radio = int(width * 0.3)
 
     start_angle = -180
-    colores = ["#f4d03f", "#82e0aa", "#ec7063", "#85c1e9", "#bb8fce", "#f5b7b1", "#f1948a", "#7fb3d5", "#f8c471", "#aed6f1"]
-
+    colores = ["#f4d03f", "#82e0aa", "#ec7063", "#85c1e9", "#bb8fce",
+               "#f5b7b1", "#f1948a", "#7fb3d5", "#f8c471", "#aed6f1"]
 
     svg = f'<svg width="{width}" height="{height}" xmlns="http://www.w3.org/2000/svg">\n'
     svg += f'<rect width="100%" height="100%" fill="white"/>\n'
@@ -226,12 +457,12 @@ def pie(etiquetas, valores):
         y2 = cy + radio * sin(radians(end_angle))
 
         large_arc = 1 if angle > 180 else 0
-        color = colores[i % len(colores)]
+        color_segment = colores[i % len(colores)]
 
         path = f'M {cx},{cy} L {x1},{y1} A {radio},{radio} 0 {large_arc},1 {x2},{y2} Z'
-        svg += f'<path d="{path}" fill="{color}" stroke="white" stroke-width="1"/>\n'
+        svg += f'<path d="{path}" fill="{color_segment}" stroke="white" stroke-width="1"/>\n'
 
-        # Porcentaje centrado
+        
         mid_angle = start_angle + angle / 2
         tx = cx + (radio / 1.5) * cos(radians(mid_angle))
         ty = cy + (radio / 1.5) * sin(radians(mid_angle))
@@ -240,25 +471,22 @@ def pie(etiquetas, valores):
 
         start_angle = end_angle
 
-    # ======= LEYENDA OPCIONAL =======
+    
     if utils.leyenda_pastel:
         leyenda_x = width - 170
         leyenda_y = 40
         alto_recuadro = 20 * len(etiquetas) + 60
 
         svg += f'<rect x="{leyenda_x - 10}" y="{leyenda_y - 25}" width="160" height="{alto_recuadro}" fill="white" stroke="#ccc" rx="5"/>\n'
-
         svg += f'''<text x="{leyenda_x}" y="{leyenda_y}" font-size="12" font-weight="bold">
-  <tspan x="{leyenda_x}" dy="0">Lenguajes de</tspan>
-  <tspan x="{leyenda_x}" dy="15">Programación Populares</tspan>
+  <tspan x="{leyenda_x}" dy="0">Leyenda</tspan>
 </text>\n'''
-
-        for i, (etq, color) in enumerate(zip(etiquetas, colores)):
+        for i, etq in enumerate(etiquetas):
             y_offset = leyenda_y + 30 + i * 20
-            svg += f'<rect x="{leyenda_x}" y="{y_offset - 10}" width="10" height="10" fill="{color}"/>\n'
+            color_segment = colores[i % len(colores)]
+            svg += f'<rect x="{leyenda_x}" y="{y_offset - 10}" width="10" height="10" fill="{color_segment}"/>\n'
             svg += f'<text x="{leyenda_x + 15}" y="{y_offset}" font-size="10">{etq}</text>\n'
 
     svg += '</svg>\n'
-
     utils.guardar_svg(svg)
     utils.resetear_variables()

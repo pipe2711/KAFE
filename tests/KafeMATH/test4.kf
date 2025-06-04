@@ -1,0 +1,3 @@
+import math;
+
+show(math.pow(-2, 7));

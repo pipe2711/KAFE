@@ -1,0 +1,84 @@
+-- test_clustering.kf
+
+import plot;
+
+-- ================================================================
+-- Ejemplo de clustering (k = 2) con datos 2D “hardcodeados”
+-- ================================================================
+
+-- 1) Definimos nuestros datos (cada elemento es un par [x, y]) 
+--    y las etiquetas asignadas por el algoritmo k-means (0 o 1).
+List[List[FLOAT]] datos = [
+    [1.0, 2.0],
+    [1.5, 1.8],
+    [5.0, 8.0],
+    [8.0, 8.0],
+    [1.0, 0.6],
+    [9.0, 11.0]
+];
+-- Supongamos que k-means devolvió estas etiquetas para cada punto:
+--   índices:    0    1    2    3    4    5
+List[INT] etiquetas = [0,   0,   1,   1,   0,   1];
+
+-- 2) Preparamos listas vacías para almacenar las coordenadas de cada clúster
+List[FLOAT] X0 = [];
+List[FLOAT] Y0 = [];
+List[FLOAT] X1 = [];
+List[FLOAT] Y1 = [];
+
+-- 3) Para recorrer “por índice” todos los puntos, creamos una lista de índices
+List[INT] indices = [0, 1, 2, 3, 4, 5];
+
+-- 4) Usamos un bucle for junto con condicionales para separar puntos según su etiqueta
+for (i in indices):
+    FLOAT xi = datos[i][0];
+    FLOAT yi = datos[i][1];
+    INT label = etiquetas[i];
+
+    if (label == 0):
+        -- Pertenecen al clúster 0
+        append(X0, xi);
+        append(Y0, yi);
+    else:
+        -- Pertenecen al clúster 1
+        append(X1, xi);
+        append(Y1, yi);
+    ;
+;
+
+-- 5) Asumimos que los centros (obtenidos tras k-means) son estos dos puntos:
+--    Centro del clúster 0: (1.1667, 1.4667)
+--    Centro del clúster 1: (7.3333, 9.0000)
+List[FLOAT] CX = [1.1667, 7.3333];
+List[FLOAT] CY = [1.4667, 9.0000];
+
+-- 6) Ahora graficamos:
+plot.figure();
+plot.title("Clustering k-means (k=2)");
+plot.xlabel("X");
+plot.ylabel("Y");
+plot.grid(True);
+
+-- 6a) Dibujamos los puntos del clúster 0 en rojo (solo puntos)
+plot.color("none");       -- “none” en línea significa que no se traza línea
+plot.pointColor("red");
+plot.pointSize(6);
+plot.graph(X0, Y0, "point");  
+
+-- 6b) Dibujamos los puntos del clúster 1 en verde (solo puntos)
+plot.pointColor("green");
+plot.graph(X1, Y1, "point");
+
+-- 6c) Dibujamos los centros de ambos clústeres como puntos negros más grandes
+plot.pointColor("black");
+plot.pointSize(8);
+plot.graph(CX, CY, "point");
+
+-- 7) Leyenda para saber qué color corresponde a qué (separada por “;”)
+--    Formato esperado: "color1: texto1 ; color2: texto2 ; color3: texto3"
+plot.legend(
+    "red: clúster 0 ; green: clúster 1 ; black: centros"
+);
+
+-- 8) Renderizamos el SVG final
+plot.render();

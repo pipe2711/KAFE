@@ -1,0 +1,31 @@
+<svg width="500" height="300" xmlns="http://www.w3.org/2000/svg">
+<rect width="100%" height="100%" fill="white"/>
+<line x1="60" y1="240" x2="440" y2="240" stroke="#ccc" />
+<text x="50" y="244" font-size="10" text-anchor="end">0</text>
+<line x1="60" y1="204" x2="440" y2="204" stroke="#ccc" />
+<text x="50" y="208" font-size="10" text-anchor="end">600</text>
+<line x1="60" y1="168" x2="440" y2="168" stroke="#ccc" />
+<text x="50" y="172" font-size="10" text-anchor="end">1200</text>
+<line x1="60" y1="132" x2="440" y2="132" stroke="#ccc" />
+<text x="50" y="136" font-size="10" text-anchor="end">1800</text>
+<line x1="60" y1="96" x2="440" y2="96" stroke="#ccc" />
+<text x="50" y="100" font-size="10" text-anchor="end">2400</text>
+<line x1="60" y1="60" x2="440" y2="60" stroke="#ccc" />
+<text x="50" y="64" font-size="10" text-anchor="end">3000</text>
+<rect x="60" y="90" width="90" height="150" fill="steelblue" />
+<text x="107" y="255" font-size="10" text-anchor="middle">Matplotlib</text>
+<text x="107" y="85" font-size="10" text-anchor="middle">2500</text>
+<rect x="155" y="132" width="90" height="108" fill="steelblue" />
+<text x="202" y="255" font-size="10" text-anchor="middle">Seaborn</text>
+<text x="202" y="127" font-size="10" text-anchor="middle">1800</text>
+<rect x="250" y="60" width="90" height="180" fill="steelblue" />
+<text x="297" y="255" font-size="10" text-anchor="middle">Plotly</text>
+<text x="297" y="55" font-size="10" text-anchor="middle">3000</text>
+<rect x="345" y="108" width="90" height="132" fill="steelblue" />
+<text x="392" y="255" font-size="10" text-anchor="middle">Plotnine</text>
+<text x="392" y="103" font-size="10" text-anchor="middle">2200</text>
+<text x="250" y="20" font-size="14" font-weight="bold" text-anchor="middle">Preferencias de Librerías</text>
+<g transform="translate(20,150) rotate(-90)"><text font-size="12" text-anchor="middle">Número de usuarios</text></g>
+<line x1="60" y1="240" x2="440" y2="240" stroke="black" stroke-width="1" />
+<line x1="60" y1="60" x2="60" y2="240" stroke="black" stroke-width="1"/>
+</svg>

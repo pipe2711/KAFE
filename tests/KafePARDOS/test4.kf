@@ -1,0 +1,25 @@
+import pardos;
+
+-- Leer el CSV con mezcla de tipos en "value"
+PARDOS df = pardos.read_csv("test4.csv");
+
+-- Mostrar DataFrame completo
+PARDOS all = df;
+show(all);
+
+List[INT] shp = df.shape();
+show(shp);   -- [5, 1]
+
+-- Valores de “value”
+List[FLOAT] contenido = df.col("value");
+show(contenido);
+
+-- Tipos inferidos (value -> STR)
+show(df.dtypes());
+
+-- Info general
+show(df.info());
+
+-- Describe (solo la cabecera)
+PARDOS desc = df.describe();
+show(desc);
