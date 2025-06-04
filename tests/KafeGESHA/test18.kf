@@ -1,12 +1,9 @@
--- clustering_plot_tuModelo_v2.kf
--- Versión ajustada para intentar separar en dos clústeres
+
 
 import geshaDeep;
 import plot;
 
--- ================================================
--- 1) Datos 2D “hardcodeados”
--- ================================================
+
 List[List[FLOAT]] datos = [
     [1.0, 2.0],
     [1.5, 1.8],
@@ -18,50 +15,44 @@ List[List[FLOAT]] datos = [
 
 List[INT] y_dummy = [];
 
--- ================================================
--- 2) Creamos el modelo clustering
--- ================================================
+
 GESHA modelo = geshaDeep.clustering();
 
--- 2.1 Capa oculta 1: 4 neuronas, ReLU, input_shape = [2], semilla = 12
+
 GESHA capa1 = geshaDeep.create_dense(
     8,         -- 4 neuronas en primera capa oculta
     "relu",    
     [2],       -- entrada 2D
-    0.0,       -- sin L2
+    0.0,       
     12         -- semilla distinta
 );
 modelo.add(capa1);
 
--- 2.2 Capa oculta 2: 4 neuronas, ReLU, hereda salida capa1, semilla = 99
+
 GESHA capa1b = geshaDeep.create_dense(
     4,        
     "relu",   
-    [],       -- se infiere (4) automáticamente
+    [],       
     0.0,
-    99        -- otra semilla
+    99        
 );
 modelo.add(capa1b);
 
--- 2.3 Capa salida: 2 neuronas (k=2), softmax, semilla = 42
+
 GESHA capa2 = geshaDeep.create_dense(
     2, "softmax", [], 0.0, 42
 );
 modelo.add(capa2);
 
--- 2.4 Compilamos: Adam con lr=0.0005, pérdida = categorical_crossentropy
+
 geshaDeep.compile(modelo, "adam", "categorical_crossentropy", []);
--- Ajustamos lr muy bajo para evitar colapso inmediato
+
 geshaDeep.set_lr(modelo, 0.0005);
 
--- ================================================
--- 3) Entrenamos: epochs = 300, batch_size = 2
--- ================================================
+
 modelo.fit(datos, y_dummy, 300, 2);
 
--- ================================================
--- 4) Predicción y separación en listas X0,Y0 y X1,Y1
--- ================================================
+
 List[FLOAT] X0 = [];
 List[FLOAT] Y0 = [];
 List[FLOAT] X1 = [];
@@ -93,9 +84,7 @@ for (i in indices):
     ;
 ;
 
--- ================================================
--- 5) Cálculo de centros de cada clúster (sin ternario)
--- ================================================
+
 FLOAT sumx0 = 0.0; FLOAT sumy0 = 0.0; INT count0 = 0;
 FLOAT sumx1 = 0.0; FLOAT sumy1 = 0.0; INT count1 = 0;
 
@@ -154,9 +143,7 @@ else:
 List[FLOAT] CX = [cx0, cx1];
 List[FLOAT] CY = [cy0, cy1];
 
--- ================================================
--- 6) Listas de pares (para plot.graph)
--- ================================================
+
 List[List[FLOAT]] pares0 = [];
 for (i in range(0, len(X0))):
     append(pares0, [X0[i], Y0[i]]);
@@ -172,28 +159,26 @@ for (i in range(0, len(CX))):
     append(centros, [CX[i], CY[i]]);
 ;
 
--- ================================================
--- 7) Graficamos resultados
--- ================================================
+
 plot.figure();
 plot.title("Clustering k-means (k=2) ― GeshaDeep (2 capas de 4 → 4, lr=0.0005)");
 plot.xlabel("X");
 plot.ylabel("Y");
 plot.grid(True);
 
--- cluster 0 en rojo
+
 if (len(pares0) > 0):
     plot.pointColor("red");
     plot.pointSize(6);
     plot.graph(pares0, "point");
 ;
--- cluster 1 en verde
+
 if (len(pares1) > 0):
     plot.pointColor("green");
     plot.pointSize(6);
     plot.graph(pares1, "point");
 ;
--- centros en negro (punto más grande)
+
 if (len(centros) > 0):
     plot.pointColor("black");
     plot.pointSize(8);
