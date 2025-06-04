@@ -1,0 +1,9 @@
+import pardos;
+
+
+PARDOS df = pardos.read_csv("penguins.csv");
+
+PARDOS desc = df.describe();
+PARDOS head = df.head(10);
+show(head);
+show(desc);
