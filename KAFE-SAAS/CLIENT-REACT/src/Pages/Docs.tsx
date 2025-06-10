@@ -33,27 +33,39 @@ export default function Docs() {
           </details>
           <details open>
             <summary>Numk <span className="badge">New</span></summary>
-            <ul></ul>
+            <ul>
+              <li><a onClick={() => setSection("numk")}>Numk</a></li>
+            </ul>
           </details> 
           <details open>
             <summary>Plot<span className="badge">New</span></summary>
-            <ul></ul>
+            <ul>
+              <li><a onClick={() => setSection("plot")}>Plot</a></li>
+            </ul>
           </details> 
           <details open>
             <summary>Math <span className="badge">New</span></summary>
-            <ul></ul>
+            <ul>
+              <li><a onClick={() => setSection("math")}>Math</a></li>
+            </ul>
           </details> 
           <details open>
             <summary>Files <span className="badge">New</span></summary>
-            <ul></ul>
+            <ul>
+              <li><a onClick={() => setSection("files")}>Files</a></li>
+            </ul>
           </details> 
           <details open>
-            <summary>Pardos<span className="badge">New</span></summary>
-            <ul></ul>
+            <summary>GeshaDeep<span className="badge">New</span></summary>
+            <ul>
+              <li><a onClick={() => setSection("gesha")}>GeshaDeep</a></li>             
+            </ul>
           </details>
           <details open>
-            <summary>GeshaDeep<span className="badge">New</span></summary>
-            <ul></ul>
+            <summary>Pardos<span className="badge">New</span></summary>
+            <ul>
+              <li><a onClick={() => setSection("pardos")}>Pardos</a></li>
+            </ul>
           </details>  
         </nav>
       </aside>
@@ -757,6 +769,813 @@ show(result);`
       Aunque la recursión es poderosa, hay que usarla con cuidado para evitar llamadas infinitas y errores de pila.
       Siempre asegúrate de tener un <strong>caso base bien definido</strong>.
     </p>
+          </section>
+        )}
+        {section === "numk" && (
+          <section>
+            <h2>Numk</h2>
+            <p>
+              Numk es nuestra librería de cálculo numérico en KAFE. Proporciona funciones para trabajar con álgebra escalar,
+              vectores y matrices (suma, multiplicación, transposición e inversa), de forma sencilla e intuitiva.
+            </p>
+
+            <h3>Importar Numk</h3>
+            <p>
+            </p>
+            <pre><code>{`import numk;`}</code></pre>
+            <p>
+
+            </p>
+
+            <h3>Operaciones con matrices</h3>
+            <p>
+
+            </p>
+
+            <h4>1. Suma de dos matrices</h4>
+            <pre><code>{`--Prueba Sumar Matrices
+        import numk;
+
+        List[List[INT]] A = [[1, 2], [3, 4]];
+        List[List[INT]] B = [[5, 6], [7, 8]];
+
+        List[List[INT]] C = numk.add(A, B);
+        show(C);  --[[6,8],[10,12]]`}</code></pre>
+            <p>
+
+            </p>
+
+            <h4>2. Multiplicación de matrices</h4>
+            <pre><code>{`--Prueba Multiplicar Matrices
+        import numk;
+
+        List[List[INT]] A = [[1, 2]];
+        List[List[INT]] B = [[2], [3]];
+
+        List[List[INT]] C = numk.mul(A, B);
+        show(C);  --[[8]]`}</code></pre>
+            <p>
+
+            </p>
+
+            <h4>3. Transposición</h4>
+            <pre><code>{`--Prueba Transpuesta
+        import numk;
+
+        List[List[INT]] A = [
+          [1, 2],
+          [3, 4],
+          [5, 6]
+        ];
+
+        show(numk.transpose(A));  --[[1,3,5],[2,4,6]]`}</code></pre>
+            <p>
+
+            </p>
+
+            <h4>4. Inversa de una matriz</h4>
+            <pre><code>{`-- Prueba Inversa
+        import numk;
+
+        List[List[INT]] A = [
+          [2, 1],
+          [7, 4]
+        ];
+
+        show(numk.inv(A));
+        --[[4.0, -1.0], [-7.0, 2.0]]`}</code></pre>
+            <p>
+
+            </p>
+
+            <h3>Notas</h3>
+            <ul>
+              <li><strong>Tipos soportados:</strong> <code>INT</code> y <code>FLOAT</code>.</li><br/>
+              <li>
+                <strong>Dimensiones compatibles:</strong>
+                <ul>
+                  <li>Para <code>add</code> y <code>mul</code>, las matrices deben tener dimensiones compatibles
+                      (suma: mismo tamaño; multiplicación: cols A = rows B).</li>
+                  <li>Para <code>inv</code>, la matriz debe ser cuadrada e invertible.</li>
+                  <li><code>transpose</code> acepta cualquier matriz filas×columnas.</li>
+                </ul>
+              </li><br/>
+              <li>Si las dimensiones no encajan, Numk lanzará un error de dimensión.</li>
+            </ul>
+          </section>
+        )}
+        {section === "plot" && (
+          <section>
+            <h2>Plot</h2>
+            <p>
+              Plot es la librería de visualización de KAFE. Permite crear gráficas de barras,
+              líneas y pastel, así como configurar títulos, etiquetas, colores y leyendas
+              de forma muy sencilla.
+            </p>
+
+            <h3>Importar Plot</h3>
+            <pre><code>{`import plot;`}</code></pre>
+            <p>
+
+            </p>
+            <h3>Inicializar figura</h3>
+            <pre><code>{`plot.figure();`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Títulos y etiquetas</h3>
+            <pre><code>{`plot.title("Mi Gráfica");
+        plot.xlabel("Eje X");
+        plot.ylabel("Eje Y");`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Rejilla</h3>
+            <pre><code>{`plot.grid(true);`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Colores</h3>
+            <pre><code>{`plot.color("blue");
+        plot.pointColor("orange");`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Gráfica de líneas (simple)</h3>
+            <pre><code>{`List[INT] t = [0, 1, 2, 3, 4];
+        List[INT] h = [0, 10, 40, 90, 160];
+
+        plot.graph(t, h);
+        plot.render();`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Gráfica de barras</h3>
+            <pre><code>{`List[STR] libs = ["Matplotlib", "Seaborn", "Plotly", "Plotnine"];
+        List[INT] users = [2500, 1800, 3000, 2200];
+
+        plot.bar(libs, users);
+        plot.title("Bibliotecas más populares");
+        plot.ylabel("Usuarios");
+        plot.render();`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Gráfica de pastel</h3>
+            <pre><code>{`List[STR] frutas = ["Manzanas", "Peras", "Bananas", "Uvas"];
+        List[INT] cantidades = [25, 15, 35, 25];
+
+        plot.pie(frutas, cantidades);
+        plot.legend("Distribución de frutas");
+        plot.render();`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Múltiples series en la misma gráfica</h3>
+            <p>
+              
+            </p>
+            <p>
+              Para superponer varias curvas o conjuntos de puntos, basta con llamar varias veces
+              al método deseado (<code>graph</code> o <code>bar</code>) antes de <code>render()</code>:
+            </p>
+            <pre><code>{`List[INT] x = [0, 1, 2, 3, 4];
+        List[INT] y1 = [0,  5, 10, 15, 20];
+        List[INT] y2 = [10, 8,  6,  4,  2];
+
+        plot.figure();
+        plot.color("red");
+        plot.graph(x, y1);       -- Primera serie en rojo
+        plot.color("green");
+        plot.graph(x, y2);       -- Segunda serie en verde
+        plot.title("Dos series de ejemplo");
+        plot.xlabel("X");
+        plot.ylabel("Y");
+        plot.legend("Serie A");
+        plot.legend("Serie B");
+        plot.render();`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Notas</h3>
+            <p>
+              
+            </p>
+            <ul>
+              <li>Llama a <code>plot.figure()</code> al inicio de cada visualización.</li><br/>
+              <li>Configura siempre <code>title</code>, <code>xlabel</code> y <code>ylabel</code>.</li><br/>
+              <li>Usa <code>grid(true)</code> para mejorar la legibilidad.</li><br/>
+              <li>Define colores antes de cada llamada si quieres distinguir series.</li><br/>
+              <li>Para múltiples series, llama varias veces a <code>graph</code>.</li><br/>
+            </ul>
+          </section>
+        )}
+        {section === "math" && (
+          <section>
+            <h2>Math</h2>
+            <p>
+
+            </p>
+            <p>
+              Math es la librería de utilidades matemáticas de KAFE. Incluye constantes,
+              funciones trigonométricas, exponenciales, logaritmos, combinatoria,
+              operaciones sobre enteros, manipulación de coma flotante, funciones especiales
+              y más.
+            </p>
+            <p>
+              
+            </p>
+
+            <h3>Importar Math</h3>
+            <pre><code>{`import math;`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Ejemplo completo</h3>
+            <pre><code>{`import math;
+
+        -- Constantes
+        show(math.pi);
+        show(math.e);
+        show(math.tau);
+        show(math.inf);
+        show(math.nan);
+
+        -- Trigonometría
+        show(math.sin(math.pi/2));
+        show(math.cos(0));
+        show(math.tan(math.pi/4));
+
+        -- Inversas
+        show(math.asin(1));
+        show(math.acos(1));
+        show(math.atan(1));
+
+        -- Hiperbólicas
+        show(math.sinh(0));
+        show(math.cosh(0));
+        show(math.tanh(0));
+
+        -- Exponenciales y logaritmos
+        show(math.exp(1));
+        show(math.expm1(1));
+        show(math.log(math.e));
+        show(math.log(8, 2));
+        show(math.log2(8));
+        show(math.log10(1000));
+        show(math.exp2(3));
+        show(math.cbrt(27));
+
+        -- Potencia y raíz
+        show(math.sqrt(16));
+        show(math.pow(2, 8));
+
+        -- Funciones número-teóricas
+        show(math.factorial(5));
+        show(math.comb(5, 2));
+        show(math.perm(5, 2));
+        show(math.gcd(48, 18));
+        show(math.gcd(48, 18, 30));
+        show(math.lcm(12, 15));
+        show(math.lcm(12, 15, 20));
+
+        -- Aritmética de coma flotante
+        show(math.abs(-42));
+        show(math.trunc(3.7));
+        show(math.trunc(-3.7));
+        show(math.fmod(7.3, 2.5));
+        show(math.fmod(-7.3, 2.5));
+        show(math.remainder(7.3, 2.5));
+        show(math.remainder(-7.3, 2.5));
+        show(math.copysign(3, -0.0));
+        show(math.copysign(-3, 5));
+        show(math.isclose(1.0000000000001, 1));
+        show(math.isfinite(math.inf));
+        show(math.isinf(math.inf));
+        show(math.isnan(math.nan));
+        show(math.ulp(1.0));
+        show(math.ulp(0.0));
+
+        -- Sumatorio y producto
+        show(math.sum(1, 5));
+        show(math.sum(range(6)));
+        show(math.prod(1, 5));
+        show(math.sumprod([1,2,3], [4,5,6]));
+
+        -- Distancia y fsum/hypot
+        show(math.dist([0,0], [3,4]));
+        show(math.fsum([0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1]));
+        show(math.hypot(3, 4));`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Descripción de funciones</h3><br/>
+            <ul>
+              <li><strong>Constantes:</strong> <code>pi, e, tau, inf, nan</code>.</li><br/>
+              <li><strong>Trigonométricas e inversas:</strong> <code>sin, cos, tan, asin, acos, atan</code> (argumentos en radianes).</li><br/>
+              <li><strong>Hiperbólicas:</strong> <code>sinh, cosh, tanh</code>.</li><br/>
+              <li><strong>Exponenciales/logaritmos:</strong> <code>exp, expm1, log(x[,base]), log2, log10, exp2, cbrt</code>.</li><br/>
+              <li><strong>Potencia y raíz:</strong> <code>pow, sqrt</code>.</li><br/>
+              <li><strong>Combinatoria:</strong> <code>factorial, comb(n,k), perm(n,k)</code>.</li><br/>
+              <li><strong>Número-teóricas:</strong> <code>gcd(...), lcm(...)</code>.</li><br/>
+              <li><strong>Flotantes:</strong> <code>abs, trunc, fmod, remainder, copysign, isclose, isfinite, isinf, isnan, ulp</code>.</li><br/>
+              <li><strong>Sumatorio/producto:</strong> <code>sum(a,b), sum(list), prod(a,b), prod(list), sumprod(list1,list2)</code>.</li><br/>
+              <li><strong>Distancia y precisión:</strong> <code>dist, fsum, hypot</code>.</li><br/>
+            </ul>
+
+            <h3>Notas</h3><br/>
+            <ul>
+              <li>Argumentos de trigonometría en radianes.</li><br/>
+              <li><code>log</code> acepta base opcional como segundo parámetro.</li><br/>
+              <li>Funciones número-teóricas requieren enteros.</li><br/>
+              <li><code>isnan</code> y <code>isinf</code> ayudan a detectar valores especiales.</li><br/>
+              <li><code>fsum</code> y <code>hypot</code> ofrecen mayor precisión en flotantes.</li><br/>
+            </ul>
+          </section>
+        )}
+        {section === "files" && (
+          <section>
+            <h2>Files</h2>
+            <p>
+
+            </p>
+            <p>
+              Files es la librería de manejo de archivos de KAFE. Permite crear, escribir,
+              leer, anexar y eliminar archivos de texto de manera sencilla.
+            </p>
+            <p>
+              
+            </p>
+
+            <h3>Importar Files</h3>
+            <pre><code>{`import files;`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Crear un archivo</h3>
+            <pre><code>{`-- Crea un archivo vacío (si ya existe, no hace nada)
+        files.create("mi_archivo.txt");`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Escribir en un archivo</h3>
+            <pre><code>{`-- Escribe (o sobreescribe) contenido en el archivo
+        files.write("mi_archivo.txt", "Hola desde KAFE");`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Leer un archivo</h3>
+            <pre><code>{`-- Lee todo el contenido como STR
+        STR texto = files.read("mi_archivo.txt");
+        show(texto);`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Anexar al archivo</h3>
+            <pre><code>{`-- Agrega contenido al final del archivo
+        files.append("mi_archivo.txt", "\nMás texto en la siguiente línea");`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Eliminar un archivo</h3>
+            <pre><code>{`-- Borra el archivo
+        files.delete("mi_archivo.txt");`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Ejemplo completo</h3>
+            <pre><code>{`import files;
+
+        -- Crear y escribir
+        files.create("notas.txt");
+        files.write("notas.txt", "Primera línea");
+
+        -- Anexar más contenido
+        files.append("notas.txt", "\nSegunda línea");
+
+        -- Leer y mostrar
+        STR contenido = files.read("notas.txt");
+        show(contenido);  -- "Primera línea\nSegunda línea"
+
+        -- Eliminar cuando ya no se necesite
+        files.delete("notas.txt");`}</code></pre>
+            <p>
+              
+            </p>
+
+            <h3>Notas y buenas prácticas</h3>
+            <ul><br/>
+              <li>
+                <strong>Rutas relativas:</strong> todos los archivos se crean en el directorio de trabajo.
+              </li><br/>
+              <li>
+                <strong>files.write</strong> sobrescribe el contenido existente; usa <code>append</code> para no perder datos.
+              </li><br/>
+              <li>
+                <strong>files.read</strong> devuelve todo como <code>STR</code>; si el archivo no existe, lanza un error.
+              </li><br/>
+            </ul>
+          </section>
+        )}
+
+{section === "gesha" && (
+  <section>
+    <h2>GeshaDeep</h2><br/>
+    <p>
+      GeshaDeep es la librería de machine learning de KAFE. Soporta modelos
+      de clasificación binaria, multiclase, regresión lineal y clustering, con
+      una API unificada basada en “modelos” y “capas”.
+    </p><br/>
+
+    <h3>Importar GeshaDeep</h3>
+    <pre><code>{`import geshaDeep;`}</code></pre><br/>
+
+    <h3>1. Clasificación AND (binaria)</h3><br/>
+    <p>
+      Este ejemplo entrena una red de una sola neurona con activación sigmoid 
+      para resolver la función lógica AND. Tras el entrenamiento, predice la 
+      probabilidad y la etiqueta (0 o 1) para cada combinación de entrada.
+    </p>
+    <pre><code>{`-- Dataset AND
+List[List[INT]] x_train = [
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+];
+List[INT] y_train = [0, 0, 0, 1];
+
+GESHA model = geshaDeep.binary();
+GESHA layer = geshaDeep.create_dense(1, "sigmoid", [2], 0.0, 42);
+model.add(layer);
+
+model.compile("sgd", "binary_crossentropy", ["accuracy"]);
+model.fit(x_train, y_train, 1000, 1, [], []);
+
+-- Probamos los 4 puntos
+for (p in x_train):
+    FLOAT prob = model.predict_proba(p);  -- probabilidad clase 1
+    INT   lbl  = model.predict_label(p);  -- etiqueta 0/1
+    show(str(p) + " -> prob=" + str(prob) + ", label=" + str(lbl));
+;`}</code></pre><br/>
+
+    <h3>2. Clasificación OR (multiclase)</h3><br/>
+    <p>
+      Aquí usamos una red con capa oculta ReLU y capa de salida softmax
+      para la función OR, codificada one-hot. Se incluye también un pequeño
+      conjunto de validación y al final obtenemos las probabilidades para un
+      nuevo ejemplo y el resumen del modelo.
+    </p>
+    <pre><code>{`-- classification_predict.kf
+import geshaDeep;
+
+-- OR lógico:  class0=[1,0], class1=[0,1]
+List[List[INT]] x_train = [
+    [0,0],
+    [0,1],
+    [1,0],
+    [1,1]
+];
+List[List[INT]] y_train = [
+    [1,0],
+    [0,1],
+    [0,1],
+    [0,1]
+];
+
+-- pequeña validación
+List[List[INT]] x_val = [[0,0],[1,1]];
+List[List[INT]] y_val = [[1,0],[0,1]];
+
+GESHA model = geshaDeep.categorical();
+GESHA h  = geshaDeep.create_dense(4, "relu",  [2], 0.0, 42);
+GESHA out = geshaDeep.create_dense(2, "softmax", [4], 0.0, 42);
+model.add(h);
+model.add(out);
+
+model.compile("sgd", "categorical_crossentropy", ["accuracy"]);
+model.fit(x_train, y_train, 100, 2, x_val, y_val);
+
+-- predicción para [1,0]  (esperamos class1)
+List[INT] sample = [1,0];
+List[FLOAT] probs = model.predict(sample);
+show("Probabilidades: " + str(probs));
+
+model.summary();`}</code></pre><br/>
+
+    <h3>3. Regresión Lineal</h3><br/>
+    <p>
+      Este ejemplo ajusta una regresión lineal simple con una única neurona
+      de activación lineal. Tras entrenar con MSE, predice un nuevo valor y
+      usa Plot para mostrar la línea de regresión junto a los puntos de 
+      entrenamiento y validación.
+    </p>
+    <pre><code>{`import geshaDeep;
+import plot;
+
+List[List[INT]] x_train = [[0], [1], [2], [3], [4]];
+List[FLOAT]     y_train = [1.0,  4.0,  7.0, 10.0, 13.0];
+
+List[List[INT]] x_val   = [[6]];
+List[FLOAT]     y_val   = [19.0];
+
+GESHA model = geshaDeep.regression();
+
+GESHA dense = geshaDeep.create_dense(1, "linear", [1], 0.0, 42);
+model.add(dense);
+
+geshaDeep.compile(model, "sgd", "mse", []);
+
+model.fit(x_train, y_train, 200, 1, x_val, y_val);
+
+List[INT] sample = [6];
+FLOAT y_pred = model.predict(sample)[0];
+show("Predicción para 6: " + str(y_pred));
+
+model.summary();
+
+List[List[FLOAT]] train_points = [];
+for (i in range(0, len(x_train))):
+    FLOAT xi = float(x_train[i][0]);
+    FLOAT yi = y_train[i];
+    append(train_points, [xi, yi]);
+;
+
+List[List[FLOAT]] val_points = [];
+for (i in range(0, len(x_val))):
+    FLOAT xv = float(x_val[i][0]);
+    FLOAT yv = y_val[i];
+    append(val_points, [xv, yv]);
+;
+
+List[List[FLOAT]] line_points = [];
+for (i in range(0, 7)):
+    List[INT] xi_int = [i];
+    FLOAT yi_pred = model.predict(xi_int)[0];
+    append(line_points, [float(i), yi_pred]);
+;
+
+plot.figure();
+plot.title("Regresión lineal con GeshaDeep: y = 3x + 1");
+plot.xlabel("X");
+plot.ylabel("Y");
+plot.grid(True);
+
+if (len(line_points) > 0):
+    plot.pointColor("blue");
+    plot.pointSize(2);
+    plot.graph(line_points, "line");
+;
+
+if (len(train_points) > 0):
+    plot.pointColor("red");
+    plot.pointSize(8);
+    plot.graph(train_points, "point");
+;
+
+if (len(val_points) > 0):
+    plot.pointColor("green");
+    plot.pointSize(12);
+    plot.graph(val_points, "point");
+;
+
+plot.legend("línea de regresión (azul) ; train (rojo) ; val (verde)");
+plot.render();`}</code></pre><br/>
+
+    <h3>4. Clustering</h3><br/>
+    <p>
+      El modelo de clustering utiliza la función k-means. Tras añadir dos capas
+      densas y compilar con “adam”, el modelo ajusta los datos sin etiquetas.
+      Luego, asigna cada punto a un clúster, calcula sus centroides y visualiza
+      resultados con Plot.
+    </p>
+    <pre><code>{`import geshaDeep;
+import plot;
+
+
+List[List[FLOAT]] datos = [
+    [1.0, 2.0],
+    [1.5, 1.8],
+    [5.0, 8.0],
+    [8.0, 8.0],
+    [1.0, 0.6],
+    [9.0, 11.0]
+];
+
+List[INT] y_dummy = [];
+
+
+GESHA modelo = geshaDeep.clustering();
+
+
+GESHA capa1 = geshaDeep.create_dense(
+    8,         -- 4 neuronas en primera capa oculta
+    "relu",    
+    [2],       -- entrada 2D
+    0.0,       
+    12         -- semilla distinta
+);
+modelo.add(capa1);
+
+
+GESHA capa1b = geshaDeep.create_dense(
+    4,        
+    "relu",   
+    [],       
+    0.0,
+    99        
+);
+modelo.add(capa1b);
+
+
+GESHA capa2 = geshaDeep.create_dense(
+    2, "softmax", [], 0.0, 42
+);
+modelo.add(capa2);
+
+
+geshaDeep.compile(modelo, "adam", "categorical_crossentropy", []);
+
+geshaDeep.set_lr(modelo, 0.0005);
+
+
+modelo.fit(datos, y_dummy, 300, 2);
+
+
+List[FLOAT] X0 = [];
+List[FLOAT] Y0 = [];
+List[FLOAT] X1 = [];
+List[FLOAT] Y1 = [];
+
+List[INT] indices = [0,1,2,3,4,5];
+for (i in indices):
+    List[FLOAT] punto = datos[i];
+    List[FLOAT] probs = modelo.predict(punto);
+    show(probs);  -- imprimo probabilidades para ver evolución
+    
+    FLOAT p0 = probs[0];
+    FLOAT p1 = probs[1];
+    INT etiqueta;
+    if (p0 >= p1):
+        etiqueta = 0;
+    else:
+        etiqueta = 1;
+    ;
+    
+    FLOAT xi = punto[0];
+    FLOAT yi = punto[1];
+    if (etiqueta == 0):
+        append(X0, xi);
+        append(Y0, yi);
+    else:
+        append(X1, xi);
+        append(Y1, yi);
+    ;
+;
+
+
+FLOAT sumx0 = 0.0; FLOAT sumy0 = 0.0; INT count0 = 0;
+FLOAT sumx1 = 0.0; FLOAT sumy1 = 0.0; INT count1 = 0;
+
+for (i in indices):
+    List[FLOAT] punto = datos[i];
+    List[FLOAT] probs = modelo.predict(punto);
+    FLOAT p0 = probs[0];
+    FLOAT p1 = probs[1];
+    INT etiqueta;
+    if (p0 >= p1):
+        etiqueta = 0;
+    else:
+        etiqueta = 1;
+    ;
+    FLOAT xi = punto[0];
+    FLOAT yi = punto[1];
+    if (etiqueta == 0):
+        sumx0 = sumx0 + xi;
+        sumy0 = sumy0 + yi;
+        count0 = count0 + 1;
+    else:
+        sumx1 = sumx1 + xi;
+        sumy1 = sumy1 + yi;
+        count1 = count1 + 1;
+    ;
+;
+
+FLOAT cx0;
+if (count0 == 0):
+    cx0 = 0.0;
+else:
+    cx0 = sumx0 / count0;
+;
+
+FLOAT cy0;
+if (count0 == 0):
+    cy0 = 0.0;
+else:
+    cy0 = sumy0 / count0;
+;
+
+FLOAT cx1;
+if (count1 == 0):
+    cx1 = 0.0;
+else:
+    cx1 = sumx1 / count1;
+;
+
+FLOAT cy1;
+if (count1 == 0):
+    cy1 = 0.0;
+else:
+    cy1 = sumy1 / count1;
+;
+
+List[FLOAT] CX = [cx0, cx1];
+List[FLOAT] CY = [cy0, cy1];
+
+
+List[List[FLOAT]] pares0 = [];
+for (i in range(0, len(X0))):
+    append(pares0, [X0[i], Y0[i]]);
+;
+
+List[List[FLOAT]] pares1 = [];
+for (i in range(0, len(X1))):
+    append(pares1, [X1[i], Y1[i]]);
+;
+
+List[List[FLOAT]] centros = [];
+for (i in range(0, len(CX))):
+    append(centros, [CX[i], CY[i]]);
+;
+
+
+plot.figure();
+plot.title("Clustering k-means (k=2) ― GeshaDeep (2 capas de 4 → 4, lr=0.0005)");
+plot.xlabel("X");
+plot.ylabel("Y");
+plot.grid(True);
+
+
+if (len(pares0) > 0):
+    plot.pointColor("red");
+    plot.pointSize(6);
+    plot.graph(pares0, "point");
+;
+
+if (len(pares1) > 0):
+    plot.pointColor("green");
+    plot.pointSize(6);
+    plot.graph(pares1, "point");
+;
+
+if (len(centros) > 0):
+    plot.pointColor("black");
+    plot.pointSize(8);
+    plot.graph(centros, "point");
+;
+
+plot.legend("red: clúster 0 ; green: clúster 1 ; black: centros");
+plot.render();`}</code></pre><br/>
+
+    <h3>Notas y buenas prácticas</h3><br/>
+    <ul>
+      <li>
+        Para clasificación usa <code>binary()</code> (sigmoid) o <code>categorical()</code> (softmax).
+      </li><br/>
+      <li>
+        En regresión lineal, utiliza <code>regression()</code> y capa “linear” con pérdida MSE.
+      </li><br/>
+      <li>
+        Añade capas con <code>create_dense</code> antes de <code>compile</code> y <code>fit</code>.
+      </li><br/>
+      <li>
+        Usa Plot para visualizar aprendizaje y resultados de forma rápida.
+      </li>
+    </ul>
+  </section>
+)}
+
+        {section === "pardos" && (
+          <section>
+            <p>
+          PROXIMAMENTE...
+            </p> 
           </section>
         )}
       </main>
