@@ -98,7 +98,7 @@ nix develop
 Puedes comenzar a trabajar con **KAFE** clonando el repositorio oficial y ejecutando la instalación manual o mediante Nix.
 
 ```bash
-git clone https://github.com/TuUsuario/KAFE.git
+git clone https://github.com/pipe2711/KAFE.git
 cd KAFE
 ```
 📺 **Tutorial en Video**
