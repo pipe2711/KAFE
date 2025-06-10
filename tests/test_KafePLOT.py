@@ -10,8 +10,8 @@ def test_valid_programs(programa, entrada, salida_esperada):
 
     carpeta_destino = os.path.dirname(programa)
     nombre_base = os.path.splitext(os.path.basename(programa))[0]
-    svg_generado_base = f"grafico_{nombre_base}.svg"
-    svg_prueba_base = f"{nombre_base}.svg"
+    svg_prueba_base = f"grafico_{nombre_base}.svg"
+    svg_generado_base = f"{nombre_base}.svg"
     svg_generado_path = os.path.join(carpeta_destino, svg_generado_base)
     svg_prueba_path = os.path.join(carpeta_destino, svg_prueba_base)
 

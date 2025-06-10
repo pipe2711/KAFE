@@ -1,0 +1,69 @@
+-- test_clasificacion_binaria.kf
+
+import plot;
+
+-- 1) Datos de ejemplo: lista de pares [x, y]
+List[List[INT]] datos = [
+    [1,  2],
+    [2,  1],
+    [3,  1],
+    [2,  5],
+    [5,  2],
+    [6,  6],
+    [7,  3],
+    [8,  8],
+    [9,  7],
+    [8,  2]
+];
+
+-- 2) Creamos dos listas vacías para cada clase
+List[List[INT]] clase1 = [];
+List[List[INT]] clase0 = [];
+
+-- 3) Definimos un umbral lineal: x + y > 8 implica clase1
+INT umbral = 8;
+
+-- 4) Recorremos cada punto "p" en "datos" y lo clasificamos
+for (p in datos):
+    INT xv = p[0];
+    INT yv = p[1];
+    if (xv + yv > umbral):
+        -- pertenece a clase1 (rojo)
+        append(clase1, p);
+    else:
+        -- pertenece a clase0 (azul)
+        append(clase0, p);
+    ;
+;
+
+-- 5) Iniciamos la figura y configuramos títulos/etiquetas
+plot.figure();
+plot.title("Clasificación Binaria: x + y > 8");
+plot.xlabel("X");
+plot.ylabel("Y");
+plot.grid(True);
+
+-- 6) Graficamos todos los puntos de la clase 1 en rojo (como pares [x,y])
+plot.color("red");
+plot.pointColor("red");
+plot.pointSize(6);
+plot.graph(clase1,"point");
+
+-- 7) Graficamos todos los puntos de la clase 0 en azul
+plot.color("blue");
+plot.pointColor("blue");
+plot.pointSize(6);
+plot.graph(clase0,"point");
+
+-- 8) Dibujamos la línea de decisión x + y = 8  (equivalente a y = 8 − x)
+List[INT] x_line = [0, 10];
+List[INT] y_line = [umbral - x_line[0], umbral - x_line[1]];
+plot.color("green");
+plot.graph(x_line, y_line, "line");
+
+-- 9) Añadimos una leyenda que describa cada color
+--     El string se separa con punto y coma: "color: texto ; color: texto ; …"
+plot.legend("red: Clase 1 ; blue: Clase 0 ; green: Frontera");
+
+-- 10) Renderizamos todo el SVG final
+plot.render();

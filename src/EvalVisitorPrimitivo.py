@@ -6,12 +6,16 @@ from componentes_lenguaje.bucles.funciones import forLoop, whileLoop
 from componentes_lenguaje.condicionales.funciones import ifElseExpr
 from componentes_lenguaje.funciones.funciones import  functionDecl, lambdaExpr, returnStmt, visitAppendCall,functionCall,visitRemoveCall,visitLenCall, rangeExpr, pourStmt, showStmt
 from componentes_lenguaje.importar.funciones import importStmt
+from componentes_lenguaje.method_calling.funciones import objectConstant, objectFunctionCall
+
+from errores import raiseVariableNotDefined
 
 import lib.KafeNUMK.funciones as numk_funcs_module
 import lib.KafeMATH.funciones as math_funcs_module
 import lib.KafeFILES.funciones as files_funcs_module
 import lib.KafePLOT.funciones as plot_funcs_module
 import lib.KafeGESHA.funciones as gesha_funcs_module
+import lib.KafePARDOS.funciones as pardos_funcs_module
 
 class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def __init__(self):
@@ -22,8 +26,9 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
             "math": [math_funcs_module, False],
             "files": [files_funcs_module, False],
             "plot": [plot_funcs_module, False],
-            "geshaDeep": [gesha_funcs_module, False]
-        };
+            "geshaDeep": [gesha_funcs_module, False],
+            "pardos": [pardos_funcs_module, False]
+        }
         self.imported = set()
 
     # ====================== VARIABLES  ======================
@@ -149,8 +154,32 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
     # ======================  LIBRARIES ======================
 
-    def visitLibraryFunctionCall(self, ctx):
-        return libraryFunctionCall(self, ctx)
+    def visitObjectFunctionCall(self, ctx):
+        object_name = ctx.ID(0).getText()
+        function_name = ctx.ID(1).getText()
+        args = [self.visit(e) for e in ctx.expr()]
 
-    def visitLibraryConstant(self, ctx):
-        return libraryConstant(self, ctx)
+        esLibreria = self.libraries.get(object_name) != None
+        esVariable = self.variables.get(object_name) != None
+        try:
+            if esLibreria:
+                return libraryFunctionCall(self.libraries.get(object_name), function_name, args)
+            elif esVariable:
+                return objectFunctionCall(self.variables[object_name][1], function_name, args)
+            else:
+                raiseVariableNotDefined(object_name)
+        except Exception as e:
+            raise Exception(f"{object_name}: {str(e)}")
+
+    def visitObjectConstant(self, ctx):
+        object_name = ctx.ID(0).getText()
+        constant_name = ctx.ID(1).getText()
+
+        esLibreria = self.libraries.get(object_name) != None
+        esVariable = self.variables.get(object_name) != None
+        if esLibreria:
+            return libraryConstant(self.libraries.get(object_name), constant_name)
+        elif esVariable:
+            return objectConstant(self.variables[object_name][1], constant_name)
+        else:
+            raiseVariableNotDefined(object_name)

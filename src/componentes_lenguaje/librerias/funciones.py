@@ -1,41 +1,29 @@
 from errores import raiseLibraryNotImported, raiseFunctionNotDefined, raiseVariableNotDefined
 
-def revisar_libreria(library, libraries_dict):
-    libreriaExistente = libraries_dict.get(library) != None
-    if not libreriaExistente:
-        raiseLibraryNotImported(library)
-
-    seImporto = libraries_dict[library][1]
+def revisarImportacion(library):
+    seImporto = library[1]
     if not seImporto:
-        raiseLibraryNotImported(library)
+        raiseLibraryNotImported()
 
 
-def libraryFunctionCall(self, ctx):
-    library = ctx.ID(0).getText()
-    revisar_libreria(library, self.libraries)
-
-    name = ctx.ID(1).getText()
-    args = [self.visit(e) for e in ctx.expr()]
-    func = getattr(self.libraries[library][0], name, None)
+def libraryFunctionCall(library, function_name, args):
+    revisarImportacion(library)
+    library_module = library[0]
+    func = getattr(library_module, function_name, None)
 
     if func is None:
-        raiseFunctionNotDefined(name, origin=library)
+        raiseFunctionNotDefined(function_name)
 
-    try:
-        resultado = func(*args)
-    except Exception as e:
-        raise Exception(f"{library}: {str(e)}")
+    resultado = func(*args)
 
     return resultado
 
-def libraryConstant(self, ctx):
-    library = ctx.ID(0).getText()
-    revisar_libreria(library, self.libraries)
-
-    name = ctx.ID(1).getText()
-    const = getattr(self.libraries[library][0], name, None)
+def libraryConstant(library, constant_name):
+    revisarImportacion(library)
+    library_module = library[0]
+    const = getattr(library_module, constant_name, None)
 
     if const is None:
-        raiseVariableNotDefined(name, origin=library)
+        raiseVariableNotDefined(constant_name)
 
     return const

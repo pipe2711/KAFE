@@ -1,0 +1,77 @@
+-- Ejemplo de clasificación supervisada en Kafé (.kf)
+
+import geshaDeep;
+
+
+List[List[INT]] x_train = [
+    [1, 2],
+    [1, 3],
+    [2, 2],
+    [8, 9],
+    [9, 8],
+    [8, 8]
+];
+
+List[INT] y_train = [
+    0,   -- [1,2]
+    0,   -- [1,3]
+    0,   -- [2,2]
+    1,   -- [8,9]
+    1,   -- [9,8]
+    1    -- [8,8]
+];
+
+List[List[INT]] x_val = [
+    [2, 3],   -- debe pertenecer a clase 0
+    [3, 1],   -- debe pertenecer a clase 0
+    [9, 9],   -- clase 1
+    [7, 7]    -- clase 1
+];
+List[INT] y_val = [
+    0,
+    0,
+    1,
+    1
+];
+
+List[List[INT]] x_test = [
+    [1, 1],   -- 0
+    [2, 3],   -- 0
+    [8, 7],   -- 1
+    [9, 9]    -- 1
+];
+List[INT] y_test = [
+    0,
+    0,
+    1,
+    1
+];
+
+GESHA model = geshaDeep.categorical();
+
+
+GESHA layer1 = geshaDeep.create_dense(8, "relu", [2], 0.0 , 42);
+model.add(layer1);
+
+
+GESHA layer2 = geshaDeep.create_dense(2, "softmax", [], 0.0, 42);
+
+model.add(layer2);
+
+
+-- ========================================
+-- 3) Compilar
+--   – Optimizador: “sgd”
+--   – Pérdida: “categorical_crossentropy”
+--   – Métrica: “accuracy”
+-- ========================================
+model.compile("sgd", "sparse_categorical_crossentropy", ["accuracy"]);
+
+
+-- ========================================
+-- 4) Entrenar con validación
+--   epochs = 20, batch_size = 2
+-- ========================================
+model.fit(x_train, y_train, 20, 2, x_val, y_val);
+model.summary();
+model.evaluate(x_test, y_test);

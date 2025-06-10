@@ -28,9 +28,9 @@ block
     ;
 
 // ======================  LIBRERÍAS ======================
-library
-    : ID '.' ID LPAREN ( expr ( COMMA expr )* )? RPAREN    # libraryFunctionCall
-    | ID '.' ID                                            # libraryConstant
+object
+    : ID '.' ID LPAREN ( expr ( COMMA expr )* )? RPAREN    # objectFunctionCall
+    | ID '.' ID                                            # objectConstant
     ;
 
 // ======================  VARIABLES ======================
@@ -144,7 +144,7 @@ unaryExpr
 // ======================  PRIMARY EXPRESSIONS ======================
 primaryExpr
     : primaryExpr LBRACK expr RBRACK           # indexingExpr
-    | library                                  # libraryExpr
+    | object                                   # objectExpr
     | functionCall                             # functionCallExpr
     | pourStmt                                 # pourExpr
     | lenCall                                  # lenCallExpr
@@ -179,6 +179,8 @@ typeDecl
     | BOOL_TYPE
     | VOID_TYPE
     | STRING_TYPE
+    | GESHA_TYPE
+    | PARDOS_TYPE
     | LIST LBRACK typeDecl RBRACK
     | functionParam
     ;

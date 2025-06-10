@@ -1,0 +1,47 @@
+import geshaDeep;
+
+
+List[List[INT]] x_train = [
+    [0, 0, 0, 0],
+    [1, 1, 1, 1],
+    [0, 1, 0, 1],
+    [1, 0, 1, 0]
+];
+List[List[INT]] y_train = [
+    [1, 0],
+    [0, 1],
+    [1, 0],
+    [0, 1]
+];
+
+List[List[INT]] x_val = [
+    [0, 0, 1, 1],
+    [1, 1, 0, 0]
+];
+List[List[INT]] y_val = [
+    [1, 0],
+    [0, 1]
+];
+
+List[List[INT]] x_test = [
+    [0, 1, 1, 0],
+    [1, 0, 0, 1]
+];
+List[List[INT]] y_test = [
+    [1, 0],
+    [0, 1]
+];
+
+
+GESHA model = geshaDeep.categorical();
+GESHA layer1 = geshaDeep.create_dense(16, "relu", [4], 0.0,42);
+model.add(layer1);
+GESHA layer2 = geshaDeep.create_dense(2, "softmax", [], 0.0,42);
+model.add(layer2);
+
+model.compile("sgd", "categorical_crossentropy", ["accuracy"]);
+
+model.fit(x_train, y_train, 20, 2, x_val, y_val);
+
+model.summary();
+model.evaluate(x_test, y_test);
