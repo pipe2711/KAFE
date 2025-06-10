@@ -1,4 +1,5 @@
 import subprocess
+import os
 import pytest
 from utils import obtener_parametros, get_programs, get_invalid_programs
 
@@ -7,6 +8,27 @@ def test_valid_programs(programa, entrada, salida_esperada):
     result = subprocess.run(["python", "Kafe.py", programa],
                             capture_output=True, text=True, input=entrada)
 
+    carpeta_destino = os.path.dirname(programa)
+    nombre_base = os.path.splitext(os.path.basename(programa))[0]
+    svg_prueba_base = f"grafico_{nombre_base}.svg"
+    svg_generado_base = f"{nombre_base}.svg"
+    svg_generado_path = os.path.join(carpeta_destino, svg_generado_base)
+    svg_prueba_path = os.path.join(carpeta_destino, svg_prueba_base)
+
+    try:
+        with open(svg_generado_path) as f:
+            svg_generado = f.read()
+            os.remove(svg_generado_path)
+    except FileNotFoundError:
+        svg_generado = ""
+
+    try:
+        with open(svg_prueba_path) as f:
+            svg_prueba = f.read()
+    except FileNotFoundError:
+        svg_prueba = ""
+
+    assert svg_generado == svg_prueba, f"{svg_prueba_path} doesn't match {svg_generado_path}"
     assert result.returncode == 0, f"Non-zero exit for {programa}"
     assert result.stdout == salida_esperada, f"Incorrect output for {programa}"
 

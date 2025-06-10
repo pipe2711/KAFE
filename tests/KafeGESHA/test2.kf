@@ -1,47 +1,36 @@
+-- classification_predict.kf
 import geshaDeep;
 
-
+-- OR lógico:  class0=[1,0], class1=[0,1]
 List[List[INT]] x_train = [
-    [0, 0, 0, 0],
-    [1, 1, 1, 1],
-    [0, 1, 0, 1],
-    [1, 0, 1, 0]
+    [0,0],
+    [0,1],
+    [1,0],
+    [1,1]
 ];
 List[List[INT]] y_train = [
-    [1, 0],
-    [0, 1],
-    [1, 0],
-    [0, 1]
+    [1,0],   -- 0 OR 0 = 0  → class0
+    [0,1],   -- 0 OR 1 = 1  → class1
+    [0,1],   -- 1 OR 0 = 1
+    [0,1]    -- 1 OR 1 = 1
 ];
 
-List[List[INT]] x_val = [
-    [0, 0, 1, 1],
-    [1, 1, 0, 0]
-];
-List[List[INT]] y_val = [
-    [1, 0],
-    [0, 1]
-];
-
-List[List[INT]] x_test = [
-    [0, 1, 1, 0],
-    [1, 0, 0, 1]
-];
-List[List[INT]] y_test = [
-    [1, 0],
-    [0, 1]
-];
-
+-- pequeña validación
+List[List[INT]] x_val = [[0,0],[1,1]];
+List[List[INT]] y_val = [[1,0],[0,1]];
 
 GESHA model = geshaDeep.categorical();
-GESHA layer1 = geshaDeep.create_dense(16, "relu", [4], 0.0,42);
-model.add(layer1);
-GESHA layer2 = geshaDeep.create_dense(2, "softmax", [], 0.0,42);
-model.add(layer2);
+GESHA h  = geshaDeep.create_dense(4, "relu",  [2], 0.0, 42);
+GESHA out = geshaDeep.create_dense(2, "softmax", [4], 0.0, 42);
+model.add(h);
+model.add(out);
 
 model.compile("sgd", "categorical_crossentropy", ["accuracy"]);
+model.fit(x_train, y_train, 100, 2, x_val, y_val);
 
-model.fit(x_train, y_train, 20, 2, x_val, y_val);
+-- predicción para [1,0]  (esperamos class1)
+List[INT] sample = [1,0];
+List[FLOAT] probs = model.predict(sample);
+show("Probabilidades: " + str(probs));
 
 model.summary();
-model.evaluate(x_test, y_test);
