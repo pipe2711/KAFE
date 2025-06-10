@@ -6,4 +6,4 @@ drip cuadrado(a: INT) => INT:
     return a * a;
 ;
 
-show(aplicar(cuadrado, 4));  -- 16
+show(aplicar(cuadrado, 4));  

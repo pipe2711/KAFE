@@ -436,7 +436,7 @@ def pie(etiquetas, valores):
         raise Exception("plot.pie: Total must be mayor que cero")
 
     width = height = 600
-    cx = int(width * 0.40)  # desplazamos el centro hacia la izquierda
+    cx = int(width * 0.40)  
     cy = height // 2
     radio = int(width * 0.3)
 

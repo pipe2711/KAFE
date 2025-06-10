@@ -1,25 +1,18 @@
 import pardos;
 
--- Leer el CSV de solo cadenas
 PARDOS df = pardos.read_csv("test3.csv");
 
--- Mostrar todo el DataFrame
 PARDOS all = df;
 show(all);
 
--- Shape (debe ser [3,2])
 show(df.shape());
 
--- Valores de columna "city"
 List[STR] ciudades = df.col("city");
 show(ciudades);
 
--- Tipos inferidos (ambas STR)
 show(df.dtypes());
 
--- Info general
 show(df.info());
 
--- Describe (solo cabecera, sin filas adicionales)
 PARDOS desc = df.describe();
 show(desc);

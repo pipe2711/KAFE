@@ -1,4 +1,3 @@
-# lib/KafeGESHA/Classification.py
 
 from lib.KafeGESHA.GeshaDeep import GeshaDeep
 

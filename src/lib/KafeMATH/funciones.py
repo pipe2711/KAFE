@@ -2,18 +2,15 @@ from .errores import raiseDomainError, raiseNonEqualLength
 from TypeUtils import vector_numeros_t, numeros_t, entero_t
 from global_utils import check_sig
 
-# ===== Constantes =====
 
 pi = 3.141592653589793
 e = 2.718281828459045
 
-# Constantes fundamentales
 
 tau = 2 * pi
 inf = float('inf')
 nan = float('nan')
 
-# ===== Exponenciales y logaritmos =====
 
 @check_sig([1], numeros_t)
 def exp(x):
@@ -48,14 +45,13 @@ def log(*args):
         return ln
     return ln / log(base)
 
-# ===== Potencia y raíz cuadrada =====
 
 @check_sig([2], numeros_t, numeros_t)
 def pow_(x, y):
     if x < 0:
         if float(y).is_integer():
             n = int(y)
-            abs_x = -x  # valor absoluto de la base
+            abs_x = -x  
             result = exp(y * log(abs_x))
             return -result if (n % 2 != 0) else result
         else:
@@ -72,7 +68,6 @@ def sqrt(x):
         guess = (guess + x / guess) / 2
     return guess
 
-# ===== Conversión de ángulos =====
 
 @check_sig([1], numeros_t)
 def degrees(x):
@@ -82,7 +77,6 @@ def degrees(x):
 def radians(x):
     return x * pi / 180.0
 
-# ===== Funciones trigonométricas =====
 
 @check_sig([1], numeros_t)
 def sin(x):
@@ -115,7 +109,6 @@ def tan(x):
         raiseDomainError('tan')
     return sin(x) / c
 
-# ===== Funciones inversas =====
 
 @check_sig([1], numeros_t)
 def asin(x):
@@ -155,7 +148,6 @@ def atan(x):
         sign *= -1
     return sum_
 
-# ===== Funciones hiperbólicas =====
 
 @check_sig([1], numeros_t)
 def sinh(x):
@@ -171,7 +163,6 @@ def tanh(x):
     enx = exp(-x)
     return (ex - enx) / (ex + enx)
 
-# ===== Funciones de teoría de números =====
 
 @check_sig([1], [entero_t])
 def factorial(n):
@@ -220,7 +211,6 @@ def lcm(*ints):
     return result
 
 
-# ===== Aritmética flotante =====
 
 @check_sig([1], numeros_t)
 def trunc(x):
@@ -290,7 +280,7 @@ def isclose(*args):
     else:
         abs_tol = 0.0
 
-    if a == b:                       # atajos rápidos
+    if a == b:                       
         return True
     diff = abs(a - b)
     tol  = max(rel_tol * max(abs(a), abs(b)), abs_tol)
@@ -315,8 +305,6 @@ def ulp(x):
     exp_val = floor(log(abs(x), 2))
     return 2 ** (exp_val - 52)
 
-
-# ===== Potencia, exponencial y logarítmico =====
 
 @check_sig([1], numeros_t)
 def exp2(x):
@@ -357,7 +345,6 @@ def log10(x):
     return log(x, 10)
 
 
-# ===== Sumatorias y productos =====
 
 @check_sig([1, 2], [entero_t] + vector_numeros_t, [entero_t])
 def sum_range(*args):
@@ -448,7 +435,6 @@ def sumprod(p, q):
     return total
 
 
-# ===== Funciones especiales =====
 
 @check_sig([1], numeros_t)
 def erf(x):

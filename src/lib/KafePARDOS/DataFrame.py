@@ -47,20 +47,16 @@ class DataFrame:
             raise Exception(f"Column '{column_name}' doesn't exist")
         idx = self.columns.index(column_name)
 
-        # Raw: lista con valores, incluidos nan
         raw = [row[idx] for row in self.data]
 
-        # Obtener DataFrame de dtypes y su data (lista de [col, tipo])
         dtypes_rows = self.dtypes()
 
-        # Buscar tipo de la columna
         tipo_col = None
         for col, tipo in dtypes_rows:
             if col == column_name:
                 tipo_col = tipo
                 break
 
-        # Crear filas normalizadas, cada fila es [valor]
         result_rows = []
         if tipo_col == cadena_t:
             for v in raw:
@@ -80,7 +76,6 @@ class DataFrame:
                 else:
                     result_rows.append(float(v))
         else:
-            # Caso improbable, convertir todo a str
             for v in raw:
                 result_rows.append(str(v))
 
@@ -110,7 +105,7 @@ class DataFrame:
         n_cols  = len(self.columns)
 
         cols_str = ", ".join(self.columns)
-        dtypes_rows = self.dtypes()    # [[col1,t1], [col2,t2], ...]
+        dtypes_rows = self.dtypes()    
         dtypes_str = ", ".join(f"{c}:{t}" for c, t in dtypes_rows)
 
         filas = [

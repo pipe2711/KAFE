@@ -31,7 +31,6 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         }
         self.imported = set()
 
-    # ====================== VARIABLES  ======================
 
     def visitSimpleImport(self, ctx): importStmt(self, ctx)
 
@@ -44,9 +43,6 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
     def visitIndexing(self, ctx):
         indexes = [self.visit(expr) for expr in ctx.expr()]
         return indexes
-
-
-    # ======================  FUNCIONES ======================
 
     def visitFunctionDecl(self, ctx): return functionDecl(self, ctx)
 
@@ -81,21 +77,13 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
         return rangeExpr(*rango)
 
 
-    # ======================  CONDICIONALES ======================
-
-
     def visitIfElseExpr(self, ctx): return ifElseExpr(self, ctx)
-
-
-    # ======================  BUCLES ======================
 
 
     def visitWhileLoop(self, ctx): whileLoop(self, ctx)
 
     def visitForLoop(self, ctx): forLoop(self, ctx)
 
-
-    # ======================  EXPRESIONES ======================
 
     def visitExpr(self, ctx): return expr(self, ctx)
 
@@ -119,8 +107,6 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
     def visitIdExpr(self, ctx): return idExpr(self, ctx)
 
-
-    # ======================  TIPOS ======================
 
     def visitIntLiteral(self, ctx): return int(ctx.getText())
 
@@ -151,8 +137,6 @@ class EvalVisitorPrimitivo(Kafe_GrammarVisitor):
 
     def visitIntCastExpr(self, ctx): return int(self.visit(ctx.expr()))
 
-
-    # ======================  LIBRARIES ======================
 
     def visitObjectFunctionCall(self, ctx):
         object_name = ctx.ID(0).getText()

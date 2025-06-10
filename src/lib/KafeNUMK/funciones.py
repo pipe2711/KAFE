@@ -22,11 +22,9 @@ def mul(matriz1, matriz2):
     if not es_uniforme(matriz1) or not es_uniforme(matriz2):
         raiseNonUniformMatrix('mul')
 
-    # Verificar si las matrices son compatibles para la multiplicación
     if len(matriz1) != 0 and len(matriz1[0]) != len(matriz2):
         raise Exception("mul: Matrices are not compatible for multiplication")
 
-    # Multiplicar las matrices
     resultado = []
     for i in range(len(matriz1)):
         fila = []
@@ -44,40 +42,32 @@ def inv(matriz):
     if not es_uniforme(matriz):
         raiseNonUniformMatrix('inv')
 
-    # Verificar que la matriz sea cuadrada
     if len(matriz) != 0 and len(matriz) != len(matriz[0]):
         raise Exception("inv: Matrix is not square")
 
-    # Calcular la inversa de la matriz
     n = len(matriz)
     m = len(matriz[0])
 
-    # Crear la matriz identidad
     identidad = [[0 for _ in range(m)] for _ in range(n)]
     for i in range(n):
         identidad[i][i] = 1
 
-    # Crear la matriz aumentada
     matriz_aumentada = [fila + identidad[i] for i, fila in enumerate(matriz)]
 
     m *= 2
 
-    # Aplicar el método de Gauss-Jordan
     for i in range(n):
-        # Hacer que el elemento diagonal sea 1
         factor = matriz_aumentada[i][i]
         if factor == 0:
             raise Exception("inv: Matrix is singular")
         for j in range(m):
             matriz_aumentada[i][j] /= factor
-        # Hacer que los elementos de la columna sean 0
         for k in range(n):
             if k != i:
                 factor = matriz_aumentada[k][i]
                 for j in range(m):
                     matriz_aumentada[k][j] -= factor * matriz_aumentada[i][j]
 
-    # Obtener la matriz inversa
     inversa = [fila[n:] for fila in matriz_aumentada]
 
     return inversa
@@ -87,7 +77,6 @@ def transpose(matriz):
     return list(map(list, zip(*matriz)))
 
 
-#================== Agregando mas funciones NUMK para GESHA =========================
 
 @check_sig([2], vector_numeros_t, vector_numeros_t)
 def dot(vec1, vec2):

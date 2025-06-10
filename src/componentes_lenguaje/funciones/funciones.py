@@ -22,13 +22,11 @@ def _get_top_params(signature: str) -> list[str]:
 
 def functionDecl(self, ctx):
     name = ctx.ID().getText()
-    #  Evitar redefinición
     if name in self.variables:
         tipo_existente, _ = self.variables[name]
         if tipo_existente == funcion_t:
             raiseFunctionAlreadyDefined(name)
 
-    #  Recolectar parámetros y preparar firma
     param_lists  = ctx.getTypedRuleContexts(Kafe_GrammarParser.ParamListContext)
     params_flat  = []
     param_groups = []
@@ -40,7 +38,6 @@ def functionDecl(self, ctx):
             params_flat.append(p)
         param_groups.append(grp)
 
-    #  Prohibir VOID como tipo de parámetro
     for p in params_flat:
         if p.typeDecl().getText().replace(" ", "") == void_t:
             raiseVoidAsParameterType()
@@ -49,7 +46,6 @@ def functionDecl(self, ctx):
     outer    = self
     total    = len(params_flat)
 
-    #  Construir firma completa (p.ej. FUNC(A)=>FUNC(B)=>C)
     if param_groups:
         prefix = "".join(f"FUNC({','.join(grp)})=>" for grp in param_groups)
         full_sig = prefix + ret_type
@@ -74,7 +70,6 @@ def functionDecl(self, ctx):
         __repr__ = __str__
 
         def __call__(self, *args):
-            # Soporte para currificación parcial
             ncol = len(self.collected) + len(args)
             if ncol > self._total:
                 raiseWrongNumberOfArgs(self._name, self._total, ncol)
@@ -83,20 +78,16 @@ def functionDecl(self, ctx):
             if ncol < self._total:
                 return KafeFunction(new_vals)
 
-            #  Ejecución con aridad completa
             saved = dict(outer.variables)
             try:
-                # Validar parámetros uno a uno
                 for decl, val in zip(params_flat, new_vals):
                     expected = decl.typeDecl().getText().replace(" ", "")
 
-                    # Si es función, comparar primero firmaplena:
                     sig_obt = getattr(val, "signature", None)
                     if sig_obt:
                         act_p, act_r = _parse_signature(sig_obt)
                         exp_p, exp_r = _parse_signature(expected)
                         if not (act_p == exp_p and act_r == exp_r):
-                            # Si la firma completa difiere, solo chequeamos nivel 1
                             top_act = _get_top_params(sig_obt)
                             top_exp = _get_top_params(expected)
                             if len(top_act) != len(top_exp):
@@ -107,10 +98,8 @@ def functionDecl(self, ctx):
                                     f"but got {len(top_act)}."
                                 )
 
-                    # Chequeo genérico de tipo (primitivos, listas, o ANY)
                     check_value_type(val, expected)
 
-                    # Asignar variable de parámetro
                     pid   = decl.ID().getText()
                     ptype = funcion_t if expected.startswith("FUNC") else expected
                     asignar_variable(outer, pid, val, ptype)
@@ -136,17 +125,14 @@ def functionDecl(self, ctx):
                 else:
                     pass
             else:
-                # Primitivos y listas: validación estándar
                 check_value_type(result, ret_type)
 
             outer.dentro_bloque = False
             return result
 
-    # 8) Registrar la función en el entorno
     self.variables[name] = (funcion_t, KafeFunction())
 
 def lambdaExpr(self, ctx):
-    # Sin cambios: lambdas inline siempre retornan ANY como firma final
     params = (ctx.paramList().paramDecl()
               if hasattr(ctx, "paramList") and ctx.paramList()
               else [ctx.paramDecl()])
@@ -179,7 +165,6 @@ def lambdaExpr(self, ctx):
         __repr__ = __str__
 
         def __call__(self, *args):
-            #  currificación parcial
             ncol = len(self.collected) + len(args)
             if ncol > self._total:
                 raiseWrongNumberOfArgs("<lambda>", self._total, ncol)
@@ -188,7 +173,6 @@ def lambdaExpr(self, ctx):
             if ncol < self._total:
                 return LambdaFn(new_vals)
 
-            #  b) Ejecución completa con entorno capturado
             saved = outer.variables
             outer.variables = dict(captured)
             try:

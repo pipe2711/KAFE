@@ -23,7 +23,6 @@ def read_csv(path):
     if len(lineas) == 0:
         return DataFrame([], [])
 
-    # Detectar separador según la primera línea (encabezado)
     header_line = lineas[0]
     if ";" in header_line and header_line.count(";") >= header_line.count(","):
         delim = ";"

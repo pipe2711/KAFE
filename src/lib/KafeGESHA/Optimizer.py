@@ -1,4 +1,3 @@
-# lib/KafeGESHA/Optimizer.py
 
 from lib.KafeMATH.funciones import pow_, sqrt
 from abc import abstractmethod
@@ -66,5 +65,4 @@ class AdamW(Adam):
 
     def step(self, params, grads):
         updated_params = super().step(params, grads)
-        # Aplicamos weight decay (L2) sobre cada parámetro
         return [p - self.lr * self.weight_decay * p for p in updated_params]
