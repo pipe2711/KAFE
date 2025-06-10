@@ -1,0 +1,5 @@
+drip sumar(a: INT) => FUNC(BOOL) => INT:
+    return (x: BOOL) => x + a;
+;
+
+show(sumar(5)(6));

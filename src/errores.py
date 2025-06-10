@@ -111,3 +111,9 @@ def raiseFileAlreadyExists(nombre, ruta):
 def raiseFileNotFound(nombre, ruta):
     message = f"File '{nombre}' not found at {ruta}"
     raise FileNotFoundError(message)
+
+def raiseSignatureMismatch(expected_signature, obtained_signature, origin=""):
+    message = f"Expected {expected_signature}, obtained {obtained_signature}"
+    if origin:
+        message = origin + ": " + message
+    raise TypeError(message)

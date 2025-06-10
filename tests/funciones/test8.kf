@@ -11,8 +11,9 @@ show(inc(9));                          -- 10
 
 
 -- 3. Lambda que devuelve otra lambda  (currificada)
-drip fold2(op: FUNC(INT) => FUNC(INT) => INT)(x: INT)(y: INT) => INT:
+drip fold2(op: FUNC(INT) => FUNC(INT) => INT, x: INT, y: INT) => INT:
     return op(x)(y);
 ;
+
 
 show(fold2((a: INT) => ((b: INT) => a - b))(10)(3));   -- 7
