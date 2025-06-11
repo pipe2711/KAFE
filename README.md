@@ -105,5 +105,5 @@ cd KAFE
 
 Una vez que tengas todo instalado, puedes seguir el siguiente video donde se explica de forma visual y clara cómo usar **KAFE** desde tu terminal, ejecutar pruebas, y trabajar de manera más sencilla y eficiente con el lenguaje.
 
-🔗 [Ver el video tutorial](ENLACE_AQUI)
+🔗 [Ver el video tutorial](https://youtu.be/AKCPBTu_CYE)
 
