@@ -1,3 +1,0 @@
-import files;
-files.create("test1.kf");
-

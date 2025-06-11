@@ -1,8 +1,0 @@
-import pardos;
-
--- Leer un CSV simple
-PARDOS df = pardos.read_csv("test6.csv");
-
--- Intentar obtener una columna que NO existe (debe lanzar excepción)
--- Ejemplo: col("z") no está en ["x","y"].
-show(df.col("z"));

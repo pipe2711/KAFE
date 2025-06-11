@@ -1,9 +1,0 @@
--- Error Inversa matriz con infinitas soluciones
-import numk;
-
-List[List[INT]] A = [
-	[3, 1],
-	[6, 2]
-];
-
-show(numk.inv(A));

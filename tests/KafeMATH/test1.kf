@@ -1,4 +1,0 @@
-import math;
-
-show(math.pi);
-show(math.e);

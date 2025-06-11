@@ -1,8 +1,0 @@
-INT suma = 0;
-INT n = 1;
-while (n <= 5):
-    suma = suma + n;
-    n = n + 1;
-;
-show(suma);
-

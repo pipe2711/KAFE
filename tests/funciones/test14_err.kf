@@ -1,3 +1,0 @@
-drip mostrar(mensaje: VOID) => VOID:
-    show(mensaje);
-;

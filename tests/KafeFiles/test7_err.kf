@@ -1,3 +1,0 @@
-import files;
-STR contenido = files.read("asdfasdf");
-show(contenido);

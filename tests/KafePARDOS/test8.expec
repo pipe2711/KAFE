@@ -1,8 +1,0 @@
-"cols: ['id', 'fecha', 'evento'], rows: [[1, '2025-01-15', 'Reunión'], [2, '2025-02-28', 'Lanzamiento'], [3, '2025-03-10', 'Entrega'], [4, '2025-04-05', 'Capacitación'], [5, '2025-05-20', 'Conferencia']]"
-[5, 3]
-['2025-01-15', '2025-02-28', '2025-03-10', '2025-04-05', '2025-05-20']
-['Reunión', 'Lanzamiento', 'Entrega', 'Capacitación', 'Conferencia']
-[1, 2, 3, 4, 5]
-[['id', 'INT'], ['fecha', 'STR'], ['evento', 'STR']]
-[['Rows', 5], ['Columns', 3], ['Column_Names', 'id, fecha, evento'], ['Dtypes', 'id:INT, fecha:STR, evento:STR']]
-"cols: ['column', 'count', 'mean', 'std', 'min', 'max'], rows: [['id', '5', '3.0', '1.4142135623730951', '1', '5']]"

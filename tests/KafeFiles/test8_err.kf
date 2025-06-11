@@ -1,2 +1,0 @@
-import files;
-files.delete("qwrety.txt");

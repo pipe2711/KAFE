@@ -1,4 +1,0 @@
--- Tipo de dato incorrecto al modificar lista
-List[FLOAT] a = [5.32, 0.234, 3.14, 2.7];
-
-a[3] = 45;

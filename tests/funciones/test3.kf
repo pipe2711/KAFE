@@ -1,6 +1,0 @@
-drip restar(a: INT)(b: INT)=>INT:
-    return a - b;
-;
-
-INT res = restar(8)(3);
-show(res);  -- 5

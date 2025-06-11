@@ -1,5 +1,0 @@
-drip aplicar(fn: FUNC(INT) => INT, v: INT) => INT:
-    return fn(v);
-;
-
-aplicar(5, 3);

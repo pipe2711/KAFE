@@ -1,7 +1,0 @@
--- Indexación con tipo de dato que no es entero
-
-List[List[INT]] matriz = [
-	[234, 234],
-	[2341, 1234]
-];
-show(matriz[4.5][2 - 1]);

@@ -1,9 +1,0 @@
--- Prueba Inversa
-import numk;
-
-List[List[INT]] A = [
-	[2, 1],
-	[7, 4]
-];
-
-show(numk.inv(A));

@@ -1,3 +1,0 @@
--- Declaración de lista con tipo de datos incorrectos
-
-List[BOOL] g = [234, 34234, 123];

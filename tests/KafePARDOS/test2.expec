@@ -1,6 +1,0 @@
-"cols: ['id', 'value'], rows: [[1, 1.5], [2, 2.0], [3, nan], [4, 4.75]]"
-[4, 2]
-[1.5, 2.0, nan, 4.75]
-[['id', 'INT'], ['value', 'FLOAT']]
-[['Rows', 4], ['Columns', 2], ['Column_Names', 'id, value'], ['Dtypes', 'id:INT, value:FLOAT']]
-"cols: ['column', 'count', 'mean', 'std', 'min', 'max'], rows: [['id', '4', '2.5', '1.118033988749895', '1', '4'], ['value', '3', '2.75', '1.4288690166235205', '1.5', '4.75']]"

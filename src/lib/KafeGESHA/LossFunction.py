@@ -1,15 +1,6 @@
-# lib/KafeGESHA/LossFunction.py
-# ------------------------------------------------------------
-#  Funciones de pérdida para GeshaDeep
-#  Incluye BCE robusta que ahora acepta float ó lista [float]
-# ------------------------------------------------------------
 from abc import ABC, abstractmethod
 from lib.KafeMATH.funciones import log, math_abs
 
-
-# ============================================================ #
-#  Interface genérica
-# ============================================================ #
 class LossFunction(ABC):
     @abstractmethod
     def compute(self, y_true, y_pred):
@@ -21,10 +12,6 @@ class LossFunction(ABC):
         """Devuelve el gradiente ∂L/∂y_pred"""
         pass
 
-
-# ============================================================ #
-#  1) Pérdidas de regresión
-# ============================================================ #
 class MeanSquaredError(LossFunction):
     def compute(self, y_true, y_pred):
         errors = [(yt - yp) * (yt - yp) for yt, yp in zip(y_true, y_pred)]
@@ -48,9 +35,6 @@ class MeanAbsoluteError(LossFunction):
         ]
 
 
-# ============================================================ #
-#  2) Pérdidas de clasificación
-# ============================================================ #
 class BinaryCrossEntropy(LossFunction):
     """
     BCE robusta:
@@ -61,7 +45,6 @@ class BinaryCrossEntropy(LossFunction):
     def __init__(self, epsilon: float = 1e-8):
         self.epsilon = epsilon
 
-    # ----- helpers internos ---------------------------------
     def _as_scalar(self, yp):
         """
         Convierte yp a escalar si es [escala].
@@ -73,7 +56,6 @@ class BinaryCrossEntropy(LossFunction):
         p = self._as_scalar(p)
         return max(self.epsilon, min(1.0 - self.epsilon, p))
 
-    # ----- API pública --------------------------------------
     def compute(self, y_true, y_pred):
         loss = []
         for yt, yp in zip(y_true, y_pred):

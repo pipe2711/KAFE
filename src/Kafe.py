@@ -9,7 +9,6 @@ from EvalVisitorPrimitivo import EvalVisitorPrimitivo
 import globals
 
 def main():
-    # Verificar argumento del archivo .kf
     if len(sys.argv) < 2:
         print("Uso: python Kafe.py <archivo.kf>")
         sys.exit(1)

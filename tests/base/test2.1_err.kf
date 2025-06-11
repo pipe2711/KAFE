@@ -1,4 +1,0 @@
--- Error redeclaración de una variable con un nuevo tipo
-
-INT var = 234;
-BOOL var = True;

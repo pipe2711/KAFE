@@ -1,7 +1,0 @@
-"cols: ['id', 'nombre', 'puntaje'], rows: [[1, 'Ana', 85], [2, 'Luis', 90], [3, 'María', 78], [4, 'Pedro', 92], [5, 'Lucía', 88]]"
-[5, 3]
-['Ana', 'Luis', 'María', 'Pedro', 'Lucía']
-[85, 90, 78, 92, 88]
-[['id', 'INT'], ['nombre', 'STR'], ['puntaje', 'INT']]
-[['Rows', 5], ['Columns', 3], ['Column_Names', 'id, nombre, puntaje'], ['Dtypes', 'id:INT, nombre:STR, puntaje:INT']]
-"cols: ['column', 'count', 'mean', 'std', 'min', 'max'], rows: [['id', '5', '3.0', '1.4142135623730951', '1', '5'], ['puntaje', '5', '86.6', '4.882622246293481', '78', '92']]"

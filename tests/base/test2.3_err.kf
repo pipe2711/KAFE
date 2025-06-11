@@ -1,3 +1,0 @@
--- Declaración de una variable con tipo incorrecto
-
-INT a = False;

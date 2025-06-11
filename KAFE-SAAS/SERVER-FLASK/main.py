@@ -94,7 +94,7 @@ def subir_csv():
         return jsonify({'error': 'No se envió ningún archivo.'}), 400
 
     archivo = request.files['archivo']
-    
+
     if archivo.filename == '':
         return jsonify({'error': 'El nombre del archivo está vacío.'}), 400
 

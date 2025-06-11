@@ -1,5 +1,0 @@
-drip add(a: INT, b: INT) => INT:
-    return a + b;
-;
-
-show(add(1));

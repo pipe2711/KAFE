@@ -1,8 +1,8 @@
 # SERVER-FLASK
 
-## INSTALLATION 
+## INSTALLATION
 
-Intall dependencies using: 
+Intall dependencies using:
 
 ```
 pip install -r requirements.txt

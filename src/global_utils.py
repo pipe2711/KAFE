@@ -74,8 +74,7 @@ def verificarHomogeneidad(lista):
     return True
 
 def check_sig(*args, **kwargs):
-    # num_args: list of the posible number of arguments the function can receive
-    # arg_types: list of lists with the posible types of each posible argument in order
+
     num_args = args[0]
 
     arg_types = []

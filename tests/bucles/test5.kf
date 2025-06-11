@@ -1,8 +1,0 @@
-INT i = 0;
-BOOL continuar = True;
-while (continuar):
-    show(i);
-    i = i + 1;
-    if (i == 3):
-        continuar = False;
-;;

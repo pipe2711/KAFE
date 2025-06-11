@@ -1,7 +1,0 @@
--- Error Multiplicar Matrices
-import numk;
-
-List[List[INT]] A = [[1, 2], [3, 4]];
-List[List[INT]] B = [[2], [3], [4]];
-
-show(numk.mul(A, B));

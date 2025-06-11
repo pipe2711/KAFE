@@ -1,3 +1,0 @@
-import files;
-files.create("archivo_test1.txt");
-

@@ -1,5 +1,0 @@
--- Solamente declaración de variables
-
-INT a;
-List[List[INT]] b;
-List[List[List[BOOL]]] c;

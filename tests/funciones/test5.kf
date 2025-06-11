@@ -1,9 +1,0 @@
-drip aplicar(f: FUNC(INT) => INT, x: INT) => INT:
-    return f(x);
-;
-
-drip cuadrado(a: INT) => INT:
-    return a * a;
-;
-
-show(aplicar(cuadrado, 4));  -- 16

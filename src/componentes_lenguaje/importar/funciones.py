@@ -18,7 +18,6 @@ def importStmt(self, ctx):
         return
     self.imported.add(module)
 
-    # Construir lista de rutas a probar
     candidates = []
     if globals.current_dir:
         candidates.append(pathlib.Path(globals.current_dir) / f"{module}.kf")
@@ -35,11 +34,9 @@ def importStmt(self, ctx):
         tried = ", ".join(str(p) for p in candidates)
         raiseModuleNotFound(module, tried)
 
-    # Ajustar directorio para imports dentro del módulo
     prev_dir = globals.current_dir
     globals.current_dir = filename.parent
 
-    # Parsear y ejecutar el módulo
     input_stream = FileStream(str(filename), encoding='utf-8')
     lexer        = Kafe_GrammarLexer(input_stream)
     tokens       = CommonTokenStream(lexer)
@@ -47,6 +44,5 @@ def importStmt(self, ctx):
     tree         = parser.program()
     self.visit(tree)
 
-    # Restaurar directorio anterior
     globals.current_dir = prev_dir
     return

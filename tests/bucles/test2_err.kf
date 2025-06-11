@@ -1,6 +1,0 @@
--- Error condicion no booleana
-
-INT x = 0;
-while (x):
-    show(x);
-;

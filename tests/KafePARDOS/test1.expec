@@ -1,7 +1,0 @@
-"cols: ['id', 'edad', 'nombre', 'salario'], rows: [[1, 30, 'Alice', 55000], [2, 25, 'Bob', 48000], [3, 40, 'Carol', 72000]]"
-"cols: ['id', 'edad', 'nombre', 'salario'], rows: [[4, 35, 'David', 61000], [5, 28, 'Eva', 53000]]"
-[5, 4]
-[30, 25, 40, 35, 28]
-[['id', 'INT'], ['edad', 'INT'], ['nombre', 'STR'], ['salario', 'INT']]
-[['Rows', 5], ['Columns', 4], ['Column_Names', 'id, edad, nombre, salario'], ['Dtypes', 'id:INT, edad:INT, nombre:STR, salario:INT']]
-"cols: ['column', 'count', 'mean', 'std', 'min', 'max'], rows: [['id', '5', '3.0', '1.4142135623730951', '1', '5'], ['edad', '5', '31.6', '5.314132102234569', '25', '40'], ['salario', '5', '57800.0', '8231.646250902671', '48000', '72000']]"

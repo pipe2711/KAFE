@@ -1,4 +1,0 @@
--- Asignación de lista de tipo incorrecto
-
-List[List[FLOAT]] h = [[234.234, 532.32], [234.4], []];
-h = [[[]]];

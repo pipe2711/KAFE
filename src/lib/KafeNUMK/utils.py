@@ -22,7 +22,6 @@ def es_uniforme(matriz):
     return True
 
 def operar_matrices(matriz1, matriz2, operacion):
-    # Sumar las matrices
     resultado = []
     for i in range(len(matriz1)):
         fila = []

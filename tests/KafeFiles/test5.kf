@@ -1,7 +1,0 @@
-import files;
-
-files.create("SereEliminado.txt");
-files.write("SereEliminado.txt","Me Voy");
-STR chao = files.read("SereEliminado.txt");
-show(chao);
-files.delete("SereEliminado.txt");

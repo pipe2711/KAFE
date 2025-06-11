@@ -1,6 +1,0 @@
--- Error sumar matrices con valores de tipo incorrecto
-import numk;
-
-INT a = 5;
-INT b = 6;
-show(numk.add(a, b));

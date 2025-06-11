@@ -1,4 +1,0 @@
-List[INT] numeros = [1, 2, 3, 4];
-for (n in numeros):
-    show(n);
-;

@@ -1,9 +1,0 @@
--- Prueba multiplicar matrices
-import numk;
-import numk;
-
-List[List[INT]] A = [[1, 2]];
-List[List[INT]] B = [[2], [3]];
-
-List[List[INT]] C = numk.mul(A, B);
-show(C);

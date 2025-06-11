@@ -1,8 +1,0 @@
-drip obtenerTexto() => INT:
-    List[INT] numeros = [1, 2, 3];
-    for (n in numeros):
-        return ("hola");
-    ;
-;
-
-show(obtenerTexto());

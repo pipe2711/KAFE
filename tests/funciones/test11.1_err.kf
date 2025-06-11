@@ -1,6 +1,0 @@
--- Se retorna un valor incorrecto
-drip suma (a: INT, b: INT) => INT :
-    return bool(a + b);
-;
-
-show(suma(5, 4));

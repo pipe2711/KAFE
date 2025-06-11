@@ -1,5 +1,0 @@
-drip sumar(a: INT)(b: INT) => VOID:
-    show( "hola");
-;
-
-sumar(10)(5);  -- 15

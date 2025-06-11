@@ -1,7 +1,3 @@
-# src/lib/KafeGESHA/GeshaDeep.py
-# ------------------------------------------------------------
-#  GeshaDeep  – ajuste: gradiente seguro para BCE y otras pérdidas
-# ------------------------------------------------------------
 import warnings
 from lib.KafeGESHA.Gesha import Gesha
 from lib.KafeGESHA.LossFunction import (
@@ -12,9 +8,7 @@ from lib.KafeGESHA.LossFunction import (
 from lib.KafeGESHA.Optimizer import SGD, RMSprop, Adam, AdamW
 from lib.KafeMATH.funciones import log
 
-
 class GeshaDeep(Gesha):
-    # ----------------------------------------------------- 0) ctor
     def __init__(self, model_type: str = "classification"):
         super().__init__()
         self._model_type = model_type
@@ -22,13 +16,11 @@ class GeshaDeep(Gesha):
         self._optimizer_obj = None
         self._metrics = []
 
-    # ----------------------------------------------------- 1) add
     def add(self, layer):
         if self.layers and hasattr(layer, "input_shape") and not layer.input_shape:
             layer.input_shape = (self.layers[-1].units,)
         self.layers.append(layer)
 
-    # ----------------------------------------------------- 2) compile
     def compile(self, optimizer=None, loss=None, metrics=None):
         if loss == "mse":
             self._loss_fn = MeanSquaredError()
@@ -60,20 +52,17 @@ class GeshaDeep(Gesha):
                 "Advertencia: un modelo de clustering con menos de 2 capas puede no tener suficiente capacidad."
             )
 
-    # ----------------------------------------------------- 3) set_lr
     def set_lr(self, new_lr: float):
         if not self._optimizer_obj:
             raise AttributeError("compile() debe llamarse antes de set_lr().")
         self._optimizer_obj.lr = new_lr
 
-    # ----------------------------------------------------- 4) predict “crudo”
     def predict(self, x):
         out = x
         for layer in self.layers:
             out = layer.forward(out)
         return out
 
-    # ----------------------------------------------------- 5) fit
     def fit(self, x_train, y_train=None, epochs=1, batch_size=1, x_val=None, y_val=None):
         n_samples = len(x_train)
         has_val = x_val is not None and y_val is not None and len(x_val) > 0
@@ -85,13 +74,11 @@ class GeshaDeep(Gesha):
             return out
 
         def _backward(err):
-            # asegura lista de errores para capas Dense
             if not isinstance(err, list):
                 err = [err]
             for layer in reversed(self.layers):
                 err = layer.backward(err, learning_rate=self._optimizer_obj.lr)
 
-        # ---------- clustering ----------
         if self._model_type == "clustering":
             alpha = 0.5  # grado de “suavizado”
 
@@ -100,29 +87,20 @@ class GeshaDeep(Gesha):
 
                 for i in range(0, n_samples, batch_size):
                     for xi in x_train[i : min(i + batch_size, n_samples)]:
-                        # 1) Forward
-                        z = _forward(xi)           # z es lista con k salidas (softmax)
-
-                        # 2) Pseudo-etiqueta “duro”
+                        z = _forward(xi)
                         k_hat = z.index(max(z))
-
-                        # 3) Acumular pérdida (solo para imprimir)
                         total += -log(z[k_hat] + 1e-8)
 
-                        # 4) Construir “target suave”
                         k = len(z)
                         target = [ (1.0 - alpha) / (k - 1) ] * k
                         target[k_hat] = alpha
 
-                        # 5) Gradiente = z - target
                         delta = [ z[j] - target[j] for j in range(k) ]
-
-                        # 6) Backward
                         _backward(delta)
 
                 print(f"Epoch {epoch}/{epochs} — Loss (soft k-means): {total / n_samples:.6f}")
             return
-        # ---------- clasificación múlticlase / binaria con abordagem “categorical” ----------
+
         if self._model_type == "classification":
             for epoch in range(1, epochs + 1):
                 total = 0.0
@@ -132,8 +110,8 @@ class GeshaDeep(Gesha):
                     for xi, yi in zip(bx, by):
                         out = _forward(xi)
                         total += self._loss_fn.compute([yi], [out])
-                        dg = self._loss_fn.derivative([yi], [out])  # lista de grads por sample
-                        grad_out = dg[0] if isinstance(dg[0], list) else dg  # lista para Dense
+                        dg = self._loss_fn.derivative([yi], [out])
+                        grad_out = dg[0] if isinstance(dg[0], list) else dg
                         _backward(grad_out)
                 msg = f"Epoch {epoch}/{epochs} — Loss {total / n_samples:.6f}"
                 if has_val:
@@ -146,7 +124,6 @@ class GeshaDeep(Gesha):
                 print(msg)
             return
 
-        # ---------- binaria ----------
         if self._model_type == "binary":
             for epoch in range(1, epochs + 1):
                 total = 0.0
@@ -156,7 +133,7 @@ class GeshaDeep(Gesha):
                     for xi, yi in zip(bx, by):
                         p = _forward(xi)[0]
                         total += self._loss_fn.compute([yi], [p])
-                        grad = self._loss_fn.derivative([yi], [p])  # lista [grad]
+                        grad = self._loss_fn.derivative([yi], [p])
                         _backward(grad)
                 msg = f"Epoch {epoch}/{epochs} — Loss {total / n_samples:.6f}"
                 if has_val:
@@ -168,7 +145,6 @@ class GeshaDeep(Gesha):
                 print(msg)
             return
 
-        # ---------- regresión ----------
         if self._model_type == "regression":
             for epoch in range(1, epochs + 1):
                 total = 0.0
@@ -178,7 +154,7 @@ class GeshaDeep(Gesha):
                     for xi, yi in zip(bx, by):
                         p = _forward(xi)[0]
                         total += self._loss_fn.compute([yi], [p])
-                        grad = self._loss_fn.derivative([yi], [p])  # lista [grad]
+                        grad = self._loss_fn.derivative([yi], [p])
                         _backward(grad)
                 msg = f"Epoch {epoch}/{epochs} — Loss {total / n_samples:.6f}"
                 if has_val:
@@ -192,7 +168,6 @@ class GeshaDeep(Gesha):
 
         raise ValueError("Tipo de modelo no soportado en fit().")
 
-    # ----------------------------------------------------- 6) summary
     def summary(self):
         print(f"*** Resumen (tipo: {self._model_type}) ***")
         for i, layer in enumerate(self.layers, 1):
@@ -204,7 +179,6 @@ class GeshaDeep(Gesha):
             )
             print(f" Capa {i}: Dense(units={layer.units}, activation={act}, {reg})")
 
-    # ----------------------------------------------------- 7) evaluate
     def evaluate(self, x_test, y_test):
         if self._model_type == "clustering":
             avg = sum(
@@ -241,7 +215,6 @@ class GeshaDeep(Gesha):
 
         raise ValueError("Tipo de modelo no soportado en evaluate().")
 
-    # ----------------------------------------------------- 8) utilidades de predicción
     def predict_proba(self, x):
         out = self.predict(x)
         if self._model_type in ("binary", "regression"):

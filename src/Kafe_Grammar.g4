@@ -52,12 +52,13 @@ indexing
 
 // ======================  FUNCIONES ======================
 functionDecl
-    : DRIP ID LPAREN paramList? RPAREN (LPAREN paramList RPAREN)* ARROW typeDecl COLON block
+    : DRIP ID '(' paramList? ')' ARROW typeDecl COLON block
     ;
 
 paramList
     : paramDecl (COMMA paramDecl)*
     ;
+
 paramDecl : ID COLON typeDecl   # simpleParam;
 
 functionParam: FUNC LPAREN paramList_typeDecl? RPAREN ARROW typeDecl;

@@ -1,8 +1,6 @@
-# utils.py
 import os
 import globals
 
-# — Variables de estilo por defecto —
 eje_x_label = ""
 eje_y_label = ""
 titulo_grafico = ""
@@ -14,9 +12,8 @@ mostrar_valores_barras = False
 leyenda_pastel = None
 ultimo_svg_generado = None  # nuevo
 
-# — NUEVAS variables para acumular SERIES en una misma FIGURA —
-_figura_activa = False        # Indica si hay una figura iniciada
-_series_acumuladas = []       # Aquí guardaremos cada serie (xs, ys, estilos)
+_figura_activa = False
+_series_acumuladas = []
 
 def resetear_variables():
     global eje_x_label, eje_y_label, titulo_grafico, mostrar_valores_barras

@@ -1,4 +1,0 @@
--- Indexar con un no entero
-
-List[STR] strings = ["asdf", "asdf"];
-strings[False] = 'asd';
