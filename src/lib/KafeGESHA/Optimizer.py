@@ -1,4 +1,3 @@
-
 from lib.KafeMATH.funciones import pow_, sqrt
 from abc import abstractmethod
 

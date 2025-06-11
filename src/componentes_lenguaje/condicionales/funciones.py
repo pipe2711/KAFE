@@ -8,10 +8,10 @@ def ifElseExpr(self, ctx):
 
     if cond_principal:
         try:
-            self.visit(ctx.block(0))  
+            self.visit(ctx.block(0))
         except ReturnValue as rv:
             raise rv
-        return 
+        return
     else:
         for elif_branch in ctx.elifBranch():
             cond_elif = self.visit(elif_branch.expr())
@@ -22,7 +22,7 @@ def ifElseExpr(self, ctx):
                     self.visit(elif_branch.block())
                 except ReturnValue as rv:
                     raise rv
-                return 
+                return
 
     if ctx.ELSE() and len(ctx.block()) > 0:
         try:

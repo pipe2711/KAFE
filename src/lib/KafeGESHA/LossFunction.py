@@ -1,7 +1,5 @@
-
 from abc import ABC, abstractmethod
 from lib.KafeMATH.funciones import log, math_abs
-
 
 class LossFunction(ABC):
     @abstractmethod

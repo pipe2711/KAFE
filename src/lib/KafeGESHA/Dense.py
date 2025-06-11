@@ -3,9 +3,7 @@ from lib.KafeGESHA.Gesha import Gesha
 from lib.KafeGESHA.utils import check_regularization
 from lib.KafeGESHA.ActivationFunctionLoader import ActivationFunctionLoader
 
-
 class Dense(Gesha):
-
     def __init__(
         self,
         units,

@@ -51,7 +51,7 @@ def pow_(x, y):
     if x < 0:
         if float(y).is_integer():
             n = int(y)
-            abs_x = -x  
+            abs_x = -x
             result = exp(y * log(abs_x))
             return -result if (n % 2 != 0) else result
         else:
@@ -280,7 +280,7 @@ def isclose(*args):
     else:
         abs_tol = 0.0
 
-    if a == b:                       
+    if a == b:
         return True
     diff = abs(a - b)
     tol  = max(rel_tol * max(abs(a), abs(b)), abs_tol)

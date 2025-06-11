@@ -20,7 +20,7 @@ plot.graph(X, Y, "point");  -- dibuja solo puntos en azul
 
 -- 2) Armo un “vector X” para la línea y “vector Y” con y = m·x + b
 List[FLOAT] X_line = [0.0, 4.0];                           -- basta con dos extremos
-List[FLOAT] Y_line = [m * 0.0 + b, m * 4.0 + b];           
+List[FLOAT] Y_line = [m * 0.0 + b, m * 4.0 + b];
 
 -- 3) Pinto la recta
 plot.color("red");

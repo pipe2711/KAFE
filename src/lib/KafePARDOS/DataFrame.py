@@ -105,7 +105,7 @@ class DataFrame:
         n_cols  = len(self.columns)
 
         cols_str = ", ".join(self.columns)
-        dtypes_rows = self.dtypes()    
+        dtypes_rows = self.dtypes()
         dtypes_str = ", ".join(f"{c}:{t}" for c, t in dtypes_rows)
 
         filas = [

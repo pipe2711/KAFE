@@ -11,8 +11,8 @@ tamaño_punto = 3
 mostrar_valores_barras = False
 leyenda_pastel = None
 
-_figura_activa = False        
-_series_acumuladas = []       
+_figura_activa = False
+_series_acumuladas = []
 
 def resetear_variables():
     global eje_x_label, eje_y_label, titulo_grafico, mostrar_valores_barras

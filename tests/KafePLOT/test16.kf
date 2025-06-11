@@ -6,7 +6,7 @@ import plot;
 -- Ejemplo de clustering (k = 2) con datos 2D “hardcodeados”
 -- ================================================================
 
--- 1) Definimos nuestros datos (cada elemento es un par [x, y]) 
+-- 1) Definimos nuestros datos (cada elemento es un par [x, y])
 --    y las etiquetas asignadas por el algoritmo k-means (0 o 1).
 List[List[FLOAT]] datos = [
     [1.0, 2.0],
@@ -63,7 +63,7 @@ plot.grid(True);
 plot.color("none");       -- “none” en línea significa que no se traza línea
 plot.pointColor("red");
 plot.pointSize(6);
-plot.graph(X0, Y0, "point");  
+plot.graph(X0, Y0, "point");
 
 -- 6b) Dibujamos los puntos del clúster 1 en verde (solo puntos)
 plot.pointColor("green");

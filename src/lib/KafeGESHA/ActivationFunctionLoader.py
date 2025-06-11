@@ -1,10 +1,8 @@
-
 from lib.KafeGESHA.ActivationFunction import Sigmoide, ReLU, Tanh, Identidad, Escalonada, Softmax
 
 class ActivationFunctionLoader:
     @staticmethod
     def get(name):
-
         if not name:
             return Identidad()
         n = name.lower()

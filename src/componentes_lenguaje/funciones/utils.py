@@ -23,7 +23,7 @@ def _parse_signature(sig: str):
             idx += 1
         params_str = s[5:idx]
         params = params_str.split(',') if params_str else []
-        rest = s[idx+3:]  
+        rest = s[idx+3:]
         if rest.startswith("FUNC("):
             sub_p, sub_r = helper(rest)
             return params + sub_p, sub_r

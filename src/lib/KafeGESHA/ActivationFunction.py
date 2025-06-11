@@ -2,17 +2,13 @@ from abc import ABC, abstractmethod
 from lib.KafeMATH.funciones import exp
 
 class ActivationFunction(ABC):
-
     @abstractmethod
     def activate(self, x):
-
         pass
 
     @abstractmethod
     def derivative(self, x):
-
         pass
-
 
 class Sigmoide(ActivationFunction):
     def __init__(self):
@@ -78,12 +74,10 @@ class Escalonada(ActivationFunction):
 
 
 class Softmax(ActivationFunction):
-
     def __init__(self):
         self.last_output = None
 
     def activate(self, vec):
-
         exp_vec = [exp(x) for x in vec]
         s = sum(exp_vec)
         salida = [v / s for v in exp_vec]
@@ -91,7 +85,6 @@ class Softmax(ActivationFunction):
         return salida
 
     def derivative(self, vec):
-
         s = self.activate(vec)
         size = len(s)
         jacobian = [[0.0 for _ in range(size)] for _ in range(size)]

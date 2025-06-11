@@ -19,20 +19,20 @@ GESHA modelo = geshaDeep.clustering();
 
 GESHA capa1 = geshaDeep.create_dense(
     8,         -- 4 neuronas en primera capa oculta
-    "relu",    
+    "relu",
     [2],       -- entrada 2D
-    0.0,       
+    0.0,
     12         -- semilla distinta
 );
 modelo.add(capa1);
 
 
 GESHA capa1b = geshaDeep.create_dense(
-    4,        
-    "relu",   
-    [],       
+    4,
+    "relu",
+    [],
     0.0,
-    99        
+    99
 );
 modelo.add(capa1b);
 

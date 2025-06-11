@@ -1,13 +1,10 @@
-
 import warnings
 
 def warn_if(condición, mensaje):
-
     if condición:
         warnings.warn(mensaje, stacklevel=2)
 
 def check_regularization(value):
-
     if value is None:
         return 0.0
     try:

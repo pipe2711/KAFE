@@ -1,4 +1,3 @@
-
 import warnings
 from lib.KafeGESHA.Gesha import Gesha
 from lib.KafeGESHA.LossFunction import (
@@ -8,7 +7,6 @@ from lib.KafeGESHA.LossFunction import (
 )
 from lib.KafeGESHA.Optimizer import SGD, RMSprop, Adam, AdamW
 from lib.KafeMATH.funciones import log
-
 
 class GeshaDeep(Gesha):
     def __init__(self, model_type: str = "classification"):
@@ -90,7 +88,7 @@ class GeshaDeep(Gesha):
                 for i in range(0, n_samples, batch_size):
                     for xi in x_train[i : min(i + batch_size, n_samples)]:
 
-                        z = _forward(xi)    
+                        z = _forward(xi)
 
                         k_hat = z.index(max(z))
 
@@ -115,8 +113,8 @@ class GeshaDeep(Gesha):
                     for xi, yi in zip(bx, by):
                         out = _forward(xi)
                         total += self._loss_fn.compute([yi], [out])
-                        dg = self._loss_fn.derivative([yi], [out]) 
-                        grad_out = dg[0] if isinstance(dg[0], list) else dg  
+                        dg = self._loss_fn.derivative([yi], [out])
+                        grad_out = dg[0] if isinstance(dg[0], list) else dg
                         _backward(grad_out)
                 msg = f"Epoch {epoch}/{epochs} — Loss {total / n_samples:.6f}"
                 if has_val:
@@ -138,7 +136,7 @@ class GeshaDeep(Gesha):
                     for xi, yi in zip(bx, by):
                         p = _forward(xi)[0]
                         total += self._loss_fn.compute([yi], [p])
-                        grad = self._loss_fn.derivative([yi], [p])  
+                        grad = self._loss_fn.derivative([yi], [p])
                         _backward(grad)
                 msg = f"Epoch {epoch}/{epochs} — Loss {total / n_samples:.6f}"
                 if has_val:
@@ -159,7 +157,7 @@ class GeshaDeep(Gesha):
                     for xi, yi in zip(bx, by):
                         p = _forward(xi)[0]
                         total += self._loss_fn.compute([yi], [p])
-                        grad = self._loss_fn.derivative([yi], [p])  
+                        grad = self._loss_fn.derivative([yi], [p])
                         _backward(grad)
                 msg = f"Epoch {epoch}/{epochs} — Loss {total / n_samples:.6f}"
                 if has_val:

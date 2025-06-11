@@ -1,4 +1,3 @@
-
 from abc import ABC
 
 class Gesha(ABC):
@@ -24,11 +23,9 @@ class Gesha(ABC):
         return x
 
     def fit(self, x_train, y_train, epochs=1, batch_size=1):
-
         pass
 
     def summary(self):
-
         print("Model Summary:")
         for i, layer in enumerate(self.layers):
             print(f"Layer {i+1}: {layer.__class__.__name__}, "
@@ -36,5 +33,4 @@ class Gesha(ABC):
                   f"Output: {getattr(layer, 'units', None)}")
 
     def evaluate(self, x_test, y_test):
-
         pass

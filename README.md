@@ -12,14 +12,14 @@ Estudiantes de ciencias de la computacion E inteligencia artificial de la Univer
 ##  Características principales
 
 - 🧠 Inspirado en lenguajes funcionales
-- 🔁 Soporte para funciones lambda, currificación y de alto nivel 
+- 🔁 Soporte para funciones lambda, currificación y de alto nivel
 - 🧮 Librería `KafeMatrix` tipo NumPy para álgebra lineal
 - 📊 Librería `Plot` tipo Matplotlib para visualización
 - 🧠 Librería `KAFE GESHA` Libreria para manejo de redes neuronales y deep learning
 - 🧮 Librería `MATH` Libreria de utilidades matematicas
 - 📊 Librería `FILES` Libreria para manejo de archivos
 - 🧠 Librería `PARDOS` Libreria para manejo de archivos CSV
-- ⚙️ Construido con ANTLR + Python 
+- ⚙️ Construido con ANTLR + Python
 - 🖥️ Aplicativo WEB  (Compilador en linea)
 - 🔁  TESTS Automatizados
 
@@ -28,7 +28,7 @@ Estudiantes de ciencias de la computacion E inteligencia artificial de la Univer
 ## 🛠️ Instalación
 
 Puedes ejecutar **KAFE** localmente desde tu terminal. Actualmente, la versión web no está disponible para uso local, pero puedes trabajar perfectamente con KAFE como lenguaje de scripting desde tu entorno.
-Tenemos dos opciones que puedes utilizar la primera es instalar manualmente todos los requisitos que necesita el proyecto para su ejecucion: 
+Tenemos dos opciones que puedes utilizar la primera es instalar manualmente todos los requisitos que necesita el proyecto para su ejecucion:
 
 ### ✅ Requisitos
 
@@ -56,7 +56,7 @@ Si prefieres evitar instalar dependencias manualmente que recomendamos esta opci
 ### 🐧 Instalación de Nix en **Linux**
 
 1. Abre tu terminal.
-   
+
 2. Ejecuta el siguiente comando para instalar Nix:
 ```bash
 curl -L https://nixos.org/nix/install | sh
@@ -70,7 +70,7 @@ curl -L https://nixos.org/nix/install | sh
 mkdir -p ~/.config/nix
 nano ~/.config/nix/nix.conf
 ```
-Y dentro del archivo activa lo siguiente : 
+Y dentro del archivo activa lo siguiente :
 ```bash
 experimental-features = nix-command flakes
 ```
@@ -78,7 +78,7 @@ experimental-features = nix-command flakes
 ### 🍎 Instalación de Nix en macOS (Intel / Apple Silicon)
 
 1. Abre la aplicación Terminal.
-   
+
 2. Ejecuta el siguiente comando:
 ```bash
 curl -L https://nixos.org/nix/install | sh
