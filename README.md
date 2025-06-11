@@ -13,8 +13,8 @@ Estudiantes de ciencias de la computacion E inteligencia artificial de la Univer
 
 - 🧠 Inspirado en lenguajes funcionales
 - 🔁 Soporte para funciones lambda, currificación y de alto nivel
-- 🧮 Librería `KafeMatrix` tipo NumPy para álgebra lineal
-- 📊 Librería `Plot` tipo Matplotlib para visualización
+- 🧮 Librería `NUMK` tipo NumPy para álgebra lineal
+- 📊 Librería `PLOT` tipo Matplotlib para visualización
 - 🧠 Librería `KAFE GESHA` Libreria para manejo de redes neuronales y deep learning
 - 🧮 Librería `MATH` Libreria de utilidades matematicas
 - 📊 Librería `FILES` Libreria para manejo de archivos
