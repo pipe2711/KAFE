@@ -4,7 +4,7 @@ from utils import obtener_parametros, get_programs, get_invalid_programs
 
 @pytest.mark.parametrize("programa, entrada, salida_esperada", list(obtener_parametros(get_programs("../tests/base"))))
 def test_valid_programs(programa, entrada, salida_esperada):
-    result = subprocess.run(["python", "Kafe.py", programa],
+    result = subprocess.run(["python3", "Kafe.py", programa],
                             capture_output=True, text=True, input=entrada)
 
     assert result.returncode == 0, f"Non-zero exit for {programa}"
@@ -13,7 +13,7 @@ def test_valid_programs(programa, entrada, salida_esperada):
 
 @pytest.mark.parametrize("programa, entrada, salida_esperada", list(obtener_parametros(get_invalid_programs("../tests/base"))))
 def test_invalid_programs(programa, entrada, salida_esperada):
-    result = subprocess.run(["python", "Kafe.py", programa],
+    result = subprocess.run(["python3", "Kafe.py", programa],
                             capture_output=True, text=True, input=entrada)
 
     assert result.returncode == 1, f"Zero exit for {programa}"

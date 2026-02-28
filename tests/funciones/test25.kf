@@ -1,0 +1,10 @@
+drip crear_multiplicador(n: INT) => FUNC(INT)=>INT:
+    drip multiplicar(x: INT) => INT:
+        return x * n;
+    ;
+    return multiplicar;
+;
+
+FUNC(INT)=>INT m5 = crear_multiplicador(5);
+INT res = m5(10);
+show(res);

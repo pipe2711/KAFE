@@ -1,0 +1,32 @@
+drip factory(a: INT) => FUNC(INT)=>FUNC(INT)=>INT:
+    drip b_level(b: INT) => FUNC(INT)=>INT:
+        drip c_level(c: INT) => INT:
+            return a + b + c;
+        ;
+        return c_level;
+    ;
+    return b_level;
+;
+
+-- Chained call test
+INT res1 = factory(10)(20)(30);
+show("Deeply nested closure test (10+20+30):");
+show(res1); -- Expected 60
+
+-- Partial application test
+FUNC(INT)=>FUNC(INT)=>INT f10 = factory(10);
+FUNC(INT)=>FUNC(INT)=>INT f10_20 = f10(20);
+INT res2 = f10_20(30);
+show("Partial application test:");
+show(res2); -- Expected 60
+
+-- Named closure instead of lambda
+drip create_adder(x: INT) => FUNC(INT)=>INT:
+    drip actual_adder(y: INT) => INT:
+        return x + y;
+    ;
+    return actual_adder;
+;
+FUNC(INT)=>INT add5 = create_adder(5);
+show("Named closure test (5 + 10):");
+show(add5(10)); -- Expected 15

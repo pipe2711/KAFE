@@ -76,10 +76,10 @@ def raiseWrongNumberOfArgs(function_name, num_args, recv_args):
     if type(num_args) == list:
         num_args_str = ""
         for i in range(len(num_args) - 1):
-            num_args_str += num_args[i] + " or "
+            num_args_str += str(num_args[i]) + " or "
         num_args_str += str(num_args[len(num_args) - 1])
     else:
-        num_args_str = num_args
+        num_args_str = str(num_args)
 
     message = f"'{function_name}' expects {num_args_str} args, got {recv_args}"
     raise Exception(message)
@@ -117,3 +117,16 @@ def raiseSignatureMismatch(expected_signature, obtained_signature, origin=""):
     if origin:
         message = origin + ": " + message
     raise TypeError(message)
+
+def raiseScientificNotationError(line, column, msg):
+    print(f"Scientific Notation Error [Line {line}, Column {column}]: {msg}")
+    import sys
+    sys.exit(1)
+
+def raiseInvalidEscape(escape_char):
+    message = f"Invalid escape sequence: \\{escape_char}"
+    raise Exception(message)
+
+def raiseIncompleteEscape():
+    message = "Incomplete escape sequence at end of string"
+    raise Exception(message)

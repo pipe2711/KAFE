@@ -2,6 +2,8 @@ import random
 from lib.KafeGESHA.Gesha import Gesha
 from lib.KafeGESHA.utils import check_regularization
 from lib.KafeGESHA.ActivationFunctionLoader import ActivationFunctionLoader
+from global_utils import check_sig
+from TypeUtils import entero_t, vector_numeros_t, flotante_t, void_t
 
 class Dense(Gesha):
     def __init__(
@@ -34,10 +36,12 @@ class Dense(Gesha):
     def _zeros_vector(self, n):
         return [0.0 for _ in range(n)]
 
+    @check_sig([2], [entero_t], is_method=True)
     def build(self, input_dim):
         self.weights = self._random_matrix(input_dim, self.units)
         self.bias = self._zeros_vector(self.units)
 
+    @check_sig([2], vector_numeros_t, is_method=True)
     def forward(self, x):
         self.last_input = x[:]
         if self.weights is None:
@@ -54,6 +58,7 @@ class Dense(Gesha):
 
         return [self.activation.activate(v) for v in z]
 
+    @check_sig([3, 4], vector_numeros_t + [flotante_t], [flotante_t], [flotante_t, void_t], is_method=True)
     def backward(self, output_error, learning_rate, regularization_lambda=None):
         if not isinstance(output_error, list):
             output_error = [output_error]

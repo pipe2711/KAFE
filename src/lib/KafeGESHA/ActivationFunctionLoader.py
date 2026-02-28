@@ -1,7 +1,10 @@
 from lib.KafeGESHA.ActivationFunction import Sigmoide, ReLU, Tanh, Identidad, Escalonada, Softmax
+from global_utils import check_sig
+from TypeUtils import cadena_t, void_t
 
 class ActivationFunctionLoader:
     @staticmethod
+    @check_sig([1], [cadena_t, void_t])
     def get(name):
         if not name:
             return Identidad()

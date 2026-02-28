@@ -70,9 +70,13 @@ PARDOS_TYPE : 'PARDOS';
 //  Literales
 INT         : [0-9]+;
 BOOL        : 'True' | 'False';
-FLOAT       : [0-9]+ '.' [0-9]+;
-STRING      : '"' (~["\\])* '"' | '\'' (~['\\])* '\'';
-
+FLOAT       : [0-9]+ '.' [0-9]+ ([eE] [+-]? [0-9]+)?
+            | [0-9]+ [eE] [+-]? [0-9]+
+            ;
+STRING
+    : '"' ( ~["\\\r\n] | '\\' . )* '"'
+    | '\'' ( ~['\\\r\n] | '\\' . )* '\''
+    ;
 
 //  Identificadores
 ID          : [a-zA-Z_] [a-zA-Z0-9_]*;

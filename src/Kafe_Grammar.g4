@@ -55,6 +55,7 @@ functionDecl
     : DRIP ID '(' paramList? ')' ARROW typeDecl COLON block
     ;
 
+
 paramList
     : paramDecl (COMMA paramDecl)*
     ;
@@ -79,7 +80,7 @@ arg
     ;
 
 lambdaExpr
-    : LPAREN paramDecl RPAREN ARROW expr
+    : LPAREN paramList RPAREN ARROW expr
     ;
 
 returnStmt

@@ -1,0 +1,1 @@
+TypeError: Expected FUNC(BOOL)=>INT, obtained FUNC(INT)=>INT

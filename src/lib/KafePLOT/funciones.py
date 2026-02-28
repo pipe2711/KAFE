@@ -1,7 +1,7 @@
 from global_utils import check_sig
 from TypeUtils import (
     cadena_t, booleano_t, construir_tipo_lista,
-    entero_t, obtener_tipo_dato, vector_numeros_t
+    entero_t, obtener_tipo_dato, vector_numeros_t, matriz_numeros_t
 )
 from errores import raiseFunctionIncorrectArgumentType
 from lib.KafeMATH.funciones import radians, sin, cos
@@ -49,17 +49,16 @@ def pointColor(valor):
 def pointSize(valor):
     utils.tamaño_punto = valor
 
-
+@check_sig(
+    {
+        1: (vector_numeros_t + matriz_numeros_t,),
+        2: (vector_numeros_t + matriz_numeros_t, vector_numeros_t + [cadena_t]),
+        3: (vector_numeros_t, vector_numeros_t, [cadena_t])
+    },
+    func_nombre="graph"
+)
 def graph(*args):
     n = len(args)
-    if n < 1 or n > 3:
-        raise Exception(
-            "graph: se permiten 1, 2 o 3 argumentos:\n"
-            "  • graph(ys)\n"
-            "  • graph(xs, ys)\n"
-            "  • graph(xs, ys, style)\n"
-            "  • graph(lista_de_pares)\n"
-        )
 
 
     if n == 1:

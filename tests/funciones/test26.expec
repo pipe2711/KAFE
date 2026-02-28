@@ -1,0 +1,6 @@
+Deeply nested closure test (10+20+30):
+60
+Partial application test:
+60
+Named closure test (5 + 10):
+15

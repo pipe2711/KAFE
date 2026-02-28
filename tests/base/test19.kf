@@ -1,0 +1,2 @@
+STR s = "Hola\n\tMundo!\" a \"";
+show(s);

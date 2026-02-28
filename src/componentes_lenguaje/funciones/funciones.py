@@ -45,6 +45,7 @@ def functionDecl(self, ctx):
     body     = ctx.block()
     outer    = self
     total    = len(params_flat)
+    captured = dict(self.variables) if self.dentro_bloque else None
 
     if param_groups:
         prefix = "".join(f"FUNC({','.join(grp)})=>" for grp in param_groups)
@@ -78,7 +79,12 @@ def functionDecl(self, ctx):
             if ncol < self._total:
                 return KafeFunction(new_vals)
 
-            saved = dict(outer.variables)
+            if captured is not None:
+                saved = outer.variables
+                outer.variables = dict(captured)
+            else:
+                saved = dict(outer.variables)
+            saved_dentro = outer.dentro_bloque
             try:
                 for decl, val in zip(params_flat, new_vals):
                     expected = decl.typeDecl().getText().replace(" ", "")
@@ -112,25 +118,27 @@ def functionDecl(self, ctx):
                     result = rv.value
             finally:
                 outer.variables = saved
+                outer.dentro_bloque = saved_dentro
 
             if ret_type.startswith("FUNC"):
+                sig_ret = getattr(result, "signature", None)
+                if sig_ret is None:
+                    raiseSignatureMismatch(ret_type, "")
+
+                act_p, act_r = _parse_signature(sig_ret)
                 exp_p, exp_r = _parse_signature(ret_type)
-                if len(exp_p) > 1:
-                    sig_ret = getattr(result, "signature", None)
-                    if sig_ret is None:
-                        raiseSignatureMismatch(ret_type, "")
-                    act_p, act_r = _parse_signature(sig_ret)
-                    if act_p != exp_p or act_r != exp_r:
-                        raiseSignatureMismatch(ret_type, sig_ret)
-                else:
-                    pass
+
+                if act_p != exp_p or act_r != exp_r:
+                    raiseSignatureMismatch(ret_type, sig_ret)
             else:
                 check_value_type(result, ret_type)
 
-            outer.dentro_bloque = False
             return result
 
-    self.variables[name] = (funcion_t, KafeFunction())
+    func_obj = KafeFunction()
+    if captured is not None:
+        captured[name] = (funcion_t, func_obj)
+    self.variables[name] = (funcion_t, func_obj)
 
 def lambdaExpr(self, ctx):
     params = (ctx.paramList().paramDecl()
@@ -142,12 +150,45 @@ def lambdaExpr(self, ctx):
             raiseVoidAsParameterType()
 
     in_types = [p.typeDecl().getText().replace(" ", "") for p in params]
-    lam_sig  = f"FUNC({','.join(in_types)})=>ANY"
+    
     total    = len(params)
     body     = ctx.expr()
-    captured = dict(self.variables)
+    captured = dict(self.variables) if self.dentro_bloque else None
     outer    = self
+    saved_vars = dict(self.variables)
+    self.variables = dict(captured) if captured is not None else dict(saved_vars)
 
+    try:
+        for p in params:
+            pid = p.ID().getText()
+            ptype = p.typeDecl().getText().replace(" ", "")
+
+            if ptype == entero_t:
+                dummy = 0
+            elif ptype == "FLOAT":
+                dummy = 0.0
+            elif ptype == "BOOL":
+                dummy = False
+            elif ptype == "STR":
+                dummy = ""
+            else:
+                dummy = None
+
+            self.variables[pid] = (ptype, dummy)
+
+        inferred = self.visit(body)
+
+        if hasattr(inferred, "signature"):
+            return_type = inferred.signature
+        else:
+            from TypeUtils import obtener_tipo_dato
+            return_type = obtener_tipo_dato(inferred)
+
+    finally:
+        self.variables = saved_vars
+
+    lam_sig  = f"FUNC({','.join(in_types)})=>{return_type}"
+    
     class LambdaFn:
         def __init__(self, collected=None):
             self.collected  = collected[:] if collected else []
@@ -174,7 +215,12 @@ def lambdaExpr(self, ctx):
                 return LambdaFn(new_vals)
 
             saved = outer.variables
-            outer.variables = dict(captured)
+            if captured is not None:
+                outer.variables = dict(captured)
+            else:
+                outer.variables = dict(saved)
+            
+            saved_dentro = outer.dentro_bloque
             try:
                 outer.dentro_bloque = True
                 for decl, val in zip(params, new_vals):
@@ -200,30 +246,37 @@ def lambdaExpr(self, ctx):
                     ptype = funcion_t if expected.startswith("FUNC") else expected
                     asignar_variable(outer, pid, val, ptype)
 
-                outer.dentro_bloque = False
                 return outer.visit(body)
             finally:
                 outer.variables = saved
+                outer.dentro_bloque = saved_dentro
 
     return LambdaFn()
 
 def functionCall(self, ctx):
-    name     = ctx.ID().getText()
+    name = ctx.ID().getText()
     if name not in self.variables:
         raiseFunctionNotDefined(name)
-    func     = self.variables[name][1]
+    func = self.variables[name][1]
+    
+    children = ctx.getTypedRuleContexts(Kafe_GrammarParser.ArgListContext)
+    
+    idx = 0
+    
+    arg_lists = ctx.getTypedRuleContexts(Kafe_GrammarParser.ArgListContext)
+    
     children = list(ctx.getChildren())
-    i        = 0
+    i = 0
     while i < len(children):
         if children[i].getText() == "(":
-            if (i + 1 < len(children)
+            if (i + 1 < len(children) 
                 and isinstance(children[i+1], Kafe_GrammarParser.ArgListContext)):
                 args = [self.visit(a) for a in children[i+1].arg()]
                 func = func(*args)
-                i   += 3
+                i += 3
             else:
                 func = func()
-                i   += 2
+                i += 2
         else:
             i += 1
     return func

@@ -1,3 +1,12 @@
 **/.vscode/
 **/__pycache__/
 **/.pytest_cache/
+
+# ANTLR4 generated files
+*Lexer.interp
+*Lexer.tokens
+*Lexer.py
+*Parser.py
+*Visitor.py
+*.interp
+*.tokens

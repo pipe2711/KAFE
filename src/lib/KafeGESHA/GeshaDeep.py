@@ -7,6 +7,11 @@ from lib.KafeGESHA.LossFunction import (
 )
 from lib.KafeGESHA.Optimizer import SGD, RMSprop, Adam, AdamW
 from lib.KafeMATH.funciones import log
+from global_utils import check_sig
+from TypeUtils import (
+    cadena_t, flotante_t, entero_t, vector_numeros_t, 
+    matriz_numeros_t, gesha_t, void_t, lista_cadenas_t
+)
 
 class GeshaDeep(Gesha):
     def __init__(self, model_type: str = "classification"):
@@ -16,11 +21,13 @@ class GeshaDeep(Gesha):
         self._optimizer_obj = None
         self._metrics = []
 
+    @check_sig([2], [gesha_t], is_method=True)
     def add(self, layer):
         if self.layers and hasattr(layer, "input_shape") and not layer.input_shape:
             layer.input_shape = (self.layers[-1].units,)
         self.layers.append(layer)
 
+    @check_sig([1, 2, 3, 4], [cadena_t, void_t], [cadena_t, void_t], [lista_cadenas_t, void_t], is_method=True)
     def compile(self, optimizer=None, loss=None, metrics=None):
         if loss == "mse":
             self._loss_fn = MeanSquaredError()
@@ -52,17 +59,20 @@ class GeshaDeep(Gesha):
                 "Advertencia: un modelo de clustering con menos de 2 capas puede no tener suficiente capacidad."
             )
 
+    @check_sig([2], [flotante_t, entero_t], is_method=True)
     def set_lr(self, new_lr: float):
         if not self._optimizer_obj:
             raise AttributeError("compile() debe llamarse antes de set_lr().")
         self._optimizer_obj.lr = new_lr
 
+    @check_sig([2], vector_numeros_t, is_method=True)
     def predict(self, x):
         out = x
         for layer in self.layers:
             out = layer.forward(out)
         return out
 
+    @check_sig([2, 3, 4, 5, 6, 7], matriz_numeros_t, matriz_numeros_t + vector_numeros_t + [void_t], [entero_t], [entero_t], matriz_numeros_t + [void_t], matriz_numeros_t + vector_numeros_t + [void_t], is_method=True)
     def fit(self, x_train, y_train=None, epochs=1, batch_size=1, x_val=None, y_val=None):
         n_samples = len(x_train)
         has_val = x_val is not None and y_val is not None and len(x_val) > 0
@@ -182,6 +192,7 @@ class GeshaDeep(Gesha):
             )
             print(f" Capa {i}: Dense(units={layer.units}, activation={act}, {reg})")
 
+    @check_sig([3], matriz_numeros_t, matriz_numeros_t + vector_numeros_t, is_method=True)
     def evaluate(self, x_test, y_test):
         if self._model_type == "clustering":
             avg = sum(
@@ -218,12 +229,14 @@ class GeshaDeep(Gesha):
 
         raise ValueError("Tipo de modelo no soportado en evaluate().")
 
+    @check_sig([2], vector_numeros_t, is_method=True)
     def predict_proba(self, x):
         out = self.predict(x)
         if self._model_type in ("binary", "regression"):
             return out[0] if isinstance(out, list) else out
         return out
 
+    @check_sig([2], vector_numeros_t, is_method=True)
     def predict_label(self, x):
         if self._model_type == "regression":
             raise ValueError("predict_label() no aplica a modelos de regresión.")
